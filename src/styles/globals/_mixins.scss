@@ -1,0 +1,117 @@
+@use "sass:map";
+@use "variables" as vars;
+
+// Responsive breakpoints
+@mixin respond-to($breakpoint) {
+  @if map.has-key(vars.$breakpoints, $breakpoint) {
+    @media (min-width: map.get(vars.$breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+// Flexbox utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Grid utilities
+@mixin grid-auto-fit($min-size: 250px, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-size, 1fr));
+  gap: $gap;
+}
+
+@mixin grid-auto-fill($min-size: 250px, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($min-size, 1fr));
+  gap: $gap;
+}
+
+// Typography mixins
+@mixin text-style($size, $weight: regular, $line-height: normal) {
+  font-size: map.get(vars.$font-sizes, $size);
+  font-weight: map.get(vars.$font-weights, $weight);
+  line-height: map.get(vars.$line-heights, $line-height);
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Animation mixins
+@mixin fade-in($duration: 0.3s) {
+  animation: fadeIn $duration ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@mixin slide-in-left($duration: 0.3s) {
+  animation: slideInLeft $duration ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Utility mixins
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+}
+
+@mixin clearfix {
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

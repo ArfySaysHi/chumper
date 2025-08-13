@@ -1,0 +1,341 @@
+@use "sass:map";
+@use "./_variables.scss" as *;
+@use "./_mixins.scss" as *;
+
+/* Headings */
+h1,
+.text-5xl {
+  @include text-style(5xl, black, tight);
+  font-family: $font-family-display;
+  color: color(white);
+  letter-spacing: -0.025em;
+  margin-bottom: map.get($spacing, 6);
+}
+
+h2,
+.text-4xl {
+  @include text-style(4xl, bold, tight);
+  font-family: $font-family-display;
+  color: color(white);
+  letter-spacing: -0.025em;
+  margin-bottom: map.get($spacing, 5);
+}
+
+h3,
+.text-3xl {
+  @include text-style(3xl, bold, tight);
+  color: color(white);
+  margin-bottom: map.get($spacing, 4);
+}
+
+h4,
+.text-xxl {
+  @include text-style(xxl, semibold, tight);
+  color: color(white);
+  margin-bottom: map.get($spacing, 3);
+}
+
+h5,
+.text-xl {
+  @include text-style(xl, semibold, normal);
+  color: color(white);
+  margin-bottom: map.get($spacing, 2);
+}
+
+h6,
+.text-lg {
+  @include text-style(lg, medium, normal);
+  color: color(light-gray);
+  margin-bottom: map.get($spacing, 2);
+}
+
+/* Body text */
+p,
+.text-base {
+  @include text-style(base, regular, relaxed);
+  color: color(light-gray);
+  margin-bottom: map.get($spacing, 4);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Small text */
+small,
+.text-sm {
+  @include text-style(sm, regular, normal);
+  color: color(gray);
+}
+
+.text-xs {
+  @include text-style(xs, regular, normal);
+  color: color(gray);
+}
+
+/* Font weight utilities */
+.font-light {
+  font-weight: map.get($font-weights, light);
+}
+.font-regular {
+  font-weight: map.get($font-weights, regular);
+}
+.font-medium {
+  font-weight: map.get($font-weights, medium);
+}
+.font-semibold {
+  font-weight: map.get($font-weights, semibold);
+}
+.font-bold {
+  font-weight: map.get($font-weights, bold);
+}
+.font-black {
+  font-weight: map.get($font-weights, black);
+}
+
+/* Font family utilities */
+.font-mono {
+  font-family: $font-family-mono;
+}
+
+.font-display {
+  font-family: $font-family-display;
+}
+
+/* Text color utilities */
+.text-primary {
+  color: color(primary-500);
+}
+.text-secondary {
+  color: color(secondary-500);
+}
+.text-tertiary {
+  color: color(tertiary);
+}
+.text-white {
+  color: color(white);
+}
+.text-gray {
+  color: color(gray);
+}
+.text-light-gray {
+  color: color(light-gray);
+}
+.text-success {
+  color: color(success);
+}
+.text-warning {
+  color: color(warning);
+}
+.text-danger {
+  color: color(danger);
+}
+.text-info {
+  color: color(info);
+}
+
+/* Shadowrun specific text colors */
+.text-physical-damage {
+  color: color(physical-damage);
+}
+.text-stun-damage {
+  color: color(stun-damage);
+}
+.text-edge {
+  color: color(edge);
+}
+.text-karma {
+  color: color(karma);
+}
+.text-nuyen {
+  color: color(nuyen);
+}
+
+/* Text alignment */
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+/* Text transform */
+.uppercase {
+  text-transform: uppercase;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+
+/* Line height utilities */
+.leading-tight {
+  line-height: map.get($line-heights, tight);
+}
+.leading-normal {
+  line-height: map.get($line-heights, normal);
+}
+.leading-relaxed {
+  line-height: map.get($line-heights, relaxed);
+}
+
+/* Letter spacing */
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+.tracking-normal {
+  letter-spacing: 0;
+}
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+/* Text utilities */
+.text-truncate {
+  @include text-truncate;
+}
+
+.text-clamp-2 {
+  @include text-clamp(2);
+}
+
+.text-clamp-3 {
+  @include text-clamp(3);
+}
+
+/* Shadowrun-specific typography components */
+.attribute-label {
+  @include text-style(xs, medium, normal);
+  color: color(light-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.attribute-value {
+  @include text-style(xxl, bold, tight);
+  font-family: $font-family-mono;
+  color: color(white);
+}
+
+.skill-name {
+  @include text-style(base, medium, normal);
+  color: color(white);
+}
+
+.skill-rating {
+  @include text-style(base, bold, normal);
+  font-family: $font-family-mono;
+  color: color(primary-500);
+}
+
+.dice-pool {
+  @include text-style(sm, medium, normal);
+  font-family: $font-family-mono;
+  color: color(secondary-500);
+}
+
+.section-header {
+  @include text-style(lg, semibold, tight);
+  font-family: $font-family-display;
+  color: color(primary-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid color(border-accent);
+  padding-bottom: map.get($spacing, 2);
+  margin-bottom: map.get($spacing, 4);
+}
+
+/* Matrix/Cyberpunk text effects */
+.matrix-text {
+  font-family: $font-family-mono;
+  color: color(primary-500);
+  text-shadow: 0 0 5px rgba(color(primary-500), 0.5);
+  animation: matrixFlicker 2s infinite alternate;
+}
+
+@keyframes matrixFlicker {
+  0%,
+  98% {
+    opacity: 1;
+  }
+  99%,
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.glitch-text {
+  position: relative;
+  font-family: $font-family-display;
+
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &::before {
+    animation: glitch-1 0.5s infinite;
+    color: color(danger);
+    z-index: -1;
+  }
+
+  &::after {
+    animation: glitch-2 0.5s infinite;
+    color: color(info);
+    z-index: -2;
+  }
+}
+
+@keyframes glitch-1 {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-2px);
+  }
+  40% {
+    transform: translateX(-2px);
+  }
+  60% {
+    transform: translateX(2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes glitch-2 {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(2px);
+  }
+  40% {
+    transform: translateX(2px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(-2px);
+  }
+}

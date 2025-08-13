@@ -1,0 +1,19 @@
+@use "sass:map";
+@use "../../styles/globals/_variables.scss" as *;
+
+.title-bar {
+    display: flex;
+    background-color: map.get($colors, bg-primary);
+
+    &__menu {
+    }
+
+    &__window-controls {
+        margin: 0 0 0 auto;
+
+        &__icon {
+            // font-size: map.get($font-sizes, sm);
+            font-size: 50px;
+        }
+    }
+}
