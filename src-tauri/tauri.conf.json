@@ -15,7 +15,12 @@
         "title": "chumper",
         "width": 1280,
         "height": 720,
-        "decorations": false
+        "decorations": false,
+        "backgroundColor": "#0c1117",
+        "visible": false,
+        "center": true,
+        "theme": "Dark",
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {
