@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router";
+import CharacterSelection from "./pages/CharacterSelection/CharacterSelection.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Hey there</div>,
+    element: <CharacterSelection />,
   },
 ]);
 

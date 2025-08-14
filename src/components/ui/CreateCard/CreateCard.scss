@@ -1,0 +1,72 @@
+@use "sass:map";
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
+
+// Create cards
+.create-card {
+    @include flex-center;
+    flex-direction: column;
+    gap: map.get($spacing, 4);
+    padding: map.get($spacing, 8);
+    background: surface(primary);
+    border: 2px dashed border(default);
+    border-radius: map.get($border-radius, lg);
+    transition: all map.get($transitions, normal);
+    cursor: pointer;
+    text-align: center;
+
+    &__icon {
+        width: 48px;
+        height: 48px;
+        color: color(primary-500);
+        transition: all map.get($transitions, fast);
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: map.get($spacing, 1);
+    }
+
+    &__title {
+        @include text-style(base, semibold, normal);
+        color: text(primary);
+        margin: 0;
+    }
+
+    &__subtitle {
+        @include text-style(sm, regular, normal);
+        color: text(tertiary);
+        margin: 0;
+    }
+
+    &--primary {
+        &:hover {
+            border-color: color(primary-500);
+            background: color(hover-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px color(shadow-primary);
+
+            .create-card__icon {
+                transform: scale(1.1);
+                color: color(primary-400);
+            }
+        }
+
+        &:active {
+            transform: translateY(0);
+            background: color(active-primary);
+        }
+    }
+
+    &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+            border-color: border(default);
+            background: surface(primary);
+        }
+    }
+}

@@ -1,0 +1,137 @@
+@use "sass:map";
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
+
+.character-card {
+    background: surface(primary);
+    border: 1px solid border(subtle);
+    border-radius: map.get($border-radius, lg);
+    padding: map.get($spacing, 6);
+    transition: all map.get($transitions, normal);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            color(primary-500),
+            transparent
+        );
+        opacity: 0;
+        transition: opacity map.get($transitions, normal);
+    }
+
+    &:hover {
+        border-color: border(strong);
+        background: color(hover-surface);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px color(shadow-md);
+
+        &::before {
+            opacity: 0.5;
+        }
+
+        .character-card__actions {
+            opacity: 1;
+        }
+    }
+
+    &--selected {
+        border-color: color(primary-500);
+        background: color(hover-primary);
+        box-shadow:
+            0 0 0 1px color(primary-500),
+            0 8px 25px color(shadow-primary);
+
+        &::before {
+            opacity: 1;
+        }
+    }
+
+    &__header {
+        @include flex-between;
+        align-items: flex-start;
+        margin-bottom: map.get($spacing, 4);
+    }
+
+    &__avatar {
+        font-size: 2rem;
+        width: 48px;
+        height: 48px;
+        @include flex-center;
+        background: surface(secondary);
+        border-radius: map.get($border-radius, lg);
+        border: 1px solid border(subtle);
+    }
+
+    &__info {
+        flex: 1;
+        margin-left: map.get($spacing, 3);
+    }
+
+    &__name {
+        @include text-style(lg, semibold, tight);
+        color: text(primary);
+        margin: 0 0 map.get($spacing, 1) 0;
+    }
+
+    &__archetype {
+        @include text-style(xs, medium, normal);
+        padding: map.get($spacing, 1) map.get($spacing, 2);
+        border-radius: map.get($border-radius, base);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    &__actions {
+        display: flex;
+        gap: map.get($spacing, 1);
+        opacity: 0;
+        transition: opacity map.get($transitions, fast);
+    }
+
+    &__stats {
+        display: flex;
+        gap: map.get($spacing, 4);
+        margin-bottom: map.get($spacing, 4);
+    }
+
+    &__priority {
+        margin-bottom: map.get($spacing, 4);
+        display: flex;
+        align-items: center;
+        gap: map.get($spacing, 2);
+    }
+
+    &__priority-label {
+        @include text-style(xs, medium, normal);
+        color: text(tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    &__footer {
+        margin-top: auto;
+    }
+
+    &__last-played {
+        display: flex;
+        align-items: center;
+        gap: map.get($spacing, 1);
+        @include text-style(xs, regular, normal);
+        color: text(quaternary);
+    }
+
+    &__calendar-icon {
+        width: 12px;
+        height: 12px;
+    }
+}

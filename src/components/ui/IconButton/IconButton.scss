@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "sass:color";
-@use "../../styles/globals/_variables.scss" as *;
-@use "../../styles/globals/_mixins.scss" as *;
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
 
 .icon-button {
     // Base styles - common to all variants

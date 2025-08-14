@@ -1,7 +1,7 @@
 import "./App.scss";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useState, useEffect } from "react";
-import TitleBar from "./components/titlebar/TitleBar.tsx";
+import TitleBar from "./components/ui/TitleBar/TitleBar.tsx";
 import { RouterProvider } from "react-router";
 import router from "./routes.tsx";
 

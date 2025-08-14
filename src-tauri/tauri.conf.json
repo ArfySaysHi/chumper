@@ -17,7 +17,7 @@
         "height": 720,
         "decorations": false,
         "backgroundColor": "#0c1117",
-        "visible": false,
+        "visible": true,
         "center": true,
         "theme": "Dark",
         "titleBarStyle": "Overlay"

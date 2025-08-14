@@ -1,16 +1,11 @@
 import { SyntheticEvent } from "react";
 import "./TitleBar.scss";
-import IconButton from "../iconbutton/IconButton.tsx";
-import { Close, CropSquare, Remove, Menu } from "@mui/icons-material";
+import IconButton from "../IconButton/IconButton.tsx";
+import { Close, CropSquare, Remove } from "@mui/icons-material";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const TitleBar = () => {
   const appWindow = getCurrentWindow();
-
-  const onMenuClick = (e: SyntheticEvent) => {
-    e.preventDefault();
-    console.info("TODO: Menu implementation");
-  };
 
   const onMinimizeClick = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -29,11 +24,7 @@ const TitleBar = () => {
 
   return (
     <div className="title-bar">
-      <div className="title-bar__menu">
-        <IconButton onClick={() => {}}>
-          <Menu onClick={onMenuClick} />
-        </IconButton>
-      </div>
+      <div className="title-bar__menu"></div>
       <div className="title-bar__window-controls">
         <IconButton onClick={onMinimizeClick}>
           <Remove />

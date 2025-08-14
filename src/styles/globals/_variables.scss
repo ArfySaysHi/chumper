@@ -203,6 +203,22 @@ $colors: (
   @return color(border-#{$style});
 }
 
+@function font-size($name) {
+  @return map.get($font-sizes, $name);
+}
+
+@function spacing($name) {
+  @return map.get($spacing, $name);
+}
+
+@function line-height($name) {
+  @return map.get($line-heights, $name);
+}
+
+@function font-weight($name) {
+  @return map.get($font-weights, $name);
+}
+
 // ===== SEMANTIC GROUPINGS =====
 $brand-palette: (
   primary: color(primary-500),
@@ -288,7 +304,7 @@ $font-family-primary:
   "Segoe UI",
   sans-serif;
 $font-family-mono: "JetBrains Mono", "Fira Code", monospace;
-$font-family-display: "Orbitron", monospace; // Cyberpunk feel
+$font-family-display: "Rajdhani", "Orbitron", sans-serif;
 
 $font-sizes: (
   xs: 0.75rem,

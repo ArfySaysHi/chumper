@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_variables.scss" as *;
 
 .title-bar {
     display: flex;
@@ -13,7 +13,6 @@
 
         &__icon {
             // font-size: map.get($font-sizes, sm);
-            font-size: 50px;
         }
     }
 }

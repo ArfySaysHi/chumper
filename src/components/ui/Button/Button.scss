@@ -1,0 +1,98 @@
+@use "sass:map";
+@use "sass:color";
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
+
+.button {
+  @include flex-center;
+  gap: map.get($spacing, 2);
+  padding: map.get($spacing, 3) map.get($spacing, 4);
+  border-radius: map.get($border-radius, md);
+  @include text-style(base, medium, normal);
+  font-family: $font-family-primary;
+  transition: all map.get($transitions, fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  &:focus-visible {
+    outline: 2px solid color(primary-500);
+    outline-offset: 2px;
+  }
+
+  &--primary {
+    background: linear-gradient(135deg, color(primary-500), color(primary-600));
+    color: color(text-on-primary);
+    border-color: color(primary-500);
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        color(primary-400),
+        color(primary-500)
+      );
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px color(shadow-primary);
+    }
+
+    &:active {
+      transform: translateY(0);
+      background: linear-gradient(
+        135deg,
+        color(primary-600),
+        color(primary-700)
+      );
+    }
+  }
+
+  &--secondary {
+    background: surface(secondary);
+    color: text(primary);
+    border-color: border(default);
+
+    &:hover {
+      background: surface(tertiary);
+      border-color: border(strong);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px color(shadow-sm);
+    }
+
+    &:active {
+      transform: translateY(0);
+      background: surface(secondary);
+    }
+  }
+
+  &--icon {
+    padding: map.get($spacing, 2);
+    min-width: auto;
+    background: transparent;
+    border: 1px solid border(subtle);
+    color: text(secondary);
+
+    &:hover {
+      background: color(hover-surface);
+      border-color: border(default);
+      color: text(primary);
+    }
+  }
+
+  &--danger {
+    color: color(danger-500);
+    border-color: color(danger-500);
+
+    &:hover {
+      background: color(danger-500);
+      color: color(text-on-primary);
+    }
+  }
+
+  &--xs {
+    padding: map.get($spacing, 1);
+    @include text-style(xs, medium, normal);
+  }
+
+  &--lg {
+    padding: map.get($spacing, 4) map.get($spacing, 8);
+    @include text-style(lg, semibold, normal);
+  }
+}

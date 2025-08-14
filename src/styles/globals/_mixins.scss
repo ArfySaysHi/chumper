@@ -1,10 +1,10 @@
 @use "sass:map";
-@use "variables" as vars;
+@use "variables" as *;
 
 // Responsive breakpoints
 @mixin respond-to($breakpoint) {
-  @if map.has-key(vars.$breakpoints, $breakpoint) {
-    @media (min-width: map.get(vars.$breakpoints, $breakpoint)) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
       @content;
     }
   } @else {
@@ -45,9 +45,28 @@
 
 // Typography mixins
 @mixin text-style($size, $weight: regular, $line-height: normal) {
-  font-size: map.get(vars.$font-sizes, $size);
-  font-weight: map.get(vars.$font-weights, $weight);
-  line-height: map.get(vars.$line-heights, $line-height);
+  font-size: map.get($font-sizes, $size);
+  font-weight: map.get($font-weights, $weight);
+  line-height: map.get($line-heights, $line-height);
+}
+
+@mixin header-style {
+  font-family: $font-family-display;
+  font-size: font-size(lg);
+  color: color(primary-500);
+}
+
+@mixin section-header-style {
+  font-family: $font-family-display;
+  font-size: font-size(lg);
+  color: color(primary-500);
+  font-weight: font-weight(semibold);
+  line-height: line-height(tight);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #f59e0b;
+  padding-bottom: spacing(2);
+  margin-bottom: spacing(4);
 }
 
 @mixin text-truncate {

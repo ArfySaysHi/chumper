@@ -1,6 +1,6 @@
 @use "sass:map";
-@use "../../styles/globals/_variables.scss" as *;
-@use "../../styles/globals/_mixins.scss" as *;
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
 
 .tab-group {
     &__tabs {
@@ -9,24 +9,24 @@
         margin: 0 0 map.get($spacing, 4);
 
         &__tab {
+            @include header-style;
             margin: 0 map.get($spacing, 6) 0 0;
-            color: map.get($colors, subtext);
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: font-weight 0.3s ease;
 
             &:hover {
-                color: map.get($colors, white);
+                font-weight: font-weight(semibold);
             }
 
             &--active {
                 position: relative;
-                color: map.get($colors, white);
+                font-weight: font-weight(semibold);
             }
         }
 
         &__slider {
             content: "";
-            background: map.get($colors, primary);
+            background: color(primary-500);
             position: absolute;
             bottom: -10px;
             height: 3px;
