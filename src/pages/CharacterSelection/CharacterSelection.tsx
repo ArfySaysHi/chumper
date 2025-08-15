@@ -2,41 +2,41 @@ import { Download, Upload, Settings, Add } from "@mui/icons-material";
 import "./CharacterSelection.scss";
 import CharacterCard from "../../components/ui/CharacterCard/CharacterCard.tsx";
 import Button from "../../components/ui/Button/Button.tsx";
-import { ArchetypeOption, PriorityOption } from "../../types/global.d.ts";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
 import CreateCard from "../../components/ui/CreateCard/CreateCard.tsx";
+import { Character } from "../../types/character.ts";
 
 const mockCreationCharacters: Character[] = [
   {
     id: 7,
     name: "Silas Quickstep",
-    archetype: ArchetypeOption.mage,
+    archetype: "Mage",
     karma: 52,
     nuyen: 7400,
     lastPlayed: "2024-08-11",
     avatar: "🥷",
     priority: {
-      A: PriorityOption.ski,
-      B: PriorityOption.att,
-      C: PriorityOption.res,
-      D: PriorityOption.met,
-      E: PriorityOption.mag,
+      A: "Skills",
+      B: "Attributes",
+      C: "Resources",
+      D: "Metatype",
+      E: "Magic/Resonance",
     },
   },
   {
     id: 8,
     name: "Maris Shadowgrasp",
-    archetype: ArchetypeOption.sam,
+    archetype: "Street Samurai",
     karma: 41,
     nuyen: 9800,
     lastPlayed: "2024-08-14",
     avatar: "⚔️",
     priority: {
-      A: PriorityOption.att,
-      B: PriorityOption.res,
-      C: PriorityOption.met,
-      D: PriorityOption.ski,
-      E: PriorityOption.mag,
+      A: "Attributes",
+      B: "Resources",
+      C: "Metatype",
+      D: "Skills",
+      E: "Magic/Resonance",
     },
   },
 ];
@@ -46,81 +46,81 @@ const mockCharacters: Character[] = [
   {
     id: 1,
     name: "Nyx Blackwire",
-    archetype: ArchetypeOption.decker,
+    archetype: "Decker",
     karma: 45,
     nuyen: 12500,
     lastPlayed: "2024-08-10",
     avatar: "🔌",
     priority: {
-      A: PriorityOption.ski,
-      B: PriorityOption.att,
-      C: PriorityOption.mag,
-      D: PriorityOption.met,
-      E: PriorityOption.res,
+      A: "Skills",
+      B: "Attributes",
+      C: "Magic/Resonance",
+      D: "Metatype",
+      E: "Resources",
     },
   },
   {
     id: 2,
     name: "Razor Chrome",
-    archetype: ArchetypeOption.sam,
+    archetype: "Street Samurai",
     karma: 28,
     nuyen: 3200,
     lastPlayed: "2024-08-12",
     avatar: "⚔️",
     priority: {
-      A: PriorityOption.att,
-      B: PriorityOption.ski,
-      C: PriorityOption.res,
-      D: PriorityOption.met,
-      E: PriorityOption.mag,
+      A: "Attributes",
+      B: "Skills",
+      C: "Resources",
+      D: "Metatype",
+      E: "Magic/Resonance",
     },
   },
   {
     id: 3,
     name: "Echo Mindbridge",
-    archetype: ArchetypeOption.mage,
+    archetype: "Mage",
     karma: 67,
     nuyen: 8900,
     lastPlayed: "2024-08-09",
     avatar: "🔮",
     priority: {
-      A: PriorityOption.mag,
-      B: PriorityOption.att,
-      C: PriorityOption.ski,
-      D: PriorityOption.met,
-      E: PriorityOption.res,
+      A: "Magic/Resonance",
+      B: "Attributes",
+      C: "Skills",
+      D: "Metatype",
+      E: "Resources",
     },
   },
   {
     id: 4,
     name: "Booga Mindbridge",
-    archetype: ArchetypeOption.decker,
+    archetype: "Decker",
     karma: 67,
     nuyen: 8900,
     lastPlayed: "2024-08-09",
     avatar: "🔮",
     priority: {
-      A: PriorityOption.mag,
-      B: PriorityOption.att,
-      C: PriorityOption.ski,
-      D: PriorityOption.met,
-      E: PriorityOption.res,
+      A: "Magic/Resonance",
+      B: "Attributes",
+      C: "Skills",
+      D: "Metatype",
+      E: "Resources",
     },
   },
   {
     id: 5,
     name: "Booga Mindbridge",
-    archetype: ArchetypeOption.decker,
+    archetype: "Decker",
     karma: 67,
     nuyen: 8900,
     lastPlayed: "2024-08-09",
     avatar: "🔮",
     priority: {
-      A: PriorityOption.mag,
-      B: PriorityOption.att,
-      C: PriorityOption.ski,
-      D: PriorityOption.met,
-      E: PriorityOption.res,
+      A: "Magic/Resonance",
+      B: "Attributes",
+      C: "Skills",
+      D: "Metatype",
+      E: "Resources",
     },
   },
 ];
@@ -155,7 +155,7 @@ const CharacterSelection = () => {
               content: (
                 <section className="character-selection__characters">
                   <div className="character-grid">
-                    {mockCharacters.map((character, i) => (
+                    {mockCharacters.map((character) => (
                       <CharacterCard
                         key={character.id}
                         character={character}
@@ -175,7 +175,7 @@ const CharacterSelection = () => {
               content: (
                 <section className="character-selection__characters">
                   <div className="character-grid">
-                    {mockCreationCharacters.map((character, i) => (
+                    {mockCreationCharacters.map((character) => (
                       <CharacterCard
                         key={character.id}
                         character={character}
@@ -191,25 +191,6 @@ const CharacterSelection = () => {
             },
           ]}
         />
-        <div className="character-selection__creation_type">
-          <TabGroup
-            tabs={[
-              {
-                key: "cs-creation",
-                label: "Initialize New Runner",
-                content: (
-                  <section className="character-selection__characters">
-                    <div className="character-grid">
-                      <CreateCard onClick={() => {}}>
-                        <Add className="create-card__icon" />
-                      </CreateCard>
-                    </div>
-                  </section>
-                ),
-              },
-            ]}
-          />
-        </div>
       </main>
     </div>
   );
