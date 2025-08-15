@@ -1,10 +1,10 @@
-import { Download, Upload, Settings, Add } from "@mui/icons-material";
+import { Download, Upload, Settings } from "@mui/icons-material";
 import "./CharacterSelection.scss";
 import CharacterCard from "../../components/ui/CharacterCard/CharacterCard.tsx";
 import Button from "../../components/ui/Button/Button.tsx";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
-import CreateCard from "../../components/ui/CreateCard/CreateCard.tsx";
 import { Character } from "../../types/character.ts";
+import { invoke } from "@tauri-apps/api/core";
 
 const mockCreationCharacters: Character[] = [
   {
@@ -126,6 +126,31 @@ const mockCharacters: Character[] = [
 ];
 
 const CharacterSelection = () => {
+  const char_fetch = async (command: string) => {
+    try {
+      const res = await invoke(command);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const makeGoHappen = async () => {
+    try {
+      const res = await invoke("create_character", {
+        character: {
+          name: "Ooga Booga",
+          metatype: "Human",
+          player_name: "Arfy",
+          karma_total: 34,
+        },
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="character-selection">
       <header className="character-selection__header">
@@ -134,14 +159,24 @@ const CharacterSelection = () => {
           <span className="character-selection__version">v1.0.0-alpha</span>
         </div>
         <div className="character-selection__toolbar">
-          <Button variant="icon" size="xs" title="Settings">
+          <Button
+            onClick={makeGoHappen}
+            variant="icon"
+            size="xs"
+            title="Settings"
+          >
             <Settings />
           </Button>
-          <Button variant="icon" size="xs" title="Import Character">
-            <Upload />
+          <Button
+            onClick={() => char_fetch("list_characters")}
+            variant="icon"
+            size="xs"
+            title="Import Character"
+          >
+            <Download />
           </Button>
           <Button variant="icon" size="xs" title="Export Character">
-            <Download />
+            <Upload />
           </Button>
         </div>
       </header>

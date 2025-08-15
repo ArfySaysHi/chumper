@@ -7,6 +7,7 @@ interface ButtonProps {
   size?: "xs" | "md" | "lg";
   title?: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
 const Button = ({
