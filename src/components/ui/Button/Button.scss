@@ -15,8 +15,9 @@
   border: 1px solid transparent;
 
   &:focus-visible {
-    outline: 2px solid color(primary-500);
-    outline-offset: 2px;
+    outline: none;
+    border-color: color(primary-500);
+    color: color(primary-500);
   }
 
   &--primary {
@@ -73,6 +74,10 @@
       background: color(hover-surface);
       border-color: border(default);
       color: text(primary);
+    }
+
+    &:focus {
+      border-color: border(active);
     }
   }
 

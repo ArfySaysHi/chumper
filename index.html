@@ -5,7 +5,6 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri + React + Typescript</title>
-    <!-- Critical CSS to prevent flash -->
     <style>
       /* Immediate styles to prevent white flash */
       html,
@@ -25,7 +24,6 @@
         background-color: #0c1117;
       }
 
-      /* Loading state styles */
       .loading-screen {
         position: fixed;
         top: 0;
@@ -45,7 +43,6 @@
         pointer-events: none;
       }
 
-      /* Simple spinner */
       .spinner {
         width: 32px;
         height: 32px;
@@ -78,7 +75,6 @@
       </div>
     </div>
     <script>
-      // Remove loading screen once everything is loaded
       document.addEventListener("DOMContentLoaded", function () {
         // Wait for a brief moment to ensure styles are applied
         setTimeout(function () {

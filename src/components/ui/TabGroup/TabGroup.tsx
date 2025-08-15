@@ -53,6 +53,7 @@ const TabGroup = ({ tabs = defaultTabContent }: TabGroupProps) => {
         {tabs.map((tab, i) => (
           <button
             key={tab.key}
+            tabIndex={tabs.length === 1 ? -1 : 1}
             ref={(el) => (tabRefs.current[i] = el)}
             className={`tab-group__tabs__tab tab-group__tabs__tab${currentTab === i ? "--active" : ""}`}
             onClick={() => setCurrentTab(i)}

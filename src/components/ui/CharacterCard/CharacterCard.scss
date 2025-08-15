@@ -29,7 +29,8 @@
         transition: opacity map.get($transitions, normal);
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         border-color: border(strong);
         background: color(hover-surface);
         transform: translateY(-2px);

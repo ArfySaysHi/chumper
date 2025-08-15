@@ -12,7 +12,13 @@
             @include header-style;
             margin: 0 map.get($spacing, 6) 0 0;
             cursor: pointer;
-            transition: font-weight 0.3s ease;
+
+            &:focus-visible {
+                outline: none;
+                text-decoration: underline;
+                text-underline-offset: spacing(2);
+                text-decoration-thickness: 1px;
+            }
 
             &:hover {
                 font-weight: font-weight(semibold);
@@ -26,9 +32,9 @@
 
         &__slider {
             content: "";
-            background: color(primary-500);
+            background: color(accent-500);
             position: absolute;
-            bottom: -10px;
+            bottom: -12px;
             height: 3px;
             border-radius: map.get($border-radius, full);
             transition: all 0.3s ease;
@@ -38,6 +44,7 @@
     &__content {
         &__container {
             transition: opacity 0.3s ease;
+            overflow: auto;
 
             &--hidden {
                 @include visually_hidden;

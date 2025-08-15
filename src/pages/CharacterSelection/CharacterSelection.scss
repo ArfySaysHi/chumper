@@ -10,10 +10,8 @@
     position: relative;
     overflow-x: hidden;
 
-    // Header
     &__header {
         position: relative;
-        z-index: 10;
         @include flex-between;
         padding: map.get($spacing, 6);
         border-bottom: 1px solid border(subtle);
@@ -23,7 +21,7 @@
 
     &__brand {
         @include flex-center;
-        gap: map.get($spacing, 4);
+        gap: spacing(4);
     }
 
     &__title {
@@ -44,34 +42,26 @@
 
     &__toolbar {
         display: flex;
-        gap: map.get($spacing, 2);
+        gap: spacing(2);
     }
 
-    // Main content
     &__main {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: spacing(8);
         position: relative;
-        z-index: 5;
         padding: map.get($spacing, 8) 0;
+        transition: all 1s ease;
     }
 
-    &__create-section {
-        margin-bottom: map.get($spacing, 12);
+    &__creation_type {
+        &__header {
+            margin: 0 0 spacing(10) 0;
+        }
     }
 
     &__characters {
         margin-bottom: map.get($spacing, 8);
-    }
-
-    &__characters-header {
-        @include flex-between;
-        align-items: flex-end;
-        margin-bottom: map.get($spacing, 6);
-    }
-
-    &__instructions {
-        @include text-style(sm, regular, normal);
-        color: text(tertiary);
-        margin: 0;
     }
 
     &__actions {
@@ -80,12 +70,20 @@
     }
 }
 
-// Character grid
 .character-grid {
-    @include grid-auto-fit(320px, map.get($spacing, 6));
+    @include grid-auto-fit(320px, spacing(6));
+    margin: spacing(8) 0 0 0;
+
+    // When only 1-2 cards, limit width further
+    &:has(.character-card:nth-child(1):nth-last-child(1)) {
+        max-width: 400px;
+    }
+
+    &:has(.character-card:nth-child(2):nth-last-child(1)) {
+        max-width: 800px;
+    }
 }
 
-// Archetype color coding
 .archetype {
     &--decker {
         background: linear-gradient(135deg, color(info-600), color(info-500));
@@ -135,11 +133,10 @@
     }
 }
 
-// Stat items
 .stat-item {
     display: flex;
     align-items: center;
-    gap: map.get($spacing, 2);
+    gap: spacing(2);
 
     &__icon {
         width: 16px;
@@ -165,10 +162,9 @@
     }
 }
 
-// Priority badges
 .priority-badges {
     display: flex;
-    gap: map.get($spacing, 1);
+    gap: spacing(1);
 }
 
 .priority-badge {
@@ -210,24 +206,18 @@
     }
 }
 
-// Action buttons
 .action-buttons {
     display: flex;
-    gap: map.get($spacing, 4);
+    gap: spacing(4);
     justify-content: center;
 }
 
-// Responsive design
 @include respond-to(lg) {
     .character-selection__main {
-        padding: map.get($spacing, 12) 0;
+        padding: spacing(12) spacing(4);
     }
 
     .character-grid {
-        @include grid-auto-fit(360px, map.get($spacing, 8));
-    }
-
-    .create-card {
-        padding: map.get($spacing, 10);
+        @include grid-auto-fit(360px, spacing(8));
     }
 }

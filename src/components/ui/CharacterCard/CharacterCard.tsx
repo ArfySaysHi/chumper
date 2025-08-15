@@ -8,7 +8,7 @@ interface CharacterCardProps {
   character: Character;
   onClick: (e: SyntheticEvent) => void;
   onDoubleClick: (e: SyntheticEvent) => void;
-  selected: boolean;
+  selected?: boolean;
 }
 
 interface ArchetypeMap {
@@ -19,7 +19,7 @@ const CharacterCard = ({
   character,
   onClick,
   onDoubleClick,
-  selected,
+  selected = false,
 }: CharacterCardProps) => {
   // TODO: Move to formatter file later
   const formatDate = (dateString: string) => {
