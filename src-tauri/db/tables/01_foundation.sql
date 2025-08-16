@@ -1,10 +1,48 @@
-CREATE TABLE IF NOT EXISTS characters (
+CREATE TABLE characters (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     metatype TEXT NOT NULL,
     player_name TEXT,
-    karma_total INTEGER,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    body INTEGER DEFAULT 1,
+    agility INTEGER DEFAULT 1,
+    reaction INTEGER DEFAULT 1,
+    strength INTEGER DEFAULT 1,
+    willpower INTEGER DEFAULT 1,
+    logic INTEGER DEFAULT 1,
+    intuition INTEGER DEFAULT 1,
+    charisma INTEGER DEFAULT 1,
+    edge INTEGER DEFAULT 1,
+    magic INTEGER DEFAULT 0,
+    resonance INTEGER DEFAULT 0,
+    karma_total INTEGER DEFAULT 0,
+    karma_spent INTEGER DEFAULT 0,
+    nuyen INTEGER DEFAULT 0
+);
+
+CREATE TABLE metatype (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    body_min INTEGER DEFAULT 1,
+    body_max INTEGER DEFAULT 1,
+    agility_min INTEGER DEFAULT 1,
+    agility_max INTEGER DEFAULT 1,
+    reaction_min INTEGER DEFAULT 1,
+    reaction_max INTEGER DEFAULT 1,
+    strength_min INTEGER DEFAULT 1,
+    strength_max INTEGER DEFAULT 1,
+    willpower_min INTEGER DEFAULT 1,
+    willpower_max INTEGER DEFAULT 1,
+    logic_min INTEGER DEFAULT 1,
+    logic_max INTEGER DEFAULT 1,
+    intuition_min INTEGER DEFAULT 1,
+    intuition_max INTEGER DEFAULT 1,
+    charisma_min INTEGER DEFAULT 1,
+    charisma_max INTEGER DEFAULT 1,
+    edge_min INTEGER DEFAULT 1,
+    edge_max INTEGER DEFAULT 1,
+    magical_type VARCHAR(20) DEFAULT 'mundane',
+    magic_min INTEGER DEFAULT 1,
+    magic_max INTEGER DEFAULT 1,
+    resonance_min INTEGER DEFAULT 1,
+    resonance_max INTEGER DEFAULT 1
 );

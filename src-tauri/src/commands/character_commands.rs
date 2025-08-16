@@ -9,8 +9,18 @@ pub async fn list_characters(controller: State<'_, CharacterController>) -> Comm
 }
 
 #[tauri::command]
+pub async fn get_character(id: i64, controller: State<'_, CharacterController>) -> CommandResult<Character> {
+    controller.get_character(id)
+}
+
+#[tauri::command]
 pub async fn import_character(yaml: &str, controller: State<'_, CharacterController>) -> CommandResult<i64> {
     controller.import_character(yaml)
+}
+
+#[tauri::command]
+pub async fn export_character(id: i64, controller: State<'_, CharacterController>) -> CommandResult<String> {
+    controller.export_character(id)
 }
 
 #[tauri::command]

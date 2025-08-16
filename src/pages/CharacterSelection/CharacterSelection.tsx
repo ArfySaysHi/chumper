@@ -168,7 +168,7 @@ const CharacterSelection = () => {
             <Settings />
           </Button>
           <Button
-            onClick={() => char_fetch("list_characters")}
+            onClick={() => char_fetch("init_database")}
             variant="icon"
             size="xs"
             title="Import Character"

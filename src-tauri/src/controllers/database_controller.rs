@@ -3,13 +3,13 @@ use crate::utils::file_handling::get_ext_from;
 use rusqlite::{Connection, Result};
 use std::fs::{remove_file, File};
 use std::io::Read;
+use std::path::Path;
 
 pub struct DatabaseController {
-    db_path: String,
+    pub db_path: String,
 }
 
 impl DatabaseController {
-    #[allow(dead_code)]
     pub fn new() -> Result<Self> {
         Ok(Self {
             db_path: "chumper.db3".to_string(),
@@ -33,8 +33,10 @@ impl DatabaseController {
     }
 
     pub fn init_database(&self) -> CommandResult<()> {
-        let path = "./db/badowrun.db3";
-        remove_file(path)?;
+        let path = Path::new("./chumper.db3");
+        if path.exists() {
+            remove_file(path)?;
+        }
         let conn = self.get_connection()?;
         let paths = get_ext_from("./db".to_owned(), ".sql".to_owned());
 
