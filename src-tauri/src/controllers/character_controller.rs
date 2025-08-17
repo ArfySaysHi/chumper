@@ -1,4 +1,4 @@
-use crate::models::character::{Character, CharacterSummary};
+use crate::models::character::{Character, CharacterStatus, CharacterSummary};
 use crate::traits::controller::Connectable;
 use crate::utils::error_handling::CommandResult;
 use rusqlite::Result;
@@ -18,9 +18,9 @@ impl CharacterController {
     pub fn list_characters(&self) -> CommandResult<Vec<CharacterSummary>> {
         let conn = self.get_connection()?;
         let mut stmt = conn.prepare(
-            "SELECT id, name, metatype, player_name, karma_total, created_at, updated_at
+            "SELECT id, name, metatype, player_name, karma_total, status, created_at, updated_at
              FROM characters
-             WHERE is_active = TRUE
+             WHERE status != 'archived'
              ORDER BY updated_at DESC",
         )?;
 
@@ -31,8 +31,42 @@ impl CharacterController {
                 metatype: row.get(2)?,
                 player_name: row.get(3)?,
                 karma_total: row.get(4)?,
-                created_at: row.get(5)?,
-                updated_at: row.get(6)?,
+                status: row.get(5)?,
+                created_at: row.get(6)?,
+                updated_at: row.get(7)?,
+            })
+        })?;
+
+        let mut characters = Vec::new();
+        for character in character_iter {
+            characters.push(character?)
+        }
+
+        Ok(characters)
+    }
+
+    pub fn list_characters_by_status(
+        &self,
+        status: CharacterStatus,
+    ) -> CommandResult<Vec<CharacterSummary>> {
+        let conn = self.get_connection()?;
+        let mut stmt = conn.prepare(
+            "SELECT id, name, metatype, player_name, karma_total, status, created_at, updated_at
+             FROM characters
+             WHERE status = ?1
+             ORDER BY updated_at DESC",
+        )?;
+
+        let character_iter = stmt.query_map([&status], |row| {
+            Ok(CharacterSummary {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                metatype: row.get(2)?,
+                player_name: row.get(3)?,
+                karma_total: row.get(4)?,
+                status: row.get(5)?,
+                created_at: row.get(6)?,
+                updated_at: row.get(7)?,
             })
         })?;
 
@@ -49,7 +83,8 @@ impl CharacterController {
         let character = conn.query_row(
             "SELECT id, name, metatype, player_name, body, agility, reaction,
                     strength, willpower, logic, intuition, charisma, edge, magic,
-                    resonance, karma_total, karma_spent, nuyen, created_at, updated_at
+                    resonance, karma_total, karma_spent, nuyen, created_at, updated_at,
+                    status
              FROM characters
              WHERE id = ?1 AND active_id = TRUE",
             rusqlite::params![id],
@@ -75,6 +110,7 @@ impl CharacterController {
                     nuyen: row.get(17)?,
                     created_at: row.get(18)?,
                     updated_at: row.get(19)?,
+                    status: row.get(20)?,
                 })
             },
         )?;
@@ -118,8 +154,8 @@ impl CharacterController {
 
     pub fn import_character(&self, yaml: &str) -> CommandResult<i64> {
         let mut character: Character = from_str(yaml)?;
-        character.id = None; // Clear any existing ID
-        let id = self.create_character(character)?; // Gets new auto-increment ID
+        character.id = None;
+        let id = self.create_character(character)?;
 
         Ok(id)
     }

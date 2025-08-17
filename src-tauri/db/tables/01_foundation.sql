@@ -1,7 +1,7 @@
 CREATE TABLE characters (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    metatype TEXT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    metatype VARCHAR(50) NOT NULL,
     player_name TEXT,
     body INTEGER DEFAULT 1,
     agility INTEGER DEFAULT 1,
@@ -16,12 +16,19 @@ CREATE TABLE characters (
     resonance INTEGER DEFAULT 0,
     karma_total INTEGER DEFAULT 0,
     karma_spent INTEGER DEFAULT 0,
-    nuyen INTEGER DEFAULT 0
+    nuyen INTEGER DEFAULT 0,
+    status VARCHAR(30) CHECK (status IN ('creation', 'active', 'archived')) DEFAULT 'creation',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (metatype) REFERENCES metatype(name)
 );
+
+-- TODO: Move all indexes into the correct files
+CREATE INDEX idx_characters_status ON characters(status);
 
 CREATE TABLE metatype (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     body_min INTEGER DEFAULT 1,
     body_max INTEGER DEFAULT 1,
     agility_min INTEGER DEFAULT 1,
