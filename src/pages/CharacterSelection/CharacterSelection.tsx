@@ -11,9 +11,18 @@ const CharacterSelection = () => {
 
   const initDb = async () => {
     try {
-      await invoke("init_database");
+      await invoke("initialize_database");
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  // Need a yaml read import ugh
+  const makeMetatype = async () => {
+    try {
+      await invoke("import_metatype");
+    } catch (e) {
+      console.error(e);
     }
   };
 

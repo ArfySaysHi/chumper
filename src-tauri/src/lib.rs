@@ -1,48 +1,44 @@
-mod commands;
-mod controllers;
-mod models;
-mod services;
-mod traits;
-mod utils;
+mod character;
+mod database;
+mod error;
+mod import;
+mod metatype;
+mod shared;
 
-use commands::*;
-use controllers::*;
-use services::*;
+use crate::database::AppState;
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let character_controller = CharacterController::new().unwrap();
-    let database_controller = DatabaseController::new().unwrap();
-    let metatype_controller = MetatypeController::new().unwrap();
-
     tauri::Builder::default()
         .setup(|app| {
-            // TODO: Initialize database
-            // TODO: Seed database from all yaml files, if already present check list
+            // Setup
+            let app_dir = app.path().app_data_dir()?;
+            let db_path = app_dir.join("chumper.db3");
+            let state = AppState::new(db_path.to_str().unwrap())?;
+            app.manage(state);
+
+            // Initialize database
 
             // Setup services
-            let character_service = CharacterService::new(app.handle().clone());
+            // let character_service = CharacterService::new(app.handle().clone());
 
             // Initialize Services
-            app.manage(character_service);
+            // app.manage(character_service);
 
             Ok(())
         })
-        .manage(character_controller)
-        .manage(database_controller)
-        .manage(metatype_controller)
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            list_characters_by_status,
-            list_characters,
-            get_character,
-            create_character,
-            import_character,
-            export_character,
-            init_database,
-            get_metatype,
-            list_metatypes,
+            character::commands::list_characters,
+            character::commands::get_character,
+            character::commands::create_character,
+            character::commands::import_character,
+            character::commands::export_character,
+            metatype::commands::list_metatypes,
+            metatype::commands::get_metatype,
+            metatype::commands::create_metatype,
+            database::commands::initialize_database
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
