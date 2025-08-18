@@ -1,4 +1,6 @@
+use crate::error::Result;
 use rusqlite::Connection;
+use std::path::Path;
 use std::sync::{Arc, Mutex};
 
 #[derive(Clone)]
@@ -7,10 +9,12 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub fn new(db_path: &str) -> Result<Self, rusqlite::Error> {
-        let conn = Connection::open(db_path)?;
+    pub fn new(db_path: &Path) -> Result<Self> {
+        let connection = Connection::open(db_path)?;
+        crate::database::repository::init_database(&connection)?;
+
         Ok(Self {
-            db: Arc::new(Mutex::new(conn)),
+            db: Arc::new(Mutex::new(connection)),
         })
     }
 }

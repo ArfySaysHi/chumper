@@ -3,7 +3,6 @@ use crate::shared::get_ext_from;
 use rusqlite::Connection;
 use std::fs::{remove_file, File};
 use std::io::Read;
-use std::path::Path;
 
 fn run_migration(connection: &Connection, path: String) -> Result<()> {
     let mut f = File::open(&path)?;
@@ -18,10 +17,6 @@ fn run_migration(connection: &Connection, path: String) -> Result<()> {
 }
 
 pub fn init_database(connection: &Connection) -> Result<()> {
-    let path = Path::new("./chumper.db3");
-    if path.exists() {
-        remove_file(path)?;
-    }
     let paths = get_ext_from("./db".to_owned(), ".sql".to_owned());
 
     for path in paths {

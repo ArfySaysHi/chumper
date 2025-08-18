@@ -6,6 +6,7 @@ mod metatype;
 mod shared;
 
 use crate::database::AppState;
+use std::fs::{create_dir_all, remove_file};
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -14,11 +15,15 @@ pub fn run() {
         .setup(|app| {
             // Setup
             let app_dir = app.path().app_data_dir()?;
-            let db_path = app_dir.join("chumper.db3");
-            let state = AppState::new(db_path.to_str().unwrap())?;
-            app.manage(state);
+            create_dir_all(&app_dir)?;
 
             // Initialize database
+            let db_path = app_dir.join("chumper.db3");
+            if db_path.exists() {
+                remove_file(&db_path)?;
+            }
+            let state = AppState::new(&db_path)?;
+            app.manage(state);
 
             // Setup services
             // let character_service = CharacterService::new(app.handle().clone());

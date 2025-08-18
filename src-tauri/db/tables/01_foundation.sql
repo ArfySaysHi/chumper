@@ -1,4 +1,4 @@
-CREATE TABLE characters (
+CREATE TABLE IF NOT EXISTS characters (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     metatype VARCHAR(50) NOT NULL,
@@ -23,9 +23,9 @@ CREATE TABLE characters (
 );
 
 -- TODO: Move all indexes into the correct files
-CREATE INDEX idx_characters_status ON characters(status);
+CREATE INDEX IF NOT EXISTS idx_characters_status ON characters(status);
 
-CREATE TABLE metatype (
+CREATE TABLE IF NOT EXISTS metatype (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     body_min INTEGER DEFAULT 1,
