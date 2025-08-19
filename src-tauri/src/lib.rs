@@ -22,7 +22,7 @@ pub fn run() {
             if db_path.exists() {
                 remove_file(&db_path)?;
             }
-            let state = AppState::new(&db_path)?;
+            let state = AppState::new(&db_path, &app)?;
             app.manage(state);
 
             // Setup services
@@ -46,6 +46,7 @@ pub fn run() {
             metatype::commands::import_metatype,
             database::commands::initialize_database,
             import::commands::import_characters,
+            import::commands::import_metatypes,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

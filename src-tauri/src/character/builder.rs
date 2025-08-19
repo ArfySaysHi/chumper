@@ -1,29 +1,31 @@
 use crate::character::*;
 
 pub struct CharacterBuilder {
-    name: String,
-    metatype: String,
-    player_name: Option<String>,
-    body: i32,
-    agility: i32,
-    reaction: i32,
-    strength: i32,
-    willpower: i32,
-    logic: i32,
-    intuition: i32,
-    charisma: i32,
-    edge: i32,
-    magic: i32,
-    resonance: i32,
-    karma_total: i32,
-    nuyen: i32,
-    status: CharacterStatus,
+    pub id: Option<i64>,
+    pub name: String,
+    pub metatype: String,
+    pub player_name: Option<String>,
+    pub body: i32,
+    pub agility: i32,
+    pub reaction: i32,
+    pub strength: i32,
+    pub willpower: i32,
+    pub logic: i32,
+    pub intuition: i32,
+    pub charisma: i32,
+    pub edge: i32,
+    pub magic: i32,
+    pub resonance: i32,
+    pub karma_total: i32,
+    pub nuyen: i32,
+    pub status: CharacterStatus,
 }
 
 #[allow(dead_code)]
 impl CharacterBuilder {
     pub fn new() -> Self {
         Self {
+            id: None,
             name: String::new(),
             metatype: "Human".to_string(),
             player_name: None,
@@ -41,31 +43,6 @@ impl CharacterBuilder {
             karma_total: 0,
             nuyen: 0,
             status: CharacterStatus::Creation,
-        }
-    }
-
-    pub fn build(self) -> Character {
-        Character {
-            id: None,
-            name: self.name,
-            metatype: self.metatype,
-            player_name: self.player_name,
-            body: self.body,
-            agility: self.agility,
-            reaction: self.reaction,
-            strength: self.strength,
-            willpower: self.willpower,
-            logic: self.logic,
-            intuition: self.intuition,
-            charisma: self.charisma,
-            edge: self.edge,
-            magic: self.magic,
-            resonance: self.resonance,
-            karma_total: self.karma_total,
-            nuyen: self.nuyen,
-            created_at: None,
-            updated_at: None,
-            status: self.status,
         }
     }
 

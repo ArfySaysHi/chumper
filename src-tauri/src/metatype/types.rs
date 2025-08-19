@@ -1,12 +1,11 @@
+use super::builder::MetatypeBuilder;
+use super::repository::create_metatype;
 use crate::import::{YamlImportable, YamlSerializable};
-use crate::metatype::builder::MetatypeBuilder;
 use rusqlite::{
     types::{FromSql, FromSqlError, ToSqlOutput, Value, ValueRef},
     Result, ToSql,
 };
 use serde::{Deserialize, Serialize};
-
-use super::repository::create_metatype;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MagicalType {
@@ -100,9 +99,35 @@ pub struct Metatype {
     pub resonance_max: i32,
 }
 
-impl Metatype {
-    pub fn builder() -> MetatypeBuilder {
-        MetatypeBuilder::new()
+impl From<MetatypeBuilder> for Metatype {
+    fn from(m: MetatypeBuilder) -> Self {
+        Self {
+            id: None,
+            name: m.name.clone(),
+            body_min: m.body_min,
+            body_max: m.body_max,
+            agility_min: m.agility_min,
+            agility_max: m.agility_max,
+            reaction_min: m.reaction_min,
+            reaction_max: m.reaction_max,
+            strength_min: m.strength_min,
+            strength_max: m.strength_max,
+            willpower_min: m.willpower_min,
+            willpower_max: m.willpower_max,
+            logic_min: m.logic_min,
+            logic_max: m.logic_max,
+            intuition_min: m.intuition_min,
+            intuition_max: m.intuition_max,
+            charisma_min: m.charisma_min,
+            charisma_max: m.charisma_max,
+            edge_min: m.edge_min,
+            edge_max: m.edge_max,
+            magical_type: m.magical_type.clone(),
+            magic_min: m.magic_min,
+            magic_max: m.magic_max,
+            resonance_min: m.resonance_min,
+            resonance_max: m.resonance_max,
+        }
     }
 }
 
@@ -117,6 +142,7 @@ impl YamlImportable for Metatype {
 fn default_minimum() -> i32 {
     1
 }
+
 fn default_maximum() -> i32 {
     6
 }

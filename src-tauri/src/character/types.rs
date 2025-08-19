@@ -52,10 +52,30 @@ pub struct Character {
     pub status: CharacterStatus,
 }
 
-#[allow(dead_code)]
-impl Character {
-    pub fn builder() -> CharacterBuilder {
-        CharacterBuilder::new()
+impl From<CharacterBuilder> for Character {
+    fn from(c: CharacterBuilder) -> Self {
+        Self {
+            id: c.id,
+            name: c.name,
+            metatype: c.metatype,
+            player_name: c.player_name,
+            body: c.body,
+            agility: c.agility,
+            reaction: c.reaction,
+            strength: c.strength,
+            willpower: c.willpower,
+            logic: c.logic,
+            intuition: c.intuition,
+            charisma: c.charisma,
+            edge: c.edge,
+            magic: c.magic,
+            resonance: c.resonance,
+            karma_total: c.karma_total,
+            nuyen: c.nuyen,
+            created_at: None,
+            updated_at: None,
+            status: c.status,
+        }
     }
 }
 

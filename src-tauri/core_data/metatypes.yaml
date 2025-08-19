@@ -1,3 +1,8 @@
 - name: Human
   edge_min: 2
   edge_max: 7
+- name: Elf
+  charisma_min: 2
+  charisma_max: 7
+  agility_min: 2
+  agility_max: 7

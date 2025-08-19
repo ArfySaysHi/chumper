@@ -14,6 +14,9 @@ pub enum AppError {
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 
+    #[error("Db pool error: {0}")]
+    DbPool(#[from] r2d2::Error),
+
     #[error("Character error: {0}")]
     Character(#[from] CharacterError),
 }

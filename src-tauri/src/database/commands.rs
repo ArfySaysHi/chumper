@@ -1,9 +1,13 @@
 use tauri::State;
-use crate::database::AppState;
-use crate::database::repository;
+use crate::database::{repository, AppState};
+use tokio::task::spawn_blocking;
 
 #[tauri::command]
 pub async fn initialize_database(state: State<'_, AppState>) -> Result<(), String> {
-    let db = state.db.lock().unwrap();
-    repository::init_database(&*db).map_err(|e| e.to_string())
+    let pool = state.db_pool.clone();
+
+    spawn_blocking(move || {
+        let connection = pool.get().map_err(|e| e.to_string())?;
+        repository::init_database(&connection).map_err(|e| e.to_string())
+    }).await.map_err(|e| e.to_string())?
 }

@@ -20,7 +20,19 @@ const CharacterSelection = () => {
   // Need a yaml read import ugh
   const makeMetatype = async () => {
     try {
-      await invoke("import_metatype");
+      const res = await invoke("import_metatypes", {
+        path: "./core_data/metatypes.yaml",
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const listMetatypes = async () => {
+    try {
+      const res = await invoke("list_metatypes");
+      console.log(res);
     } catch (e) {
       console.error(e);
     }
@@ -40,14 +52,19 @@ const CharacterSelection = () => {
             <Settings />
           </Button>
           <Button
-            onClick={() => {}}
+            onClick={makeMetatype}
             variant="icon"
             size="xs"
             title="Import Character"
           >
             <Download />
           </Button>
-          <Button variant="icon" size="xs" title="Export Character">
+          <Button
+            onClick={listMetatypes}
+            variant="icon"
+            size="xs"
+            title="Export Character"
+          >
             <Upload />
           </Button>
         </div>

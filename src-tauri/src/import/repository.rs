@@ -2,11 +2,10 @@ use crate::import::YamlImportable;
 use rusqlite::{Connection, Result};
 use serde::de::DeserializeOwned;
 use serde_yml;
-use std::path::Path;
 
 pub fn import_yaml_file<T>(
     db: &Connection,
-    file_path: &Path,
+    file_path: &str,
 ) -> Result<Vec<T>, Box<dyn std::error::Error>>
 where
     T: DeserializeOwned + YamlImportable,

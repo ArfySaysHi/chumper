@@ -27,4 +27,7 @@ thiserror = "2.0.14"
 anyhow = "1.0.99"
 walkdir = "2.5.0"
 serde_yml = "0.0.12"
+r2d2 = "0.8.10"
+r2d2_sqlite = "0.31.0"
+tokio = "1.47.1"
 

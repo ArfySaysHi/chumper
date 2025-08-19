@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS characters (
 -- TODO: Move all indexes into the correct files
 CREATE INDEX IF NOT EXISTS idx_characters_status ON characters(status);
 
-CREATE TABLE IF NOT EXISTS metatype (
+CREATE TABLE IF NOT EXISTS metatypes (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     body_min INTEGER DEFAULT 1,
