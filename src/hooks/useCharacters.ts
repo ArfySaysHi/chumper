@@ -2,10 +2,10 @@ import { useCallback, useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import {
-  CharacterArray,
-  CharacterArraySchema,
   CharacterStatus,
-  Character,
+  CharacterSummaryArray,
+  CharacterSummaryArraySchema,
+  CharacterSummary,
 } from "../schemas/character.ts";
 
 interface UseCharactersOptions {
@@ -14,7 +14,7 @@ interface UseCharactersOptions {
 }
 
 interface UseCharactersReturn {
-  characters: CharacterArray;
+  characters: CharacterSummaryArray;
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
@@ -26,7 +26,7 @@ const useCharacters = ({
   status,
   enableRealtimeUpdates = true,
 }: UseCharactersOptions = {}): UseCharactersReturn => {
-  const [characters, setCharacters] = useState<CharacterArray>([]);
+  const [characters, setCharacters] = useState<CharacterSummaryArray>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,7 +44,7 @@ const useCharacters = ({
       const params = status ? { status } : undefined;
 
       const data = await invoke(endpoint, params);
-      const validatedData = CharacterArraySchema.parse(data);
+      const validatedData = CharacterSummaryArraySchema.parse(data);
 
       if (isMountedRef.current) {
         setCharacters(validatedData);
@@ -63,22 +63,33 @@ const useCharacters = ({
   useEffect(() => {
     if (!enableRealtimeUpdates) return;
 
-    const realtimeUpdates = async () => {
-      const unlistenCreated = await listen<{
-        id: number;
-        character: Character;
-      }>("character_created", () => console.log("CREATED A CHARACTER"));
+    const setupRealtimeUpdates = async () => {
+      try {
+        const unlistenCreated = await listen<CharacterSummary>(
+          "character_created",
+          async () => await refetch(),
+        );
 
-      unlistenFns.current = [unlistenCreated];
+        unlistenFns.current = [unlistenCreated];
+      } catch (error) {
+        console.error("Failed to set up event listeners:", error);
+      }
     };
 
-    realtimeUpdates();
+    setupRealtimeUpdates();
 
+    // Cleanup function
     return () => {
-      unlistenFns.current.forEach((unlisten) => unlisten());
+      unlistenFns.current.forEach((unlisten) => {
+        try {
+          unlisten();
+        } catch (error) {
+          console.error("Error cleaning up listener:", error);
+        }
+      });
       unlistenFns.current = [];
     };
-  }, []);
+  }, [enableRealtimeUpdates]); // Only re-run if enableRealtimeUpdates changes
 
   const refetch = useCallback(async () => {
     await listCharacters(true);

@@ -1,44 +1,30 @@
+import { useState } from "react";
 import { Download, Upload, Settings } from "@mui/icons-material";
 import "./CharacterSelection.scss";
 import CharacterCard from "../../components/ui/CharacterCard/CharacterCard.tsx";
 import Button from "../../components/ui/Button/Button.tsx";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
 import useCharacters from "../../hooks/useCharacters.ts";
-import { invoke } from "@tauri-apps/api/core";
+import useCommand from "../../hooks/useCommand.ts";
 
 const CharacterSelection = () => {
   const { characters, loading } = useCharacters();
+  const [counter, setCounter] = useState(0);
 
-  const initDb = async () => {
-    try {
-      await invoke("initialize_database");
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const { execute: createCharacter, isLoading } =
+    useCommand("create_character");
 
-  // Need a yaml read import ugh
-  const makeMetatype = async () => {
+  const handleCreateChar = async () => {
     try {
-      const res = await invoke("import_metatypes", {
-        path: "./core_data/metatypes.yaml",
+      const res = await createCharacter({
+        character: { name: `name_${counter}`, metatype: "Human" },
       });
+      setCounter(counter + 1);
       console.log(res);
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   };
-
-  const listMetatypes = async () => {
-    try {
-      const res = await invoke("list_metatypes");
-      console.log(res);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="character-selection">
@@ -48,73 +34,72 @@ const CharacterSelection = () => {
           <span className="character-selection__version">v1.0.0-alpha</span>
         </div>
         <div className="character-selection__toolbar">
-          <Button onClick={initDb} variant="icon" size="xs" title="Settings">
+          <Button
+            onClick={handleCreateChar}
+            variant="icon"
+            size="xs"
+            title="Settings"
+          >
             <Settings />
           </Button>
-          <Button
-            onClick={makeMetatype}
-            variant="icon"
-            size="xs"
-            title="Import Character"
-          >
+          <Button variant="icon" size="xs" title="Import Character">
             <Download />
           </Button>
-          <Button
-            onClick={listMetatypes}
-            variant="icon"
-            size="xs"
-            title="Export Character"
-          >
+          <Button variant="icon" size="xs" title="Export Character">
             <Upload />
           </Button>
         </div>
       </header>
 
       <main className="character-selection__main container">
-        <TabGroup
-          tabs={[
-            {
-              key: "tab1",
-              label: "Active Runners",
-              content: (
-                <section className="character-selection__characters">
-                  <div className="character-grid">
-                    {characters.map((character) => (
-                      <CharacterCard
-                        key={character.id}
-                        character={character}
-                        onClick={() => {}}
-                        onDoubleClick={() =>
-                          console.log("Load character:", character.name)
-                        }
-                      />
-                    ))}
-                  </div>
-                </section>
-              ),
-            },
-            {
-              key: "tab2",
-              label: "Soon-to-be Runners",
-              content: (
-                <section className="character-selection__characters">
-                  <div className="character-grid">
-                    {characters.map((character) => (
-                      <CharacterCard
-                        key={character.id}
-                        character={character}
-                        onClick={() => {}}
-                        onDoubleClick={() =>
-                          console.log("Load character:", character.name)
-                        }
-                      />
-                    ))}
-                  </div>
-                </section>
-              ),
-            },
-          ]}
-        />
+        {!(loading || isLoading) ? (
+          <TabGroup
+            tabs={[
+              {
+                key: "tab1",
+                label: "Active Runners",
+                content: (
+                  <section className="character-selection__characters">
+                    <div className="character-grid">
+                      {characters.map((character) => (
+                        <CharacterCard
+                          key={character.id}
+                          character={character}
+                          onClick={() => {}}
+                          onDoubleClick={() =>
+                            console.log("Load character:", character.name)
+                          }
+                        />
+                      ))}
+                    </div>
+                  </section>
+                ),
+              },
+              {
+                key: "tab2",
+                label: "Soon-to-be Runners",
+                content: (
+                  <section className="character-selection__characters">
+                    <div className="character-grid">
+                      {characters.map((character) => (
+                        <CharacterCard
+                          key={character.id}
+                          character={character}
+                          onClick={() => {}}
+                          onDoubleClick={() =>
+                            console.log("Load character:", character.name)
+                          }
+                        />
+                      ))}
+                    </div>
+                  </section>
+                ),
+              },
+            ]}
+          />
+        ) : (
+          <div>Loading...</div>
+        )}
       </main>
     </div>
   );

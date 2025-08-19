@@ -24,31 +24,34 @@ pub async fn get_character(id: i64, state: State<'_, AppState>) -> Result<Charac
 }
 
 #[tauri::command]
-pub async fn create_character(character: Character, state: State<'_, AppState>) -> Result<i64, String> {
+pub async fn create_character(character: Character, state: State<'_, AppState>) -> Result<Character, String> {
     let pool = state.db_pool.clone();
+    let app_handle = state.app_handle.clone();
 
-    let res = tokio::task::spawn_blocking(move || {
+    let res = tokio::task::spawn_blocking(move || -> Result<Character, String> {
         let connection = pool.get().map_err(|e| e.to_string())?;
-        repository::create_character(&connection, &character).map_err(|e| e.to_string())
-    }).await.map_err(|e| e.to_string())?;
+        let result = repository::create_character(&connection, &character).map_err(|e| e.to_string())?;
+        Ok(result)
+    })
+    .await
+    .map_err(|e| e.to_string())??; // Double ? for join error + your Result
 
-    state.app_handle.emit("character_created", &res).map_err(|e| e.to_string())?;
-    res
+    println!("EMIT: About to emit character_created event for ID: {:?}", res.id);
+    app_handle.emit("character_created", &res).map_err(|e| e.to_string())?;
+    println!("EMIT: Successfully emitted character_created event");
+    Ok(res)
 }
 
 #[tauri::command]
-pub async fn import_character(yaml: String, state: State<'_, AppState>) -> Result<i64, String> {
+pub async fn import_character(yaml: String, state: State<'_, AppState>) -> Result<Character, String> {
     let pool = state.db_pool.clone();
 
-    let res = tokio::task::spawn_blocking(move || {
+    tokio::task::spawn_blocking(move || {
         let connection = pool.get().map_err(|e| e.to_string())?;
         let mut character = Character::from_yaml(&yaml).map_err(|e| format!("YAML parse error: {}", e))?;
         character.id = None;
         character.insert_into_db(&connection).map_err(|e| format!("Database error: {}", e))
-    }).await.map_err(|e| e.to_string())?;
-
-    state.app_handle.emit("character_created", &res).map_err(|e| e.to_string())?;
-    res
+    }).await.map_err(|e| e.to_string())?
 }
 
 #[tauri::command]

@@ -3,7 +3,9 @@ use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 
 pub trait YamlImportable {
-    fn insert_into_db(&self, connection: &Connection) -> Result<i64>;
+    fn insert_into_db(&self, connection: &Connection) -> Result<Self>
+    where
+        Self: Sized;
 }
 
 pub trait YamlSerializable {

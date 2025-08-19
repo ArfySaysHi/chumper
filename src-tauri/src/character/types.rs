@@ -82,7 +82,7 @@ impl From<CharacterBuilder> for Character {
 impl YamlSerializable for Character {}
 
 impl YamlImportable for Character {
-    fn insert_into_db(&self, connection: &Connection) -> Result<i64> {
+    fn insert_into_db(&self, connection: &Connection) -> Result<Character> {
         create_character(&connection, &self)
     }
 }

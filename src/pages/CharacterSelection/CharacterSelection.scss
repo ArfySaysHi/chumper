@@ -162,50 +162,6 @@
     }
 }
 
-.priority-badges {
-    display: flex;
-    gap: spacing(1);
-}
-
-.priority-badge {
-    @include text-style(xs, bold, normal);
-    padding: map.get($spacing, 1) map.get($spacing, 2);
-    border-radius: map.get($border-radius, base);
-    font-family: $font-family-mono;
-    min-width: 24px;
-    text-align: center;
-
-    &--a {
-        background: color(danger-600);
-        color: color(text-on-primary);
-        border: 1px solid color(danger-500);
-    }
-
-    &--b {
-        background: color(accent-600);
-        color: color(text-inverse);
-        border: 1px solid color(accent-500);
-    }
-
-    &--c {
-        background: color(warning-600);
-        color: color(text-inverse);
-        border: 1px solid color(warning-500);
-    }
-
-    &--d {
-        background: color(info-600);
-        color: color(text-on-primary);
-        border: 1px solid color(info-500);
-    }
-
-    &--e {
-        background: surface(tertiary);
-        color: text(secondary);
-        border: 1px solid border(default);
-    }
-}
-
 .action-buttons {
     display: flex;
     gap: spacing(4);

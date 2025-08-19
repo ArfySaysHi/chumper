@@ -65,7 +65,7 @@ pub fn get_metatype(connection: &Connection, name: &str) -> Result<Metatype> {
     Ok(metatype)
 }
 
-pub fn create_metatype(connection: &Connection, m: &Metatype) -> Result<i64> {
+pub fn create_metatype(connection: &Connection, m: &Metatype) -> Result<Metatype> {
     let mut stmt = connection.prepare(
         "INSERT INTO metatypes (
                name, body_min, body_max, agility_min, agility_max,
@@ -108,12 +108,16 @@ pub fn create_metatype(connection: &Connection, m: &Metatype) -> Result<i64> {
         &m.resonance_max
     ])?;
 
-    Ok(connection.last_insert_rowid())
+    let row_id = connection.last_insert_rowid();
+    let mut created_metatype = m.clone();
+    created_metatype.id = Some(row_id);
+
+    Ok(created_metatype)
 }
 
-pub fn import_metatype(connection: &Connection, yaml: &str) -> Result<i64> {
+pub fn import_metatype(connection: &Connection, yaml: &str) -> Result<Metatype> {
     let metatype: Metatype = from_str(yaml)?;
-    let id = create_metatype(connection, &metatype)?;
+    let created_metatype = create_metatype(connection, &metatype)?;
 
-    Ok(id)
+    Ok(created_metatype)
 }

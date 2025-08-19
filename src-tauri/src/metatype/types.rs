@@ -46,7 +46,7 @@ impl FromSql for MagicalType {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Metatype {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
@@ -134,7 +134,7 @@ impl From<MetatypeBuilder> for Metatype {
 impl YamlSerializable for Metatype {}
 
 impl YamlImportable for Metatype {
-    fn insert_into_db(&self, connection: &rusqlite::Connection) -> crate::error::Result<i64> {
+    fn insert_into_db(&self, connection: &rusqlite::Connection) -> crate::error::Result<Metatype> {
         create_metatype(&connection, &self)
     }
 }

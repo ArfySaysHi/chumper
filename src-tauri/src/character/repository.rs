@@ -63,7 +63,7 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
     Ok(res)
 }
 
-pub fn create_character(connection: &Connection, character: &Character) -> Result<i64> {
+pub fn create_character(connection: &Connection, character: &Character) -> Result<Character> {
     connection.execute(
         "INSERT INTO characters
            (name, metatype, player_name, body, agility, reaction, strength,
@@ -94,5 +94,9 @@ pub fn create_character(connection: &Connection, character: &Character) -> Resul
         ],
     )?;
 
-    Ok(connection.last_insert_rowid())
+    let row_id = connection.last_insert_rowid();
+    let mut created_character = character.clone();
+    created_character.id = Some(row_id);
+
+    Ok(created_character)
 }
