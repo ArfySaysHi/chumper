@@ -1,27 +1,4 @@
 use crate::character::*;
-use crate::import::YamlImportable;
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-pub struct CharacterYaml {
-    name: String,
-    metatype: String,
-    player_name: Option<String>,
-    body: Option<i32>,
-    agility: Option<i32>,
-    reaction: Option<i32>,
-    strength: Option<i32>,
-    willpower: Option<i32>,
-    logic: Option<i32>,
-    intuition: Option<i32>,
-    charisma: Option<i32>,
-    edge: Option<i32>,
-    magic: Option<i32>,
-    resonance: Option<i32>,
-    karma_total: Option<i32>,
-    nuyen: Option<i32>,
-    status: Option<CharacterStatus>,
-}
 
 pub struct CharacterBuilder {
     name: String,
@@ -43,11 +20,12 @@ pub struct CharacterBuilder {
     status: CharacterStatus,
 }
 
+#[allow(dead_code)]
 impl CharacterBuilder {
-    pub fn new(name: String, metatype: String) -> Self {
+    pub fn new() -> Self {
         Self {
-            name,
-            metatype,
+            name: String::new(),
+            metatype: "Human".to_string(),
             player_name: None,
             body: 1,
             agility: 1,
@@ -89,5 +67,25 @@ impl CharacterBuilder {
             updated_at: None,
             status: self.status,
         }
+    }
+
+    crate::builder_setters! {
+    name: String,
+    metatype: String,
+    player_name: Option<String>,
+    body: i32,
+    agility: i32,
+    reaction: i32,
+    strength: i32,
+    willpower: i32,
+    logic: i32,
+    intuition: i32,
+    charisma: i32,
+    edge: i32,
+    magic: i32,
+    resonance: i32,
+    karma_total: i32,
+    nuyen: i32,
+    status: CharacterStatus,
     }
 }

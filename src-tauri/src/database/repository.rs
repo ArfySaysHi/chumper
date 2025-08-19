@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::shared::get_ext_from;
 use rusqlite::Connection;
-use std::fs::{remove_file, File};
+use std::fs::File;
 use std::io::Read;
 
 fn run_migration(connection: &Connection, path: String) -> Result<()> {

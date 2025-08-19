@@ -1,14 +1,24 @@
+use crate::import::{YamlImportable, YamlSerializable};
+use crate::metatype::builder::MetatypeBuilder;
 use rusqlite::{
     types::{FromSql, FromSqlError, ToSqlOutput, Value, ValueRef},
     Result, ToSql,
 };
 use serde::{Deserialize, Serialize};
 
+use super::repository::create_metatype;
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MagicalType {
     Magic,
     Resonance,
     Mundane,
+}
+
+impl Default for MagicalType {
+    fn default() -> Self {
+        Self::Mundane
+    }
 }
 
 impl ToSql for MagicalType {
@@ -39,30 +49,76 @@ impl FromSql for MagicalType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Metatype {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<i64>,
     pub name: String,
-    pub body_min: Option<i32>,
-    pub body_max: Option<i32>,
-    pub agility_min: Option<i32>,
-    pub agility_max: Option<i32>,
-    pub reaction_min: Option<i32>,
-    pub reaction_max: Option<i32>,
-    pub strength_min: Option<i32>,
-    pub strength_max: Option<i32>,
-    pub willpower_min: Option<i32>,
-    pub willpower_max: Option<i32>,
-    pub logic_min: Option<i32>,
-    pub logic_max: Option<i32>,
-    pub intuition_min: Option<i32>,
-    pub intuition_max: Option<i32>,
-    pub charisma_min: Option<i32>,
-    pub charisma_max: Option<i32>,
-    pub edge_min: Option<i32>,
-    pub edge_max: Option<i32>,
+    #[serde(default = "default_minimum")]
+    pub body_min: i32,
+    #[serde(default = "default_maximum")]
+    pub body_max: i32,
+    #[serde(default = "default_minimum")]
+    pub agility_min: i32,
+    #[serde(default = "default_maximum")]
+    pub agility_max: i32,
+    #[serde(default = "default_minimum")]
+    pub reaction_min: i32,
+    #[serde(default = "default_maximum")]
+    pub reaction_max: i32,
+    #[serde(default = "default_minimum")]
+    pub strength_min: i32,
+    #[serde(default = "default_maximum")]
+    pub strength_max: i32,
+    #[serde(default = "default_minimum")]
+    pub willpower_min: i32,
+    #[serde(default = "default_maximum")]
+    pub willpower_max: i32,
+    #[serde(default = "default_minimum")]
+    pub logic_min: i32,
+    #[serde(default = "default_maximum")]
+    pub logic_max: i32,
+    #[serde(default = "default_minimum")]
+    pub intuition_min: i32,
+    #[serde(default = "default_maximum")]
+    pub intuition_max: i32,
+    #[serde(default = "default_minimum")]
+    pub charisma_min: i32,
+    #[serde(default = "default_maximum")]
+    pub charisma_max: i32,
+    #[serde(default = "default_minimum")]
+    pub edge_min: i32,
+    #[serde(default = "default_maximum")]
+    pub edge_max: i32,
+    #[serde(default)]
     pub magical_type: MagicalType,
-    pub magic_min: Option<i32>,
-    pub magic_max: Option<i32>,
-    pub resonance_min: Option<i32>,
-    pub resonance_max: Option<i32>,
+    #[serde(default)]
+    pub magic_min: i32,
+    #[serde(default = "default_maximum")]
+    pub magic_max: i32,
+    #[serde(default)]
+    pub resonance_min: i32,
+    #[serde(default = "default_maximum")]
+    pub resonance_max: i32,
+}
+
+impl Metatype {
+    pub fn builder() -> MetatypeBuilder {
+        MetatypeBuilder::new()
+    }
+}
+
+impl YamlSerializable for Metatype {}
+
+impl YamlImportable for Metatype {
+    fn insert_into_db(&self, connection: &rusqlite::Connection) -> crate::error::Result<i64> {
+        create_metatype(&connection, &self)
+    }
+}
+
+fn default_minimum() -> i32 {
+    1
+}
+fn default_maximum() -> i32 {
+    6
 }
 
 #[derive(Debug, Serialize, Deserialize)]

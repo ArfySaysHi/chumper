@@ -43,7 +43,9 @@ pub fn run() {
             metatype::commands::list_metatypes,
             metatype::commands::get_metatype,
             metatype::commands::create_metatype,
-            database::commands::initialize_database
+            metatype::commands::import_metatype,
+            database::commands::initialize_database,
+            import::commands::import_characters,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

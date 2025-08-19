@@ -17,7 +17,7 @@ pub async fn get_metatype(name: &str, state: State<'_, AppState>) -> Result<Meta
 #[tauri::command]
 pub async fn create_metatype(metatype: Metatype, state: State<'_, AppState>) -> Result<i64, String> {
     let db = state.db.lock().unwrap();
-    repository::create_metatype(&*db, metatype).map_err(|e| e.to_string())
+    repository::create_metatype(&*db, &metatype).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
