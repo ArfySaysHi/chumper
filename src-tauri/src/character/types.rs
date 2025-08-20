@@ -110,9 +110,9 @@ pub enum CharacterStatus {
 impl ToSql for CharacterStatus {
     fn to_sql(&self) -> RusqliteResult<ToSqlOutput<'_>> {
         let val = match self {
-            CharacterStatus::Active => Value::Text("active".into()),
-            CharacterStatus::Creation => Value::Text("creation".into()),
-            CharacterStatus::Archived => Value::Text("archived".into()),
+            CharacterStatus::Active => Value::Text("Active".into()),
+            CharacterStatus::Creation => Value::Text("Creation".into()),
+            CharacterStatus::Archived => Value::Text("Archived".into()),
         };
         Ok(ToSqlOutput::Owned(val))
     }
@@ -122,9 +122,9 @@ impl FromSql for CharacterStatus {
     fn column_result(value: ValueRef<'_>) -> RusqliteResult<Self, FromSqlError> {
         match value {
             ValueRef::Text(text) => match text {
-                b"active" => Ok(CharacterStatus::Active),
-                b"creation" => Ok(CharacterStatus::Creation),
-                b"archived" => Ok(CharacterStatus::Archived),
+                b"Active" => Ok(CharacterStatus::Active),
+                b"Creation" => Ok(CharacterStatus::Creation),
+                b"Archived" => Ok(CharacterStatus::Archived),
                 _ => Err(FromSqlError::InvalidType),
             },
             _ => Err(FromSqlError::InvalidType),

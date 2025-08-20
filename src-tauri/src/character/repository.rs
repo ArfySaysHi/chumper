@@ -1,16 +1,36 @@
+use super::commands::ListCharactersParams;
 use crate::character::types::*;
 use crate::error::Result;
 use rusqlite::{params, Connection};
 
-pub fn list_characters(connection: &Connection) -> Result<Vec<CharacterSummary>> {
-    let mut stmt = connection.prepare(
-        "SELECT id, name, metatype, player_name, karma_total, status, created_at, updated_at
-         FROM characters
-         WHERE status != 'archived'
-         ORDER BY updated_at DESC",
-    )?;
+pub fn list_characters(
+    connection: &Connection,
+    params: Option<ListCharactersParams>,
+) -> Result<Vec<CharacterSummary>> {
+    let mut query = "SELECT
+                       id, name, metatype, player_name, karma_total, status, created_at, updated_at
+                     FROM characters
+                     WHERE 1=1"
+        .to_string();
+    let mut vals = vec![];
 
-    let character_iter = stmt.query_map([], |row| {
+    if let Some(params) = params {
+        if let Some(status) = params.status {
+            query.push_str(" AND status = ?");
+            vals.push(status);
+        }
+        let ordering = format!(
+            " ORDER BY {} {}",
+            params.sort_by.as_str(),
+            params.sort_direction.as_str()
+        );
+
+        query.push_str(&ordering);
+    }
+
+    let mut stmt = connection.prepare(&query)?;
+
+    let character_iter = stmt.query_map(rusqlite::params_from_iter(vals.iter()), |row| {
         Ok(CharacterSummary {
             id: row.get(0)?,
             name: row.get(1)?,

@@ -44,4 +44,4 @@ export type Character = z.infer<typeof CharacterSchema>;
 export type CharacterArray = z.infer<typeof CharacterArraySchema>;
 export type CharacterSummary = z.infer<typeof CharacterSummarySchema>;
 export type CharacterSummaryArray = z.infer<typeof CharacterSummaryArraySchema>;
-export type CharacterStatus = "creation" | "active" | "archived";
+export type CharacterStatus = "Creation" | "Active" | "Archived";

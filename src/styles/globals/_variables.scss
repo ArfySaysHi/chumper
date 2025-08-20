@@ -203,6 +203,10 @@ $colors: (
   @return color(border-#{$style});
 }
 
+@function border-radius($name) {
+  @return map.get($border-radius, $name);
+}
+
 @function font-size($name) {
   @return map.get($font-sizes, $name);
 }

@@ -7,7 +7,6 @@
     border: 1px solid border(subtle);
     border-radius: map.get($border-radius, lg);
     padding: map.get($spacing, 6);
-    transition: all map.get($transitions, normal);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -26,7 +25,6 @@
             transparent
         );
         opacity: 0;
-        transition: opacity map.get($transitions, normal);
     }
 
     &:hover,

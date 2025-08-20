@@ -3,6 +3,8 @@ import { Delete, Spa, CalendarToday, CurrencyYen } from "@mui/icons-material";
 import Button from "../Button/Button.tsx";
 import "./CharacterCard.scss";
 import { CharacterSummary } from "../../../schemas/character.ts";
+import { motion } from "framer-motion";
+import { itemVariants } from "../../../pages/CharacterSelection/CharacterSelectionTab/CharacterSelectionTab.tsx";
 
 interface CharacterCardProps {
   character: CharacterSummary;
@@ -18,11 +20,16 @@ const CharacterCard = ({
   selected = false,
 }: CharacterCardProps) => {
   return (
-    <div
+    <motion.div
       key={character.id}
       className={`character-card ${selected ? "character-card--selected" : ""}`}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
+      variants={itemVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      layout
     >
       <div className="character-card__header">
         <div className="character-card__avatar">A</div>
@@ -58,7 +65,7 @@ const CharacterCard = ({
           <span>Last played: Date Here</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

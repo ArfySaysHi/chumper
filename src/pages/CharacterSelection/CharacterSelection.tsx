@@ -1,26 +1,22 @@
 import { useState } from "react";
 import { Download, Upload, Settings } from "@mui/icons-material";
 import "./CharacterSelection.scss";
-import CharacterCard from "../../components/ui/CharacterCard/CharacterCard.tsx";
 import Button from "../../components/ui/Button/Button.tsx";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
-import useCharacters from "../../hooks/useCharacters.ts";
 import useCommand from "../../hooks/useCommand.ts";
+import CharacterSelectionTab from "./CharacterSelectionTab/CharacterSelectionTab.tsx";
 
 const CharacterSelection = () => {
-  const { characters, loading } = useCharacters();
   const [counter, setCounter] = useState(0);
 
-  const { execute: createCharacter, isLoading } =
-    useCommand("create_character");
+  const { execute: createCharacter } = useCommand("create_character");
 
   const handleCreateChar = async () => {
     try {
-      const res = await createCharacter({
+      await createCharacter({
         character: { name: `name_${counter}`, metatype: "Human" },
       });
       setCounter(counter + 1);
-      console.log(res);
     } catch (e) {
       console.log(e);
     }
@@ -52,54 +48,27 @@ const CharacterSelection = () => {
       </header>
 
       <main className="character-selection__main container">
-        {!(loading || isLoading) ? (
+        {
           <TabGroup
             tabs={[
               {
                 key: "tab1",
                 label: "Active Runners",
-                content: (
-                  <section className="character-selection__characters">
-                    <div className="character-grid">
-                      {characters.map((character) => (
-                        <CharacterCard
-                          key={character.id}
-                          character={character}
-                          onClick={() => {}}
-                          onDoubleClick={() =>
-                            console.log("Load character:", character.name)
-                          }
-                        />
-                      ))}
-                    </div>
-                  </section>
-                ),
+                content: <CharacterSelectionTab status="Active" />,
               },
               {
                 key: "tab2",
                 label: "Soon-to-be Runners",
-                content: (
-                  <section className="character-selection__characters">
-                    <div className="character-grid">
-                      {characters.map((character) => (
-                        <CharacterCard
-                          key={character.id}
-                          character={character}
-                          onClick={() => {}}
-                          onDoubleClick={() =>
-                            console.log("Load character:", character.name)
-                          }
-                        />
-                      ))}
-                    </div>
-                  </section>
-                ),
+                content: <CharacterSelectionTab status="Creation" />,
+              },
+              {
+                key: "tab3",
+                label: "Archived Runners",
+                content: <CharacterSelectionTab status="Archived" />,
               },
             ]}
           />
-        ) : (
-          <div>Loading...</div>
-        )}
+        }
       </main>
     </div>
   );

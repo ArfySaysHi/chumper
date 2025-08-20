@@ -42,12 +42,15 @@
     }
 
     &__content {
-        &__container {
-            transition: opacity 0.3s ease;
-            overflow: auto;
+        &__fade {
+            &-enter {
+            }
+            &-enter-active {
+            }
 
-            &--hidden {
-                @include visually_hidden;
+            &-exit {
+            }
+            &-exit-active {
             }
         }
     }

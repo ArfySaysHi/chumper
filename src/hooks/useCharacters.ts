@@ -40,10 +40,9 @@ const useCharacters = ({
         setError(null);
       }
 
-      const endpoint = status ? "list_characters_by_status" : "list_characters";
-      const params = status ? { status } : undefined;
+      const endpoint = "list_characters";
 
-      const data = await invoke(endpoint, params);
+      const data = await invoke(endpoint, { params: { status } });
       const validatedData = CharacterSummaryArraySchema.parse(data);
 
       if (isMountedRef.current) {
@@ -96,7 +95,9 @@ const useCharacters = ({
   }, [listCharacters]);
 
   useEffect(() => {
-    listCharacters();
+    setTimeout(() => {
+      listCharacters();
+    }, 1000);
   }, []);
 
   return {

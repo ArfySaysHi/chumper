@@ -2,14 +2,27 @@ use tauri::{Emitter, State};
 use crate::database::AppState;
 use crate::character::{repository, types::*};
 use crate::import::{YamlImportable, YamlSerializable};
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct ListCharactersParams {
+    pub status: Option<String>,
+    #[serde(default = "default_sort_by")]
+    pub sort_by: String,
+    #[serde(default = "default_sort_direction")]
+    pub sort_direction: String,
+}
+
+fn default_sort_by() -> String { "updated_at".to_string() }
+fn default_sort_direction() -> String { "DESC".to_string() }
 
 #[tauri::command]
-pub async fn list_characters(state: State<'_, AppState>) -> Result<Vec<CharacterSummary>, String> {
+pub async fn list_characters(params: ListCharactersParams, state: State<'_, AppState>) -> Result<Vec<CharacterSummary>, String> {
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
         let connection = pool.get().map_err(|e| e.to_string())?;
-        repository::list_characters(&connection).map_err(|e| e.to_string())
+        repository::list_characters(&connection, Some(params)).map_err(|e| e.to_string())
     }).await.map_err(|e| e.to_string())?
 }
 

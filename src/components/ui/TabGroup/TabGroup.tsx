@@ -1,5 +1,6 @@
 import { ReactNode, useState, useRef, useEffect } from "react";
 import "./TabGroup.scss";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Tab {
   key: string;
@@ -15,21 +16,6 @@ interface TabGroupProps {
 const defaultTabContent: Tab[] = [
   { key: "tab1", label: "Tab One", content: <div>Tab One</div> },
   { key: "tab2", label: "Tab Two", content: <div>Tab Two</div> },
-  {
-    key: "tab3",
-    label: "Tab Three",
-    content: <div>Tab Three</div>,
-    disabled: true,
-  },
-  { key: "tab4", label: "Tab Four", content: <div>Tab Four</div> },
-  { key: "tab5", label: "Tab Five", content: <div>Tab Five</div> },
-  { key: "tab6", label: "Tab Six", content: <div>Tab Six</div> },
-  { key: "tab7", label: "Tab Seven", content: <div>Tab Seven</div> },
-  {
-    key: "tab8",
-    label: "BLAHBLAHBLAHBLAHBLAHBLAHBLABH",
-    content: <div>Tab Eight</div>,
-  },
 ];
 
 const TabGroup = ({ tabs = defaultTabContent }: TabGroupProps) => {
@@ -46,6 +32,7 @@ const TabGroup = ({ tabs = defaultTabContent }: TabGroupProps) => {
   }, [currentTab, tabs]);
 
   const adjustedSliderWidth = `${sliderOffset.width / 3}px`;
+  const tab = tabs[currentTab];
 
   return (
     <div className="tab-group">
@@ -71,16 +58,17 @@ const TabGroup = ({ tabs = defaultTabContent }: TabGroupProps) => {
         />
       </div>
       <div className="tab-group__content">
-        {tabs.map((tab, i) => (
-          <div
+        <AnimatePresence mode="wait">
+          <motion.div
             key={tab.key}
-            role="tabpanel"
-            aria-labelledby={`tab-${tab.key}`}
-            className={`tab-group__content__container${currentTab !== i ? "--hidden" : ""}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
           >
             {tab.content}
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

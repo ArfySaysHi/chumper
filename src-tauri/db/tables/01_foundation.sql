@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS characters (
     resonance INTEGER DEFAULT 0,
     karma_total INTEGER DEFAULT 0,
     nuyen INTEGER DEFAULT 0,
-    status VARCHAR(30) CHECK (status IN ('creation', 'active', 'archived')) DEFAULT 'creation',
+    status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (metatype) REFERENCES metatype(name)
