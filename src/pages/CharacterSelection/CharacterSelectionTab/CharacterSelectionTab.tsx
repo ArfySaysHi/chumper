@@ -6,6 +6,7 @@ import Loading from "../../../components/ui/Loading/Loading.tsx";
 import { AnimatePresence, motion } from "framer-motion";
 import useCommand from "../../../hooks/useCommand.ts";
 import "./CharacterSelectionTab.scss";
+import { useNavigate } from "react-router";
 
 interface CharacterSelectionTabProps {
   status: CharacterStatus;
@@ -20,6 +21,8 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
   const { characters, loading } = useCharacters({ status });
   const { execute: deleteCharacter } = useCommand("delete_character");
   const { execute: archiveCharacter } = useCommand("archive_character");
+
+  const navigate = useNavigate();
 
   const listVariants = {
     animate: { transition: { staggerChildren: 0.04 } },
@@ -87,9 +90,7 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
                   key={character.id}
                   character={character}
                   onClick={onClick}
-                  onDoubleClick={() =>
-                    console.log("Load character:", character.name)
-                  }
+                  onDoubleClick={() => navigate(`/creation/${character.id}`)}
                   onDelete={() => deleteSingle(character)}
                   selected={selected.includes(character)}
                 />
