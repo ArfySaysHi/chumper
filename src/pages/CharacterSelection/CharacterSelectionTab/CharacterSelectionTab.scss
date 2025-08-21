@@ -1,0 +1,27 @@
+@use "sass:map";
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
+
+.character-selection-tab {
+    margin-bottom: map.get($spacing, 8);
+
+    &__grid {
+        @include grid-auto-fit(320px, spacing(6));
+        margin: spacing(8) 0 0 0;
+
+        // When only 1-2 cards, limit width further
+        &:has(.character-card:nth-child(1):nth-last-child(1)) {
+            max-width: 400px;
+        }
+
+        &:has(.character-card:nth-child(2):nth-last-child(1)) {
+            max-width: 800px;
+        }
+    }
+}
+
+@include respond-to(lg) {
+    .character-selection-tab__characters__grid {
+        @include grid-auto-fit(360px, spacing(8));
+    }
+}

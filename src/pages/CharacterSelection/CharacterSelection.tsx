@@ -48,27 +48,25 @@ const CharacterSelection = () => {
       </header>
 
       <main className="character-selection__main container">
-        {
-          <TabGroup
-            tabs={[
-              {
-                key: "tab1",
-                label: "Active Runners",
-                content: <CharacterSelectionTab status="Active" />,
-              },
-              {
-                key: "tab2",
-                label: "Soon-to-be Runners",
-                content: <CharacterSelectionTab status="Creation" />,
-              },
-              {
-                key: "tab3",
-                label: "Archived Runners",
-                content: <CharacterSelectionTab status="Archived" />,
-              },
-            ]}
-          />
-        }
+        <TabGroup
+          tabs={[
+            {
+              key: "tab1",
+              label: "Active Runners",
+              content: <CharacterSelectionTab status="Active" />,
+            },
+            {
+              key: "tab2",
+              label: "Soon-to-be Runners",
+              content: <CharacterSelectionTab status="Creation" />,
+            },
+            {
+              key: "tab3",
+              label: "Archived Runners",
+              content: <CharacterSelectionTab status="Archived" />,
+            },
+          ]}
+        />
       </main>
     </div>
   );

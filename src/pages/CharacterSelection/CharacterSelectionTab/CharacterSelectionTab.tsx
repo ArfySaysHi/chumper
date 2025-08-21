@@ -2,7 +2,9 @@ import useCharacters from "../../../hooks/useCharacters";
 import CharacterCard from "../../../components/ui/CharacterCard/CharacterCard.tsx";
 import { CharacterStatus } from "../../../schemas/character";
 import Loading from "../../../components/ui/Loading/Loading.tsx";
-import { Variants, Transition, AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import useCommand from "../../../hooks/useCommand.ts";
+import "./CharacterSelectionTab.scss";
 
 interface CharacterSelectionTabProps {
   status: CharacterStatus;
@@ -11,20 +13,9 @@ const enter = { opacity: 1, y: 0 };
 const exit = { opacity: 0, y: -8 };
 const initial = { opacity: 0, y: 8 };
 
-const itemTransition: Transition = { duration: 0.3, ease: "easeOut" };
-export const itemVariants: Variants = {
-  initial: { opacity: 0, y: 8, scale: 0.995 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: itemTransition,
-  },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
-};
-
 const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
   const { characters, loading } = useCharacters({ status });
+  const { execute: deleteCharacter } = useCommand("delete_character");
 
   const listVariants = {
     animate: { transition: { staggerChildren: 0.04 } },
@@ -32,7 +23,7 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
   };
 
   return (
-    <section className="character-selection__characters">
+    <section className="character-selection-tab">
       <AnimatePresence mode="wait" initial={false}>
         {loading ? (
           <motion.div
@@ -41,7 +32,7 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
             animate={enter}
             exit={exit}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="character-grid"
+            className="character-selection-tab__grid"
           >
             <Loading />
           </motion.div>
@@ -55,7 +46,7 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
             layout
           >
             <motion.div
-              className="character-grid"
+              className="character-selection-tab__grid"
               variants={listVariants}
               initial="initial"
               animate="animate"
@@ -69,6 +60,7 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
                   onDoubleClick={() =>
                     console.log("Load character:", character.name)
                   }
+                  onDelete={() => deleteCharacter({ id: character.id })}
                 />
               ))}
             </motion.div>

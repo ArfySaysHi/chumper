@@ -69,7 +69,12 @@ const useCharacters = ({
           async () => await refetch(),
         );
 
-        unlistenFns.current = [unlistenCreated];
+        const unlistenDeleted = await listen<CharacterSummary>(
+          "character_deleted",
+          async () => await refetch(),
+        );
+
+        unlistenFns.current = [unlistenCreated, unlistenDeleted];
       } catch (error) {
         console.error("Failed to set up event listeners:", error);
       }
@@ -95,9 +100,7 @@ const useCharacters = ({
   }, [listCharacters]);
 
   useEffect(() => {
-    setTimeout(() => {
-      listCharacters();
-    }, 1000);
+    listCharacters();
   }, []);
 
   return {

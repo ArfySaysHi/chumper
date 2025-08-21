@@ -77,3 +77,16 @@ pub async fn export_character(id: i64, state: State<'_, AppState>) -> Result<Str
         character.to_yaml().map_err(|e| e.to_string())
     }).await.map_err(|e| e.to_string())?
 }
+
+#[tauri::command]
+pub async fn delete_character(id: i64, state: State<'_, AppState>) -> Result<String, String> {
+    let pool = state.db_pool.clone();
+
+    let res = tokio::task::spawn_blocking(move || {
+        let connection = pool.get().map_err(|e| e.to_string())?;
+        repository::delete_character(&connection, id).map_err(|e| e.to_string())
+    }).await.map_err(|e| e.to_string())?;
+
+    state.app_handle.emit("character_deleted", id).map_err(|e| e.to_string())?;
+    res
+}

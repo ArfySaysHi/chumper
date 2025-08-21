@@ -3,20 +3,33 @@ import { Delete, Spa, CalendarToday, CurrencyYen } from "@mui/icons-material";
 import Button from "../Button/Button.tsx";
 import "./CharacterCard.scss";
 import { CharacterSummary } from "../../../schemas/character.ts";
-import { motion } from "framer-motion";
-import { itemVariants } from "../../../pages/CharacterSelection/CharacterSelectionTab/CharacterSelectionTab.tsx";
+import { motion, Transition, Variants } from "framer-motion";
 
 interface CharacterCardProps {
   character: CharacterSummary;
   onClick: (e: SyntheticEvent) => void;
   onDoubleClick: (e: SyntheticEvent) => void;
+  onDelete: (e: SyntheticEvent) => void;
   selected?: boolean;
 }
+
+const itemTransition: Transition = { duration: 0.3, ease: "easeOut" };
+export const itemVariants: Variants = {
+  initial: { opacity: 0, y: 8, scale: 0.995 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: itemTransition,
+  },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
+};
 
 const CharacterCard = ({
   character,
   onClick,
   onDoubleClick,
+  onDelete,
   selected = false,
 }: CharacterCardProps) => {
   return (
@@ -39,7 +52,7 @@ const CharacterCard = ({
         </div>
         <div className="character-card__actions">
           <Button variant="icon" size="xs" title="Delete" destructive>
-            <Delete />
+            <Delete onClick={onDelete} />
           </Button>
         </div>
       </div>

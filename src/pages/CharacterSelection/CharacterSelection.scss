@@ -59,76 +59,9 @@
         }
     }
 
-    &__characters {
-        margin-bottom: map.get($spacing, 8);
-    }
-
     &__actions {
         display: flex;
         justify-content: center;
-    }
-}
-
-.character-grid {
-    @include grid-auto-fit(320px, spacing(6));
-    margin: spacing(8) 0 0 0;
-
-    // When only 1-2 cards, limit width further
-    &:has(.character-card:nth-child(1):nth-last-child(1)) {
-        max-width: 400px;
-    }
-
-    &:has(.character-card:nth-child(2):nth-last-child(1)) {
-        max-width: 800px;
-    }
-}
-
-.archetype {
-    &--decker {
-        background: linear-gradient(135deg, color(info-600), color(info-500));
-        color: color(text-on-primary);
-    }
-
-    &--samurai {
-        background: linear-gradient(
-            135deg,
-            color(danger-600),
-            color(danger-500)
-        );
-        color: color(text-on-primary);
-    }
-
-    &--mage {
-        background: linear-gradient(135deg, #8b5cf6, #a855f7);
-        color: color(text-on-primary);
-    }
-
-    &--rigger {
-        background: linear-gradient(
-            135deg,
-            color(accent-600),
-            color(accent-500)
-        );
-        color: color(text-inverse);
-    }
-
-    &--adept {
-        background: linear-gradient(
-            135deg,
-            color(success-600),
-            color(success-500)
-        );
-        color: color(text-on-primary);
-    }
-
-    &--face {
-        background: linear-gradient(135deg, #ec4899, #f472b6);
-        color: color(text-on-primary);
-    }
-
-    &--default {
-        background: surface(tertiary);
-        color: text(primary);
     }
 }
 
@@ -161,18 +94,8 @@
     }
 }
 
-.action-buttons {
-    display: flex;
-    gap: spacing(4);
-    justify-content: center;
-}
-
 @include respond-to(lg) {
     .character-selection__main {
         padding: spacing(12) spacing(4);
-    }
-
-    .character-grid {
-        @include grid-auto-fit(360px, spacing(8));
     }
 }

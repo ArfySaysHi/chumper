@@ -120,3 +120,11 @@ pub fn create_character(connection: &Connection, character: &Character) -> Resul
 
     Ok(created_character)
 }
+
+pub fn delete_character(connection: &Connection, id: i64) -> Result<String> {
+    let mut stmt =
+        connection.prepare(format!("DELETE FROM characters WHERE id = {}", id).as_str())?;
+    stmt.execute([])?;
+
+    Ok("Character deleted successfully".to_string())
+}
