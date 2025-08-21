@@ -128,3 +128,16 @@ pub fn delete_character(connection: &Connection, id: i64) -> Result<String> {
 
     Ok("Character deleted successfully".to_string())
 }
+
+pub fn archive_character(connection: &Connection, id: i64) -> Result<String> {
+    let mut stmt = connection.prepare(
+        format!(
+            "UPDATE characters SET status = 'Archived' WHERE id = {}",
+            id
+        )
+        .as_str(),
+    )?;
+    stmt.execute([])?;
+
+    Ok("Character archived successfully".to_string())
+}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import TitleBar from "./components/ui/TitleBar/TitleBar.tsx";
 import { RouterProvider } from "react-router";
 import router from "./routes.tsx";
+import ActiveElementDebugger from "./components/debug/ActiveElementDebugger/ActiveElementDebugger.tsx";
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
@@ -13,7 +14,6 @@ const App = () => {
     const showWindow = async () => {
       try {
         await new Promise((res) => setTimeout(res, 100));
-
         await appWindow.show();
 
         setIsReady(true);
@@ -38,6 +38,7 @@ const App = () => {
     <main>
       <TitleBar />
       <RouterProvider router={router} />
+      <ActiveElementDebugger />
     </main>
   );
 };

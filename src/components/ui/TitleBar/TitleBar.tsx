@@ -26,15 +26,27 @@ const TitleBar = () => {
     <div className="title-bar">
       <div className="title-bar__menu"></div>
       <div className="title-bar__window-controls">
-        <IconButton onClick={onMinimizeClick}>
+        <button
+          onClick={onMinimizeClick}
+          className="title-bar__window-controls__button title-bar__window-controls__button--primary"
+          tabIndex={-1}
+        >
           <Remove />
-        </IconButton>
-        <IconButton onClick={onMaximizeClick}>
+        </button>
+        <button
+          onClick={onMaximizeClick}
+          className="title-bar__window-controls__button title-bar__window-controls__button--primary"
+          tabIndex={-1}
+        >
           <CropSquare />
-        </IconButton>
-        <IconButton onClick={onCloseClick}>
+        </button>
+        <button
+          onClick={onCloseClick}
+          className="title-bar__window-controls__button title-bar__window-controls__button--primary"
+          tabIndex={-1}
+        >
           <Close />
-        </IconButton>
+        </button>
       </div>
     </div>
   );

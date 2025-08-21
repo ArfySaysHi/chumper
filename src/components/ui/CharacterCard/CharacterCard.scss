@@ -53,6 +53,16 @@
         &::before {
             opacity: 1;
         }
+
+        &:hover,
+        &:focus-within {
+            border-color: color(primary-500); // Keep selected border
+            background: color(hover-primary); // Keep selected background
+            box-shadow:
+                0 0 0 1px color(primary-500),
+                0 12px 30px color(shadow-primary); // Enhanced shadow on hover
+            transform: translateY(-2px); // Keep hover transform
+        }
     }
 
     &__header {

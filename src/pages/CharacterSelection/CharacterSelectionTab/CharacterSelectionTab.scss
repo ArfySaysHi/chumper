@@ -3,7 +3,7 @@
 @use "../../../styles/globals/_mixins.scss" as *;
 
 .character-selection-tab {
-    margin-bottom: map.get($spacing, 8);
+    margin-bottom: spacing(8);
 
     &__grid {
         @include grid-auto-fit(320px, spacing(6));

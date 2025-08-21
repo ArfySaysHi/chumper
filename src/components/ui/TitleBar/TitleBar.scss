@@ -1,9 +1,16 @@
 @use "sass:map";
+@use "sass:color";
 @use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
 
 .title-bar {
     display: flex;
-    background-color: map.get($colors, bg-primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: map.get($z-layers, titlebar);
 
     &__menu {
     }
@@ -11,8 +18,375 @@
     &__window-controls {
         margin: 0 0 0 auto;
 
-        &__icon {
-            // font-size: map.get($font-sizes, sm);
+        &__button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: map.get($border-radius, md);
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            user-select: none;
+
+            padding: map.get($spacing, 1);
+
+            &:focus {
+                outline: 2px solid color(primary-500);
+                outline-offset: 2px;
+            }
+
+            &:focus:not(:focus-visible) {
+                outline: none;
+            }
+
+            &:disabled,
+            &--disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                pointer-events: none;
+            }
+
+            &--loading {
+                cursor: wait;
+
+                svg {
+                    opacity: 0.6;
+                }
+            }
+
+            svg {
+                display: block;
+                transition: all 0.2s ease-in-out;
+                font-size: map.get($font-sizes, base);
+            }
+
+            &--primary {
+                svg {
+                    fill: color(secondary-500);
+                }
+
+                &:hover:not(:disabled) {
+                    svg {
+                        fill: color(primary-500);
+                        transform: scale(1.05);
+                    }
+                }
+
+                &:active {
+                    background: rgba(color(primary-500), 0.2);
+                    transform: scale(0.98);
+                }
+            }
+
+            &--secondary {
+                svg {
+                    fill: color(subtext);
+                }
+
+                &:hover:not(:disabled) {
+                    background: rgba(color(secondary-500), 0.1);
+
+                    svg {
+                        fill: color(secondary-500);
+                    }
+                }
+
+                &:active {
+                    background: rgba(color(secondary-500), 0.2);
+                }
+            }
+
+            &--danger {
+                svg {
+                    fill: color(subtext);
+                }
+
+                &:hover:not(:disabled) {
+                    background: rgba(#e74c3c, 0.1);
+
+                    svg {
+                        fill: #e74c3c;
+                    }
+                }
+
+                &:active {
+                    background: rgba(#e74c3c, 0.2);
+                }
+            }
+
+            &--success {
+                svg {
+                    fill: color(subtext);
+                }
+
+                &:hover:not(:disabled) {
+                    background: rgba(#27ae60, 0.1);
+
+                    svg {
+                        fill: #27ae60;
+                    }
+                }
+
+                &:active {
+                    background: rgba(#27ae60, 0.2);
+                }
+            }
+
+            &--ghost {
+                svg {
+                    fill: color(subtext);
+                }
+
+                &:hover:not(:disabled) {
+                    background: color(light-gray);
+
+                    svg {
+                        fill: color(text);
+                    }
+                }
+            }
+
+            // Size variants
+            &--xs {
+                padding: map.get($spacing, 1);
+
+                svg {
+                    font-size: map.get($font-sizes, xs);
+                }
+            }
+
+            &--sm {
+                padding: map.get($spacing, 1) map.get($spacing, 2);
+
+                svg {
+                    font-size: map.get($font-sizes, sm);
+                }
+            }
+
+            &--md {
+                padding: map.get($spacing, 2);
+
+                svg {
+                    font-size: map.get($font-sizes, md);
+                }
+            }
+
+            &--lg {
+                padding: map.get($spacing, 3);
+
+                svg {
+                    font-size: map.get($font-sizes, lg);
+                }
+            }
+
+            &--xl {
+                padding: map.get($spacing, 4);
+
+                svg {
+                    font-size: map.get($font-sizes, xl);
+                }
+            }
+
+            // Shape variants
+            &--circular {
+                border-radius: 50%;
+                aspect-ratio: 1;
+            }
+
+            &--rounded {
+                border-radius: map.get($border-radius, md);
+            }
+
+            &--square {
+                border-radius: 0;
+                aspect-ratio: 1;
+            }
+
+            // Style variants
+            &--filled {
+                background: color(primary-500);
+
+                svg {
+                    fill: color(text-secondary);
+                }
+
+                &:hover:not(:disabled) {
+                    background: color.adjust(
+                        color(primary-500),
+                        $lightness: -10%
+                    );
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 8px rgba(color(primary-500), 0.3);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                    box-shadow: 0 2px 4px rgba(color(primary-500), 0.3);
+                }
+            }
+
+            &--outlined {
+                border: 1px solid color(border);
+
+                svg {
+                    fill: color(text);
+                }
+
+                &:hover:not(:disabled) {
+                    border-color: color(primary-500);
+                    background: rgba(color(primary-500), 0.05);
+
+                    svg {
+                        fill: color(primary-500);
+                    }
+                }
+            }
+
+            // Special states
+            &--active {
+                background: color(primary-500);
+
+                svg {
+                    fill: color(text-secondary);
+                }
+            }
+
+            // Animations
+            &--pulse {
+                animation: pulse 2s infinite;
+            }
+
+            &--bounce:hover {
+                animation: bounce 0.6s ease-in-out;
+            }
+
+            &--rotate:hover svg {
+                transform: rotate(90deg);
+            }
+
+            &--flip:hover svg {
+                transform: scaleX(-1);
+            }
+
+            // Badge/notification dot
+            &--has-badge {
+                position: relative;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: map.get($spacing, 1);
+                    right: map.get($spacing, 1);
+                    width: 8px;
+                    height: 8px;
+                    background: #e74c3c;
+                    border-radius: 50%;
+                    border: 2px solid color(text-secondary);
+                }
+            }
+
+            // Grouped buttons
+            &-group {
+                display: inline-flex;
+
+                .icon-button {
+                    border-radius: 0;
+
+                    &:first-child {
+                        border-top-left-radius: map.get($border-radius, sm);
+                        border-bottom-left-radius: map.get($border-radius, sm);
+                    }
+
+                    &:last-child {
+                        border-top-right-radius: map.get($border-radius, sm);
+                        border-bottom-right-radius: map.get($border-radius, sm);
+                    }
+
+                    &:not(:last-child) {
+                        border-right: 1px solid color(border);
+                    }
+                }
+
+                &--vertical {
+                    flex-direction: column;
+
+                    .icon-button {
+                        &:first-child {
+                            border-radius: map.get($border-radius, sm)
+                                map.get($border-radius, sm) 0 0;
+                        }
+
+                        &:last-child {
+                            border-radius: 0 0 map.get($border-radius, sm)
+                                map.get($border-radius, sm);
+                        }
+
+                        &:not(:last-child) {
+                            border-right: none;
+                            border-bottom: 1px solid color(border);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Keyframe animations
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes bounce {
+            0%,
+            20%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-3px);
+            }
+            80% {
+                transform: translateY(-1px);
+            }
+        }
+
+        // Dark mode support (if you have dark mode variables)
+        @media (prefers-color-scheme: dark) {
+            .icon-button {
+                &--ghost:hover:not(:disabled) {
+                    background: rgba(color(text-secondary), 0.1);
+                }
+
+                &--outlined {
+                    border-color: rgba(color(text-secondary), 0.2);
+
+                    &:hover:not(:disabled) {
+                        border-color: color(primary-500);
+                        background: rgba(color(primary-500), 0.1);
+                    }
+                }
+            }
+        }
+
+        // Print styles
+        @media print {
+            .icon-button {
+                &:hover,
+                &:focus,
+                &:active {
+                    background: transparent !important;
+                    transform: none !important;
+                    box-shadow: none !important;
+                }
+            }
         }
     }
 }

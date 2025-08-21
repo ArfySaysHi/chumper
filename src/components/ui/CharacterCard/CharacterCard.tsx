@@ -1,4 +1,4 @@
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, MouseEvent } from "react";
 import { Delete, Spa, CalendarToday, CurrencyYen } from "@mui/icons-material";
 import Button from "../Button/Button.tsx";
 import "./CharacterCard.scss";
@@ -7,7 +7,7 @@ import { motion, Transition, Variants } from "framer-motion";
 
 interface CharacterCardProps {
   character: CharacterSummary;
-  onClick: (e: SyntheticEvent) => void;
+  onClick: (e: MouseEvent, cs: CharacterSummary) => void;
   onDoubleClick: (e: SyntheticEvent) => void;
   onDelete: (e: SyntheticEvent) => void;
   selected?: boolean;
@@ -36,7 +36,7 @@ const CharacterCard = ({
     <motion.div
       key={character.id}
       className={`character-card ${selected ? "character-card--selected" : ""}`}
-      onClick={onClick}
+      onClick={(e) => onClick(e, character)}
       onDoubleClick={onDoubleClick}
       variants={itemVariants}
       initial="initial"

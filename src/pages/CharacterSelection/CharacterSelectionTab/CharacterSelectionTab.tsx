@@ -1,6 +1,7 @@
+import { useState, MouseEvent, useEffect } from "react";
 import useCharacters from "../../../hooks/useCharacters";
 import CharacterCard from "../../../components/ui/CharacterCard/CharacterCard.tsx";
-import { CharacterStatus } from "../../../schemas/character";
+import { CharacterStatus, CharacterSummary } from "../../../schemas/character";
 import Loading from "../../../components/ui/Loading/Loading.tsx";
 import { AnimatePresence, motion } from "framer-motion";
 import useCommand from "../../../hooks/useCommand.ts";
@@ -14,13 +15,42 @@ const exit = { opacity: 0, y: -8 };
 const initial = { opacity: 0, y: 8 };
 
 const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
+  const [selected, setSelected] = useState<CharacterSummary[]>([]);
+
   const { characters, loading } = useCharacters({ status });
   const { execute: deleteCharacter } = useCommand("delete_character");
+  const { execute: archiveCharacter } = useCommand("archive_character");
 
   const listVariants = {
     animate: { transition: { staggerChildren: 0.04 } },
     exit: {},
   };
+
+  const onClick = (e: MouseEvent, cs: CharacterSummary) => {
+    e.preventDefault();
+    if (e.shiftKey) setSelected((prev) => [...prev, cs]);
+    else setSelected([cs]);
+  };
+
+  const deleteSingle = (cs: CharacterSummary) =>
+    cs.status === "Archived"
+      ? deleteCharacter({ id: cs.id })
+      : archiveCharacter({ id: cs.id });
+
+  const deleteSelected = () => selected.forEach((cs) => deleteSingle(cs));
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Delete") return;
+      deleteSelected();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selected]);
 
   return (
     <section className="character-selection-tab">
@@ -56,11 +86,12 @@ const CharacterSelectionTab = ({ status }: CharacterSelectionTabProps) => {
                 <CharacterCard
                   key={character.id}
                   character={character}
-                  onClick={() => {}}
+                  onClick={onClick}
                   onDoubleClick={() =>
                     console.log("Load character:", character.name)
                   }
-                  onDelete={() => deleteCharacter({ id: character.id })}
+                  onDelete={() => deleteSingle(character)}
+                  selected={selected.includes(character)}
                 />
               ))}
             </motion.div>
