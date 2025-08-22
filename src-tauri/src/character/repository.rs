@@ -2,7 +2,7 @@ use super::commands::ListCharactersParams;
 use super::resource;
 use crate::character::types::*;
 use crate::error::Result;
-use resource::{CreateResourceParams, Resource};
+use resource::Resource;
 use rusqlite::{params, Connection};
 use std::collections::HashMap;
 
@@ -131,8 +131,7 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
 }
 
 pub fn create_character(connection: &mut Connection, character: &Character) -> Result<Character> {
-    let tx = connection.transaction()?;
-    tx.execute(
+    connection.execute(
         "INSERT INTO characters
            (name, metatype, player_name, body, agility, reaction, strength,
             willpower, logic, intuition, charisma, edge, magic, resonance,
@@ -160,19 +159,10 @@ pub fn create_character(connection: &mut Connection, character: &Character) -> R
         ],
     )?;
 
-    let row_id = tx.last_insert_rowid();
-
-    let nuyen = CreateResourceParams {
-        name: "Nuyen".to_string(),
-        base_amount: 0.0,
-        current_amount: 0.0,
-        character_id: row_id.clone(),
-    };
-    resource::repository::create_resource(&tx, nuyen)?;
-
-    tx.commit()?;
+    let row_id = connection.last_insert_rowid();
     let mut created_character = character.clone();
     created_character.id = Some(row_id);
+    created_character.initialize_base_resources(connection)?;
 
     Ok(created_character)
 }

@@ -6,7 +6,8 @@ use serde::{Deserialize, Serialize};
 
 use super::builder::CharacterBuilder;
 use super::repository::create_character;
-use super::resource::Resource;
+use super::resource::repository::create_resource;
+use super::resource::{CreateResourceParams, Resource};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Character {
@@ -47,6 +48,25 @@ pub struct Character {
     pub updated_at: Option<String>,
     #[serde(default)]
     pub status: CharacterStatus,
+}
+
+impl Character {
+    pub fn initialize_base_resources(&self, connection: &mut Connection) -> Result<()> {
+        let resources = vec![
+            ("Essence", 6.0, 6.0),
+            ("Edge", self.edge as f32, self.edge as f32),
+            ("Nuyen", 0.0, 0.0),
+            ("Karma", 0.0, 0.0),
+        ];
+
+        for (name, base, current) in resources {
+            let params =
+                CreateResourceParams::new(name.to_string(), base, current, self.id.unwrap());
+            create_resource(connection, params)?;
+        }
+
+        Ok(())
+    }
 }
 
 impl From<CharacterBuilder> for Character {

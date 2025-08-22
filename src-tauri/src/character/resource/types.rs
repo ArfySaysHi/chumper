@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Resource {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
@@ -12,7 +12,7 @@ pub struct Resource {
     pub character_id: i64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct CreateResourceParams {
     pub name: String,
     #[serde(default)]
@@ -20,4 +20,20 @@ pub struct CreateResourceParams {
     #[serde(default)]
     pub current_amount: f32,
     pub character_id: i64,
+}
+
+impl CreateResourceParams {
+    pub fn new(
+        name: impl Into<String>,
+        base_amount: f32,
+        current_amount: f32,
+        character_id: i64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            base_amount,
+            current_amount,
+            character_id,
+        }
+    }
 }
