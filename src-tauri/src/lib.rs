@@ -42,6 +42,7 @@ pub fn run() {
             character::commands::export_character,
             character::commands::delete_character,
             character::commands::archive_character,
+            character::resource::commands::list_character_resources,
             metatype::commands::list_metatypes,
             metatype::commands::get_metatype,
             metatype::commands::create_metatype,

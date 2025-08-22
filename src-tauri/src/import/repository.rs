@@ -4,7 +4,7 @@ use serde::de::DeserializeOwned;
 use serde_yml;
 
 pub fn import_yaml_file<T>(
-    db: &Connection,
+    db: &mut Connection,
     file_path: &str,
 ) -> Result<Vec<T>, Box<dyn std::error::Error>>
 where

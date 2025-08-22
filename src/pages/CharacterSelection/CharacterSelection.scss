@@ -3,7 +3,8 @@
 @use "../../styles/globals/_mixins.scss" as *;
 
 .character-selection {
-    min-height: 100vh;
+    min-height: calc(100vh - 24px);
+    height: calc(100vh - 24px);
     background: surface(app);
     color: text(primary);
     font-family: $font-family-primary;

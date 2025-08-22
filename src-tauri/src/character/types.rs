@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use super::builder::CharacterBuilder;
 use super::repository::create_character;
+use super::resource::Resource;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Character {
@@ -40,10 +41,6 @@ pub struct Character {
     pub magic: i32,
     #[serde(default)]
     pub resonance: i32,
-    #[serde(default)]
-    pub karma_total: i32,
-    #[serde(default)]
-    pub nuyen: i32,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,
     #[serde(default = "default_timestamp")]
@@ -70,8 +67,6 @@ impl From<CharacterBuilder> for Character {
             edge: c.edge,
             magic: c.magic,
             resonance: c.resonance,
-            karma_total: c.karma_total,
-            nuyen: c.nuyen,
             created_at: None,
             updated_at: None,
             status: c.status,
@@ -82,8 +77,8 @@ impl From<CharacterBuilder> for Character {
 impl YamlSerializable for Character {}
 
 impl YamlImportable for Character {
-    fn insert_into_db(&self, connection: &Connection) -> Result<Character> {
-        create_character(&connection, &self)
+    fn insert_into_db(&self, connection: &mut Connection) -> Result<Character> {
+        create_character(connection, &self)
     }
 }
 
@@ -138,10 +133,10 @@ pub struct CharacterSummary {
     pub name: String,
     pub metatype: String,
     pub player_name: Option<String>,
-    pub karma_total: i32,
     pub status: CharacterStatus,
     pub created_at: String,
     pub updated_at: String,
+    pub resources: Vec<Resource>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -10,8 +10,8 @@ pub async fn import_characters(path: String, state: State<'_, AppState>) -> Resu
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
-        let connection = pool.get().map_err(|e| e.to_string())?;
-        import_yaml_file::<Character>(&connection, &path).map_err(|e| e.to_string())?;
+        let mut connection = pool.get().map_err(|e| e.to_string())?;
+        import_yaml_file::<Character>(&mut connection, &path).map_err(|e| e.to_string())?;
         Ok("Characters imported successfully".to_string())
     }).await.map_err(|e| e.to_string())?
 }
@@ -21,8 +21,8 @@ pub async fn import_metatypes(path: String, state: State<'_, AppState>) -> Resul
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
-        let connection = pool.get().map_err(|e| e.to_string())?;
-        import_yaml_file::<Metatype>(&connection, &path).map_err(|e| e.to_string())?;
+        let mut connection = pool.get().map_err(|e| e.to_string())?;
+        import_yaml_file::<Metatype>(&mut connection, &path).map_err(|e| e.to_string())?;
         Ok("Metatypes imported successfully".to_string())
     }).await.map_err(|e| e.to_string())?
 }

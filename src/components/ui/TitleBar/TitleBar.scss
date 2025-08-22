@@ -9,14 +9,17 @@
     top: 0;
     left: 0;
     right: 0;
+    height: 24px;
     background-color: transparent;
     z-index: map.get($z-layers, titlebar);
+    -webkit-app-region: drag;
 
     &__menu {
     }
 
     &__window-controls {
         margin: 0 0 0 auto;
+        -webkit-app-region: no-drag;
 
         &__button {
             display: inline-flex;

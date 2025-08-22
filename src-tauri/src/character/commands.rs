@@ -42,16 +42,14 @@ pub async fn create_character(character: Character, state: State<'_, AppState>) 
     let app_handle = state.app_handle.clone();
 
     let res = tokio::task::spawn_blocking(move || -> Result<Character, String> {
-        let connection = pool.get().map_err(|e| e.to_string())?;
-        let result = repository::create_character(&connection, &character).map_err(|e| e.to_string())?;
+        let mut connection = pool.get().map_err(|e| e.to_string())?;
+        let result = repository::create_character(&mut connection, &character).map_err(|e| e.to_string())?;
         Ok(result)
     })
     .await
     .map_err(|e| e.to_string())??; // Double ? for join error + your Result
 
-    println!("EMIT: About to emit character_created event for ID: {:?}", res.id);
     app_handle.emit("character_created", &res).map_err(|e| e.to_string())?;
-    println!("EMIT: Successfully emitted character_created event");
     Ok(res)
 }
 
@@ -60,10 +58,10 @@ pub async fn import_character(yaml: String, state: State<'_, AppState>) -> Resul
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
-        let connection = pool.get().map_err(|e| e.to_string())?;
+        let mut connection = pool.get().map_err(|e| e.to_string())?;
         let mut character = Character::from_yaml(&yaml).map_err(|e| format!("YAML parse error: {}", e))?;
         character.id = None;
-        character.insert_into_db(&connection).map_err(|e| format!("Database error: {}", e))
+        character.insert_into_db(&mut connection).map_err(|e| format!("Database error: {}", e))
     }).await.map_err(|e| e.to_string())?
 }
 

@@ -134,8 +134,11 @@ impl From<MetatypeBuilder> for Metatype {
 impl YamlSerializable for Metatype {}
 
 impl YamlImportable for Metatype {
-    fn insert_into_db(&self, connection: &rusqlite::Connection) -> crate::error::Result<Metatype> {
-        create_metatype(&connection, &self)
+    fn insert_into_db(
+        &self,
+        connection: &mut rusqlite::Connection,
+    ) -> crate::error::Result<Metatype> {
+        create_metatype(connection, &self)
     }
 }
 

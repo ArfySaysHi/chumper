@@ -1,6 +1,5 @@
 import { SyntheticEvent } from "react";
 import "./TitleBar.scss";
-import IconButton from "../IconButton/IconButton.tsx";
 import { Close, CropSquare, Remove } from "@mui/icons-material";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 

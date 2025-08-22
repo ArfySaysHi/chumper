@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS characters (
+CREATE TABLE characters (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     metatype VARCHAR(50) NOT NULL,
@@ -14,8 +14,6 @@ CREATE TABLE IF NOT EXISTS characters (
     edge INTEGER DEFAULT 1,
     magic INTEGER DEFAULT 0,
     resonance INTEGER DEFAULT 0,
-    karma_total INTEGER DEFAULT 0,
-    nuyen INTEGER DEFAULT 0,
     status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
@@ -23,9 +21,9 @@ CREATE TABLE IF NOT EXISTS characters (
 );
 
 -- TODO: Move all indexes into the correct files
-CREATE INDEX IF NOT EXISTS idx_characters_status ON characters(status);
+CREATE INDEX idx_characters_status ON characters(status);
 
-CREATE TABLE IF NOT EXISTS metatypes (
+CREATE TABLE metatypes (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     body_min INTEGER DEFAULT 1,
@@ -51,4 +49,13 @@ CREATE TABLE IF NOT EXISTS metatypes (
     magic_max INTEGER DEFAULT 0,
     resonance_min INTEGER DEFAULT 0,
     resonance_max INTEGER DEFAULT 0
+);
+
+CREATE TABLE resources (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    base_amount REAL DEFAULT 0,
+    current_amount REAL DEFAULT 0,
+    character_id INTEGER NOT NULL,
+    FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
 );

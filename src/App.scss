@@ -7,3 +7,21 @@
     justify-content: center;
     color: #f9fafb;
 }
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .app-content {
+        height: calc(100vh - 24px);
+        flex: 1;
+        margin: 24px 0 0 0;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 0px;
+            background: transparent; /* make scrollbar transparent */
+        }
+    }
+}

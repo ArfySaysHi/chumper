@@ -35,9 +35,11 @@ const App = () => {
     );
 
   return (
-    <main>
+    <main className="app-container">
       <TitleBar />
-      <RouterProvider router={router} />
+      <div className="app-content">
+        <RouterProvider router={router} />
+      </div>
       <ActiveElementDebugger />
     </main>
   );
