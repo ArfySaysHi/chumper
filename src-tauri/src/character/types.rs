@@ -1,16 +1,16 @@
 use super::attribute::repository::create_attribute;
 use super::attribute::Attribute;
-use super::builder::CharacterBuilder;
 use super::repository::create_character;
 use super::resource::repository::create_resource;
 use super::resource::{CreateResourceParams, Resource};
 use crate::error::Result;
 use crate::import::{YamlImportable, YamlSerializable};
+use crate::metatype::types::Metatype;
 use rusqlite::types::{FromSql, FromSqlError, ToSql, ToSqlOutput, Value, ValueRef};
 use rusqlite::{Connection, Result as RusqliteResult};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct Character {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
@@ -23,6 +23,7 @@ pub struct Character {
     pub updated_at: Option<String>,
     #[serde(default)]
     pub status: CharacterStatus,
+    pub metatype_info: Metatype,
 }
 
 impl Character {
@@ -48,20 +49,6 @@ impl Character {
         create_attribute(connection, attribute)?;
 
         Ok(())
-    }
-}
-
-impl From<CharacterBuilder> for Character {
-    fn from(c: CharacterBuilder) -> Self {
-        Self {
-            id: c.id,
-            name: c.name,
-            metatype: c.metatype,
-            player_name: c.player_name,
-            created_at: None,
-            updated_at: None,
-            status: c.status,
-        }
     }
 }
 

@@ -2,6 +2,7 @@ use super::resource;
 use super::{attribute::Attribute, commands::ListCharactersParams};
 use crate::character::types::*;
 use crate::error::Result;
+use crate::metatype::types::Metatype;
 use resource::Resource;
 use rusqlite::{named_params, params, Connection};
 use std::collections::HashMap;
@@ -131,7 +132,7 @@ pub fn list_characters(
 }
 
 pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character> {
-    let res = connection.query_row(
+    let mut character = connection.query_row(
         "SELECT id, name, metatype, player_name, created_at, updated_at, status
          FROM characters
          WHERE id = ?1",
@@ -145,13 +146,59 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
                 created_at: row.get("created_at")?,
                 updated_at: row.get("updated_at")?,
                 status: row.get("status")?,
+                metatype_info: Metatype::new(row.get("name")?),
             })
         },
     )?;
 
-    Ok(res)
+    let metatype_query = format!(
+        "SELECT (
+           id, name, body_min, body_max, agility_min, agility_max, reaction_min, reaction_max,
+           strength_min, strength_max, willpower_min, willpower_max, logic_min, logic_max,
+           intuition_min, intuition_max, charisma_min, charisma_max, edge_min, edge_max,
+           magical_type, magic_min, magic_max, resonance_min, resonance_max
+         )
+         FROM metatypes
+         WHERE name = ({})",
+        character.metatype
+    );
+
+    let metatype = connection.query_row(&metatype_query, [], |row| {
+        Ok(Metatype {
+            id: row.get("id")?,
+            name: row.get("name")?,
+            body_min: row.get("body_min")?,
+            body_max: row.get("body_max")?,
+            agility_min: row.get("agility_min")?,
+            agility_max: row.get("agility_max")?,
+            reaction_min: row.get("reaction_min")?,
+            reaction_max: row.get("reaction_max")?,
+            strength_min: row.get("strength_min")?,
+            strength_max: row.get("strength_max")?,
+            willpower_min: row.get("willpower_min")?,
+            willpower_max: row.get("willpower_max")?,
+            logic_min: row.get("logic_min")?,
+            logic_max: row.get("logic_max")?,
+            intuition_min: row.get("intuition_min")?,
+            intuition_max: row.get("intuition_max")?,
+            charisma_min: row.get("charisma_min")?,
+            charisma_max: row.get("charisma_max")?,
+            edge_min: row.get("edge_min")?,
+            edge_max: row.get("edge_max")?,
+            magical_type: row.get("magical_type")?,
+            magic_min: row.get("magic_min")?,
+            magic_max: row.get("magic_max")?,
+            resonance_min: row.get("resonance_min")?,
+            resonance_max: row.get("resonance_max")?,
+        })
+    })?;
+
+    character.metatype_info = metatype;
+
+    Ok(character)
 }
 
+// TODO: Change the create character method to take priority params to set base stats / metatype / resources
 pub fn create_character(connection: &mut Connection, character: &Character) -> Result<Character> {
     connection.execute(
         "INSERT INTO characters

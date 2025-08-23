@@ -3,6 +3,7 @@ mod database;
 mod error;
 mod import;
 mod metatype;
+mod modifier;
 mod shared;
 
 use crate::database::AppState;
@@ -43,6 +44,7 @@ pub fn run() {
             character::commands::delete_character,
             character::commands::archive_character,
             character::resource::commands::list_character_resources,
+            modifier::commands::list_modifiers,
             metatype::commands::list_metatypes,
             metatype::commands::get_metatype,
             metatype::commands::create_metatype,
