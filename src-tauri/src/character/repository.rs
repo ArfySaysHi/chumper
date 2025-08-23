@@ -1,9 +1,9 @@
-use super::commands::ListCharactersParams;
 use super::resource;
+use super::{attribute::Attribute, commands::ListCharactersParams};
 use crate::character::types::*;
 use crate::error::Result;
 use resource::Resource;
-use rusqlite::{params, Connection};
+use rusqlite::{named_params, params, Connection};
 use std::collections::HashMap;
 
 pub fn list_characters(
@@ -44,6 +44,7 @@ pub fn list_characters(
                 created_at: row.get("created_at")?,
                 updated_at: row.get("updated_at")?,
                 resources: Vec::new(),
+                attributes: Attribute::new_defaults(row.get("id")?),
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -83,10 +84,44 @@ pub fn list_characters(
                 .push(result);
         }
 
+        let attributes_query = format!(
+            "SELECT character_id, body, agility, reaction, strength, willpower,
+                    logic, intuition, charisma, edge, magic, resonance
+             FROM attributes
+             WHERE character_id IN ({})",
+            placeholders
+        );
+        let mut attributes_stmt = connection.prepare(&attributes_query)?;
+        let attributes_iter =
+            attributes_stmt.query_map(rusqlite::params_from_iter(character_ids.iter()), |row| {
+                Ok(Attribute {
+                    character_id: row.get("character_id")?,
+                    body: row.get("body")?,
+                    agility: row.get("agility")?,
+                    reaction: row.get("reaction")?,
+                    strength: row.get("strength")?,
+                    willpower: row.get("willpower")?,
+                    logic: row.get("logic")?,
+                    intuition: row.get("intuition")?,
+                    charisma: row.get("charisma")?,
+                    edge: row.get("edge")?,
+                    magic: row.get("magic")?,
+                    resonance: row.get("resonance")?,
+                })
+            })?;
+        let mut attributes_map: HashMap<i64, Attribute> = HashMap::new();
+        for attribute in attributes_iter {
+            let result = attribute?;
+            attributes_map.insert(result.character_id, result);
+        }
+
         for character in &mut characters {
             if let Some(character_id) = character.id {
                 if let Some(resources) = resources_map.remove(&character_id) {
                     character.resources = resources;
+                }
+                if let Some(attribute) = attributes_map.remove(&character_id) {
+                    character.attributes = attribute;
                 }
             }
         }
@@ -97,9 +132,7 @@ pub fn list_characters(
 
 pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character> {
     let res = connection.query_row(
-        "SELECT id, name, metatype, player_name, body, agility, reaction,
-                strength, willpower, logic, intuition, charisma, edge, magic,
-                resonance, created_at, updated_at, status
+        "SELECT id, name, metatype, player_name, created_at, updated_at, status
          FROM characters
          WHERE id = ?1",
         params![id],
@@ -109,17 +142,6 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
                 name: row.get("name")?,
                 metatype: row.get("metatype")?,
                 player_name: row.get("player_name")?,
-                body: row.get("body")?,
-                agility: row.get("agility")?,
-                reaction: row.get("reaction")?,
-                strength: row.get("strength")?,
-                willpower: row.get("willpower")?,
-                logic: row.get("logic")?,
-                intuition: row.get("intuition")?,
-                charisma: row.get("charisma")?,
-                edge: row.get("edge")?,
-                magic: row.get("magic")?,
-                resonance: row.get("resonance")?,
                 created_at: row.get("created_at")?,
                 updated_at: row.get("updated_at")?,
                 status: row.get("status")?,
@@ -133,36 +155,23 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
 pub fn create_character(connection: &mut Connection, character: &Character) -> Result<Character> {
     connection.execute(
         "INSERT INTO characters
-           (name, metatype, player_name, body, agility, reaction, strength,
-            willpower, logic, intuition, charisma, edge, magic, resonance,
-            created_at, updated_at, status)
+           (name, metatype, player_name, created_at, updated_at, status)
          VALUES (
-           ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,
-           datetime('now'), datetime('now'), ?15
+           :name, :metatype, :player_name, datetime('now'), datetime('now'), :status
          )",
-        params![
-            character.name,
-            character.metatype,
-            character.player_name,
-            character.body,
-            character.agility,
-            character.reaction,
-            character.strength,
-            character.willpower,
-            character.logic,
-            character.intuition,
-            character.charisma,
-            character.edge,
-            character.magic,
-            character.resonance,
-            character.status,
-        ],
+        named_params!(
+            ":name": character.name,
+            ":metatype": character.metatype,
+            ":player_name": character.player_name,
+            ":status": character.status
+        ),
     )?;
 
     let row_id = connection.last_insert_rowid();
     let mut created_character = character.clone();
     created_character.id = Some(row_id);
     created_character.initialize_base_resources(connection)?;
+    created_character.initialize_attributes(connection)?;
 
     Ok(created_character)
 }

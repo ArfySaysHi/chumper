@@ -3,6 +3,14 @@ CREATE TABLE characters (
     name VARCHAR(100) NOT NULL,
     metatype VARCHAR(50) NOT NULL,
     player_name VARCHAR(100),
+    status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (metatype) REFERENCES metatype(name)
+);
+
+CREATE TABLE attributes (
+    character_id INTEGER PRIMARY KEY,
     body INTEGER DEFAULT 1,
     agility INTEGER DEFAULT 1,
     reaction INTEGER DEFAULT 1,
@@ -14,10 +22,7 @@ CREATE TABLE characters (
     edge INTEGER DEFAULT 1,
     magic INTEGER DEFAULT 0,
     resonance INTEGER DEFAULT 0,
-    status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (metatype) REFERENCES metatype(name)
+    FOREIGN KEY (character_id) REFERENCES characters(id)
 );
 
 -- TODO: Move all indexes into the correct files

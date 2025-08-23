@@ -1,13 +1,14 @@
+use super::attribute::repository::create_attribute;
+use super::attribute::Attribute;
+use super::builder::CharacterBuilder;
+use super::repository::create_character;
+use super::resource::repository::create_resource;
+use super::resource::{CreateResourceParams, Resource};
 use crate::error::Result;
 use crate::import::{YamlImportable, YamlSerializable};
 use rusqlite::types::{FromSql, FromSqlError, ToSql, ToSqlOutput, Value, ValueRef};
 use rusqlite::{Connection, Result as RusqliteResult};
 use serde::{Deserialize, Serialize};
-
-use super::builder::CharacterBuilder;
-use super::repository::create_character;
-use super::resource::repository::create_resource;
-use super::resource::{CreateResourceParams, Resource};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Character {
@@ -16,32 +17,6 @@ pub struct Character {
     pub name: String,
     pub metatype: String,
     pub player_name: Option<String>,
-
-    // Attributes
-    #[serde(default = "default_attribute")]
-    pub body: i32,
-    #[serde(default = "default_attribute")]
-    pub agility: i32,
-    #[serde(default = "default_attribute")]
-    pub reaction: i32,
-    #[serde(default = "default_attribute")]
-    pub strength: i32,
-    #[serde(default = "default_attribute")]
-    pub willpower: i32,
-    #[serde(default = "default_attribute")]
-    pub logic: i32,
-    #[serde(default = "default_attribute")]
-    pub intuition: i32,
-    #[serde(default = "default_attribute")]
-    pub charisma: i32,
-
-    // Special Attributes
-    #[serde(default)]
-    pub edge: i32,
-    #[serde(default)]
-    pub magic: i32,
-    #[serde(default)]
-    pub resonance: i32,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,
     #[serde(default = "default_timestamp")]
@@ -54,7 +29,7 @@ impl Character {
     pub fn initialize_base_resources(&self, connection: &mut Connection) -> Result<()> {
         let resources = vec![
             ("Essence", 6.0, 6.0),
-            ("Edge", self.edge as f32, self.edge as f32),
+            ("Edge", 1.0, 1.0),
             ("Nuyen", 0.0, 0.0),
             ("Karma", 0.0, 0.0),
         ];
@@ -67,6 +42,13 @@ impl Character {
 
         Ok(())
     }
+
+    pub fn initialize_attributes(&self, connection: &mut Connection) -> Result<()> {
+        let attribute = Attribute::new_defaults(self.id.unwrap());
+        create_attribute(connection, attribute)?;
+
+        Ok(())
+    }
 }
 
 impl From<CharacterBuilder> for Character {
@@ -76,17 +58,6 @@ impl From<CharacterBuilder> for Character {
             name: c.name,
             metatype: c.metatype,
             player_name: c.player_name,
-            body: c.body,
-            agility: c.agility,
-            reaction: c.reaction,
-            strength: c.strength,
-            willpower: c.willpower,
-            logic: c.logic,
-            intuition: c.intuition,
-            charisma: c.charisma,
-            edge: c.edge,
-            magic: c.magic,
-            resonance: c.resonance,
             created_at: None,
             updated_at: None,
             status: c.status,
@@ -108,9 +79,6 @@ impl Default for CharacterStatus {
     }
 }
 
-fn default_attribute() -> i32 {
-    1
-}
 fn default_timestamp() -> Option<String> {
     Some("datetime('now')".to_string())
 }
@@ -157,6 +125,7 @@ pub struct CharacterSummary {
     pub created_at: String,
     pub updated_at: String,
     pub resources: Vec<Resource>,
+    pub attributes: Attribute,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

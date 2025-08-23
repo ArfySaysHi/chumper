@@ -61,9 +61,7 @@ const CharacterCard = ({
         <div className="stat-item">
           <Spa className="stat-item__icon stat-item__icon--karma" />
           <span className="stat-item__label">Karma</span>
-          <span className="stat-item__value text-karma">
-            {character.karma_total}
-          </span>
+          <span className="stat-item__value text-karma">0</span>
         </div>
         <div className="stat-item">
           <CurrencyYen className="stat-item__icon stat-item__icon--nuyen" />
