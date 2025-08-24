@@ -15,7 +15,7 @@ pub struct Character {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
     pub name: String,
-    pub metatype: String,
+    pub metatype: String, // TODO: Remove this later
     pub player_name: Option<String>,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,

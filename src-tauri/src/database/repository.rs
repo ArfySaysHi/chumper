@@ -5,18 +5,18 @@ use std::fs::File;
 use std::io::Read;
 
 fn run_migration(connection: &Connection, path: String) -> Result<()> {
+    log::info!("Running migration for {}", &path);
     let mut f = File::open(&path)?;
     let mut schema = String::new();
     f.read_to_string(&mut schema)?;
 
-    println!("Running migration for: {:?}", &path);
     connection.execute_batch(&schema)?;
-    println!("Success!");
 
     Ok(())
 }
 
 pub fn init_database(connection: &Connection) -> Result<()> {
+    log::info!("Running init_database...");
     let paths = get_ext_from("./db".to_owned(), ".sql".to_owned());
 
     for path in paths {

@@ -4,6 +4,7 @@ use crate::metatype::{types::*, repository};
 
 #[tauri::command]
 pub async fn list_metatypes(state: State<'_, AppState>) -> Result<Vec<MetatypeSummary>, String> {
+    log::info!("list_metatypes");
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -14,6 +15,7 @@ pub async fn list_metatypes(state: State<'_, AppState>) -> Result<Vec<MetatypeSu
 
 #[tauri::command]
 pub async fn get_metatype(name: String, state: State<'_, AppState>) -> Result<Metatype, String> {
+    log::info!("get_metatype with {:?}", &name);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -24,6 +26,7 @@ pub async fn get_metatype(name: String, state: State<'_, AppState>) -> Result<Me
 
 #[tauri::command]
 pub async fn create_metatype(metatype: Metatype, state: State<'_, AppState>) -> Result<Metatype, String> {
+    log::info!("create_metatype with {:#?}", &metatype);
     let pool = state.db_pool.clone();
     let app_handle = state.app_handle.clone();
 
@@ -38,6 +41,7 @@ pub async fn create_metatype(metatype: Metatype, state: State<'_, AppState>) -> 
 
 #[tauri::command]
 pub async fn import_metatype(yaml: String, state: State<'_, AppState>) -> Result<Metatype, String> {
+    log::info!("import_metatype with {:#?}", &yaml);
     let pool = state.db_pool.clone();
     let app_handle = state.app_handle.clone();
 

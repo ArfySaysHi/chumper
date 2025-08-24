@@ -12,8 +12,10 @@ use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    log::info!("Starting Chumper...");
     tauri::Builder::default()
         .setup(|app| {
+            log::info!("Initializing database 'chumper.db3'...");
             // Setup
             let app_dir = app.path().app_data_dir()?;
             create_dir_all(&app_dir)?;
@@ -23,14 +25,9 @@ pub fn run() {
             if db_path.exists() {
                 remove_file(&db_path)?;
             }
+
             let state = AppState::new(&db_path, &app)?;
             app.manage(state);
-
-            // Setup services
-            // let character_service = CharacterService::new(app.handle().clone());
-
-            // Initialize Services
-            // app.manage(character_service);
 
             Ok(())
         })

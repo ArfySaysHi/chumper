@@ -18,6 +18,7 @@ fn default_sort_direction() -> String { "DESC".to_string() }
 
 #[tauri::command]
 pub async fn list_characters(params: ListCharactersParams, state: State<'_, AppState>) -> Result<Vec<CharacterSummary>, String> {
+    log::info!("list_characters with {:#?}", &params);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -28,6 +29,7 @@ pub async fn list_characters(params: ListCharactersParams, state: State<'_, AppS
 
 #[tauri::command]
 pub async fn get_character(id: i64, state: State<'_, AppState>) -> Result<Character, String> {
+    log::info!("get_character with {:?}", &id);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -38,6 +40,7 @@ pub async fn get_character(id: i64, state: State<'_, AppState>) -> Result<Charac
 
 #[tauri::command]
 pub async fn create_character(character: Character, state: State<'_, AppState>) -> Result<Character, String> {
+    log::info!("create_character with {:?}", &character);
     let pool = state.db_pool.clone();
     let app_handle = state.app_handle.clone();
 
@@ -55,6 +58,7 @@ pub async fn create_character(character: Character, state: State<'_, AppState>) 
 
 #[tauri::command]
 pub async fn import_character(yaml: String, state: State<'_, AppState>) -> Result<Character, String> {
+    log::info!("import_character with {:#?}", &yaml);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -67,6 +71,7 @@ pub async fn import_character(yaml: String, state: State<'_, AppState>) -> Resul
 
 #[tauri::command]
 pub async fn export_character(id: i64, state: State<'_, AppState>) -> Result<String, String> {
+    log::info!("export_character with {:?}", &id);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -78,6 +83,7 @@ pub async fn export_character(id: i64, state: State<'_, AppState>) -> Result<Str
 
 #[tauri::command]
 pub async fn delete_character(id: i64, state: State<'_, AppState>) -> Result<String, String> {
+    log::info!("delete_character with {:?}", &id);
     let pool = state.db_pool.clone();
 
     let res = tokio::task::spawn_blocking(move || {
@@ -91,6 +97,7 @@ pub async fn delete_character(id: i64, state: State<'_, AppState>) -> Result<Str
 
 #[tauri::command]
 pub async fn archive_character(id: i64, state: State<'_, AppState>) -> Result<String, String> {
+    log::info!("archive_character with {:?}", &id);
     let pool = state.db_pool.clone();
 
     let res = tokio::task::spawn_blocking(move || {

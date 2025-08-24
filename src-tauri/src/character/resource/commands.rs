@@ -5,6 +5,7 @@ use tauri::State;
 
 #[tauri::command]
 pub async fn list_character_resources(id: i64, state: State<'_, AppState>) -> Result<Vec<Resource>, String> {
+    log::info!("list_character_resources with {:?}", &id);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {

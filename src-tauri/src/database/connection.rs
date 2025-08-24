@@ -13,6 +13,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn new(db_path: &Path, app: &App) -> Result<Self> {
+        log::info!("Establishing AppState...");
         let manager = SqliteConnectionManager::file(db_path);
         let pool = Pool::builder().max_size(15).build(manager)?;
 

@@ -5,6 +5,7 @@ use super::repository;
 
 #[tauri::command]
 pub async fn list_modifiers(character_id: i64, state: State<'_, AppState>) -> Result<Vec<Modifier>, String> {
+    log::info!("list_modifiers with {:?}", &character_id);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {

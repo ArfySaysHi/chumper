@@ -7,6 +7,7 @@ use tauri::State;
 
 #[tauri::command]
 pub async fn import_characters(path: String, state: State<'_, AppState>) -> Result<String, String> {
+    log::info!("import characters with {:?}", &path);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
@@ -18,6 +19,7 @@ pub async fn import_characters(path: String, state: State<'_, AppState>) -> Resu
 
 #[tauri::command]
 pub async fn import_metatypes(path: String, state: State<'_, AppState>) -> Result<String, String> {
+    log::info!("import_metatypes with {:?}", &path);
     let pool = state.db_pool.clone();
 
     tokio::task::spawn_blocking(move || {
