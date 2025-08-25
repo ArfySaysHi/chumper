@@ -38,18 +38,3 @@ pub async fn create_metatype(metatype: Metatype, state: State<'_, AppState>) -> 
     app_handle.emit("created_metatype", &res).map_err(|e| e.to_string())?;
     Ok(res)
 }
-
-#[tauri::command]
-pub async fn import_metatype(yaml: String, state: State<'_, AppState>) -> Result<Metatype, String> {
-    log::info!("import_metatype with {:#?}", &yaml);
-    let pool = state.db_pool.clone();
-    let app_handle = state.app_handle.clone();
-
-    let res = tokio::task::spawn_blocking(move || {
-        let connection = pool.get().map_err(|e| e.to_string())?;
-        repository::import_metatype(&connection, &yaml).map_err(|e| e.to_string())
-    }).await.map_err(|e| e.to_string())??;
-
-    app_handle.emit("created_metatype", &res).map_err(|e| e.to_string())?;
-    Ok(res)
-}

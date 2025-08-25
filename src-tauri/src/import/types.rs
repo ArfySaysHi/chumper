@@ -1,25 +1,27 @@
-use crate::error::Result;
+use crate::{character::Character, error::Result, metatype::types::Metatype};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 
-pub trait YamlImportable {
-    fn insert_into_db(&self, connection: &mut Connection) -> Result<Self>
-    where
-        Self: Sized;
+#[derive(Debug, Deserialize, Serialize, Clone)]
+#[serde(tag = "type")]
+pub enum CoreData {
+    Character(Character),
+    Metatype(Metatype),
 }
 
-pub trait YamlSerializable {
-    fn from_yaml(yaml: &str) -> Result<Self>
-    where
-        Self: Sized + for<'de> Deserialize<'de>,
-    {
-        Ok(serde_yml::from_str(yaml)?)
+impl YamlImportable for CoreData {
+    type Output = CoreData;
+    fn insert_into_db(&self, connection: &mut Connection) -> Result<Self::Output> {
+        match self {
+            CoreData::Character(v) => v.insert_into_db(connection).map(CoreData::Character),
+            CoreData::Metatype(v) => v.insert_into_db(connection).map(CoreData::Metatype),
+        }
     }
+}
 
-    fn to_yaml(&self) -> Result<String>
+pub trait YamlImportable {
+    type Output;
+    fn insert_into_db(&self, connection: &mut Connection) -> Result<Self::Output>
     where
-        Self: Serialize,
-    {
-        Ok(serde_yml::to_string(self)?)
-    }
+        Self: Sized;
 }

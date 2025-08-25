@@ -1,4 +1,4 @@
-use crate::error::Result;
+use crate::{error::Result, import};
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::Connection;
@@ -18,8 +18,11 @@ impl AppState {
         let pool = Pool::builder().max_size(15).build(manager)?;
 
         {
-            let connection = Connection::open(db_path)?;
-            crate::database::repository::init_database(&connection)?;
+            let mut connection = Connection::open(db_path)?;
+            crate::database::repository::init_database(&mut connection)?;
+
+            let yaml_paths = import::repository::fetch_ordered_yaml();
+            import::repository::import_all(&mut connection, yaml_paths)?;
         }
 
         Ok(Self {

@@ -4,7 +4,7 @@ use super::repository::create_character;
 use super::resource::repository::create_resource;
 use super::resource::{CreateResourceParams, Resource};
 use crate::error::Result;
-use crate::import::{YamlImportable, YamlSerializable};
+use crate::import::YamlImportable;
 use crate::metatype::types::Metatype;
 use rusqlite::types::{FromSql, FromSqlError, ToSql, ToSqlOutput, Value, ValueRef};
 use rusqlite::{Connection, Result as RusqliteResult};
@@ -52,10 +52,9 @@ impl Character {
     }
 }
 
-impl YamlSerializable for Character {}
-
 impl YamlImportable for Character {
-    fn insert_into_db(&self, connection: &mut Connection) -> Result<Character> {
+    type Output = Character;
+    fn insert_into_db(&self, connection: &mut Connection) -> Result<Self::Output> {
         create_character(connection, &self)
     }
 }

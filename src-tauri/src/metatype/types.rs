@@ -1,10 +1,16 @@
-use super::repository::create_metatype;
-use crate::import::{YamlImportable, YamlSerializable};
+use super::repository::{create_metatype, create_metatype_priority_grades, get_metatype};
+use crate::import::YamlImportable;
 use rusqlite::{
     types::{FromSql, FromSqlError, ToSqlOutput, Value, ValueRef},
     Result, ToSql,
 };
 use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+pub struct MetatypePriorityGrade {
+    pub special_attribute_bonus: i32,
+    pub grade: String,
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MagicalType {
@@ -22,9 +28,9 @@ impl Default for MagicalType {
 impl ToSql for MagicalType {
     fn to_sql(&self) -> Result<ToSqlOutput<'_>> {
         let val = match self {
-            MagicalType::Magic => Value::Text("magic".into()),
-            MagicalType::Resonance => Value::Text("resonance".into()),
-            MagicalType::Mundane => Value::Text("mundane".into()),
+            MagicalType::Magic => Value::Text("Magic".into()),
+            MagicalType::Resonance => Value::Text("Resonance".into()),
+            MagicalType::Mundane => Value::Text("Mundane".into()),
         };
 
         Ok(ToSqlOutput::Owned(val))
@@ -35,9 +41,9 @@ impl FromSql for MagicalType {
     fn column_result(value: ValueRef<'_>) -> Result<Self, FromSqlError> {
         match value {
             ValueRef::Text(text) => match text {
-                b"magic" => Ok(MagicalType::Magic),
-                b"resonance" => Ok(MagicalType::Resonance),
-                b"mundane" => Ok(MagicalType::Mundane),
+                b"Magic" => Ok(MagicalType::Magic),
+                b"Resonance" => Ok(MagicalType::Resonance),
+                b"Mundane" => Ok(MagicalType::Mundane),
                 _ => Err(FromSqlError::InvalidType),
             },
             _ => Err(FromSqlError::InvalidType),
@@ -96,6 +102,8 @@ pub struct Metatype {
     pub resonance_min: i32,
     #[serde(default = "default_maximum")]
     pub resonance_max: i32,
+    #[serde(default)]
+    pub priority_grades: Vec<MetatypePriorityGrade>,
 }
 
 impl Metatype {
@@ -107,14 +115,21 @@ impl Metatype {
     }
 }
 
-impl YamlSerializable for Metatype {}
-
 impl YamlImportable for Metatype {
+    type Output = Metatype;
     fn insert_into_db(
         &self,
         connection: &mut rusqlite::Connection,
-    ) -> crate::error::Result<Metatype> {
-        create_metatype(connection, &self)
+    ) -> crate::error::Result<Self::Output> {
+        let tx = connection.transaction()?;
+        create_metatype(&tx, &self)?;
+        create_metatype_priority_grades(&tx, &self)?;
+
+        let m = get_metatype(&tx, &self.name)?;
+
+        tx.commit()?;
+
+        Ok(m)
     }
 }
 

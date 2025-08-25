@@ -1,8 +1,17 @@
-- name: Human
+# Metatype baseline is attribute_minimum: 1 and attribute_maximum: 6 for all
+- type: Metatype
+  name: Human
   edge_min: 2
   edge_max: 7
-- name: Elf
+  priority_grades:
+    - grade: A
+      special_attribute_bonus: 9
+- type: Metatype
+  name: Elf
   charisma_min: 2
   charisma_max: 7
   agility_min: 2
   agility_max: 7
+  priority_grades:
+    - grade: A
+      special_attribute_bonus: 8

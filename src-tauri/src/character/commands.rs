@@ -1,7 +1,6 @@
 use tauri::{Emitter, State};
 use crate::database::AppState;
 use crate::character::{repository, types::*};
-use crate::import::{YamlImportable, YamlSerializable};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -54,31 +53,6 @@ pub async fn create_character(character: Character, state: State<'_, AppState>) 
 
     app_handle.emit("character_created", &res).map_err(|e| e.to_string())?;
     Ok(res)
-}
-
-#[tauri::command]
-pub async fn import_character(yaml: String, state: State<'_, AppState>) -> Result<Character, String> {
-    log::info!("import_character with {:#?}", &yaml);
-    let pool = state.db_pool.clone();
-
-    tokio::task::spawn_blocking(move || {
-        let mut connection = pool.get().map_err(|e| e.to_string())?;
-        let mut character = Character::from_yaml(&yaml).map_err(|e| format!("YAML parse error: {}", e))?;
-        character.id = None;
-        character.insert_into_db(&mut connection).map_err(|e| format!("Database error: {}", e))
-    }).await.map_err(|e| e.to_string())?
-}
-
-#[tauri::command]
-pub async fn export_character(id: i64, state: State<'_, AppState>) -> Result<String, String> {
-    log::info!("export_character with {:?}", &id);
-    let pool = state.db_pool.clone();
-
-    tokio::task::spawn_blocking(move || {
-        let connection = pool.get().map_err(|e| e.to_string())?;
-        let character = repository::get_character_by_id(&connection, id).map_err(|e| e.to_string())?;
-        character.to_yaml().map_err(|e| e.to_string())
-    }).await.map_err(|e| e.to_string())?
 }
 
 #[tauri::command]

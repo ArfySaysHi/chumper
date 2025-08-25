@@ -8,6 +8,9 @@ pub enum AppError {
     #[error("Query conversion type error: {0}")]
     QueryConversion(#[from] rusqlite::types::FromSqlError),
 
+    #[error("Tokio join error: {0}")]
+    TokioJoin(#[from] tokio::task::JoinError),
+
     #[error("Yaml parsing error: {0}")]
     YamlParse(#[from] serde_yml::Error),
 

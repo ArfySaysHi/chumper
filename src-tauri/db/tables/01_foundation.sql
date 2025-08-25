@@ -89,7 +89,7 @@ CREATE TABLE metatypes (
     charisma_max INTEGER DEFAULT 6,
     edge_min INTEGER DEFAULT 1,
     edge_max INTEGER DEFAULT 6,
-    magical_type VARCHAR(20) DEFAULT 'mundane',
+    magical_type VARCHAR(20) CHECK(magical_type IN ('Magic', 'Resonance', 'Mundane')) DEFAULT 'Mundane',
     magic_min INTEGER DEFAULT 0,
     magic_max INTEGER DEFAULT 0,
     resonance_min INTEGER DEFAULT 0,
@@ -104,3 +104,20 @@ CREATE TABLE resources (
     character_id INTEGER NOT NULL,
     FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
 );
+
+CREATE TABLE priority_grades (
+    grade VARCHAR(1) PRIMARY KEY
+);
+
+CREATE TABLE metatypes_priority_grades (
+    special_attribute_bonus INTEGER NOT NULL, -- Handles additional edge and magic / resonance
+    metatype_name VARCHAR(100) NOT NULL,
+    grade VARCHAR(1) NOT NULL,
+    PRIMARY KEY (grade, metatype_name),
+    FOREIGN KEY (metatype_name) REFERENCES metatypes(name) ON DELETE CASCADE,
+    FOREIGN KEY (grade) REFERENCES priority_grades(grade) ON DELETE CASCADE
+);
+
+-- TODO: Implement attributes via modifiers
+-- TODO: Implement qualities
+-- TODO: Implement metavariants as metatypes that reference a metatype (new table maybe?)

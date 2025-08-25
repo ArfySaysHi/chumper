@@ -1,7 +1,7 @@
+use super::types::MetatypePriorityGrade;
 use crate::error::Result;
 use crate::metatype::{Metatype, MetatypeSummary};
-use rusqlite::Connection;
-use serde_yml::from_str;
+use rusqlite::{named_params, Connection};
 
 pub fn list_metatypes(connection: &Connection) -> Result<Vec<MetatypeSummary>> {
     let mut stmt = connection.prepare("SELECT name, magical_type FROM metatypes ORDER BY name")?;
@@ -58,14 +58,35 @@ pub fn get_metatype(connection: &Connection, name: &str) -> Result<Metatype> {
                 magic_max: row.get(22)?,
                 resonance_min: row.get(23)?,
                 resonance_max: row.get(24)?,
+                priority_grades: Vec::new(),
             })
         },
     )?;
+    let mut stmt = connection.prepare(
+        "SELECT grade, special_attribute_bonus
+         FROM metatypes_priority_grades
+         WHERE metatype_name = ?1",
+    )?;
+    let grades_iter = stmt.query_map(rusqlite::params![name], |row| {
+        Ok(MetatypePriorityGrade {
+            grade: row.get("grade")?,
+            special_attribute_bonus: row.get("special_attribute_bonus")?,
+        })
+    })?;
+
+    let mut priority_grades = Vec::new();
+    for g in grades_iter {
+        priority_grades.push(g?);
+    }
+
+    let mut metatype = metatype;
+    metatype.priority_grades = priority_grades;
 
     Ok(metatype)
 }
 
 pub fn create_metatype(connection: &Connection, m: &Metatype) -> Result<Metatype> {
+    log::info!("create_metatype with {:#?}", &m);
     let mut stmt = connection.prepare(
         "INSERT INTO metatypes (
                name, body_min, body_max, agility_min, agility_max,
@@ -108,16 +129,39 @@ pub fn create_metatype(connection: &Connection, m: &Metatype) -> Result<Metatype
         &m.resonance_max
     ])?;
 
-    let row_id = connection.last_insert_rowid();
-    let mut created_metatype = m.clone();
-    created_metatype.id = Some(row_id);
+    let id = connection.last_insert_rowid();
+    let mut cloned_metatype = m.clone();
+    cloned_metatype.id = Some(id);
 
-    Ok(created_metatype)
+    Ok(cloned_metatype)
 }
 
-pub fn import_metatype(connection: &Connection, yaml: &str) -> Result<Metatype> {
-    let metatype: Metatype = from_str(yaml)?;
-    let created_metatype = create_metatype(connection, &metatype)?;
+pub fn create_metatype_priority_grades(connection: &Connection, m: &Metatype) -> Result<()> {
+    log::info!("create_metatype_priority_grades with {:#?}", &m);
+    for pg in &m.priority_grades {
+        log::debug!(
+            "Inserting grade {:?} into priority_grades for {} if not exists",
+            &pg.grade,
+            &m.name
+        );
+        connection.execute(
+            "INSERT INTO priority_grades (grade) VALUES (:grade) ON CONFLICT(grade) DO NOTHING",
+            named_params! { ":grade": &pg.grade},
+        )?;
+        connection.execute(
+            "INSERT INTO
+               metatypes_priority_grades (special_attribute_bonus, metatype_name, grade)
+             VALUES
+               (:special_attribute_bonus, :metatype_name, :grade)
+             ON CONFLICT(metatype_name, grade)
+             DO UPDATE SET special_attribute_bonus = excluded.special_attribute_bonus",
+            named_params! {
+                ":special_attribute_bonus": &pg.special_attribute_bonus,
+                ":metatype_name": &m.name,
+                ":grade": &pg.grade
+            },
+        )?;
+    }
 
-    Ok(created_metatype)
+    Ok(())
 }
