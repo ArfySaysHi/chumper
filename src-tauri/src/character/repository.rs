@@ -1,5 +1,5 @@
+use super::commands::ListCharactersParams;
 use super::resource;
-use super::{attribute::Attribute, commands::ListCharactersParams};
 use crate::character::types::*;
 use crate::error::Result;
 use crate::metatype::types::Metatype;
@@ -45,7 +45,6 @@ pub fn list_characters(
                 created_at: row.get("created_at")?,
                 updated_at: row.get("updated_at")?,
                 resources: Vec::new(),
-                attributes: Attribute::new_defaults(row.get("id")?),
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -85,44 +84,10 @@ pub fn list_characters(
                 .push(result);
         }
 
-        let attributes_query = format!(
-            "SELECT character_id, body, agility, reaction, strength, willpower,
-                    logic, intuition, charisma, edge, magic, resonance
-             FROM attributes
-             WHERE character_id IN ({})",
-            placeholders
-        );
-        let mut attributes_stmt = connection.prepare(&attributes_query)?;
-        let attributes_iter =
-            attributes_stmt.query_map(rusqlite::params_from_iter(character_ids.iter()), |row| {
-                Ok(Attribute {
-                    character_id: row.get("character_id")?,
-                    body: row.get("body")?,
-                    agility: row.get("agility")?,
-                    reaction: row.get("reaction")?,
-                    strength: row.get("strength")?,
-                    willpower: row.get("willpower")?,
-                    logic: row.get("logic")?,
-                    intuition: row.get("intuition")?,
-                    charisma: row.get("charisma")?,
-                    edge: row.get("edge")?,
-                    magic: row.get("magic")?,
-                    resonance: row.get("resonance")?,
-                })
-            })?;
-        let mut attributes_map: HashMap<i64, Attribute> = HashMap::new();
-        for attribute in attributes_iter {
-            let result = attribute?;
-            attributes_map.insert(result.character_id, result);
-        }
-
         for character in &mut characters {
             if let Some(character_id) = character.id {
                 if let Some(resources) = resources_map.remove(&character_id) {
                     character.resources = resources;
-                }
-                if let Some(attribute) = attributes_map.remove(&character_id) {
-                    character.attributes = attribute;
                 }
             }
         }
@@ -219,7 +184,6 @@ pub fn create_character(connection: &mut Connection, character: &Character) -> R
     let mut created_character = character.clone();
     created_character.id = Some(row_id);
     created_character.initialize_base_resources(connection)?;
-    created_character.initialize_attributes(connection)?;
 
     Ok(created_character)
 }

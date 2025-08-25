@@ -1,4 +1,3 @@
-pub mod attribute;
 pub mod commands;
 pub mod repository;
 pub mod resource;

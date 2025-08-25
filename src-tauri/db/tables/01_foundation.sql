@@ -9,22 +9,6 @@ CREATE TABLE characters (
     FOREIGN KEY (metatype) REFERENCES metatype(name)
 );
 
-CREATE TABLE attributes (
-    character_id INTEGER PRIMARY KEY,
-    body INTEGER DEFAULT 1,
-    agility INTEGER DEFAULT 1,
-    reaction INTEGER DEFAULT 1,
-    strength INTEGER DEFAULT 1,
-    willpower INTEGER DEFAULT 1,
-    logic INTEGER DEFAULT 1,
-    intuition INTEGER DEFAULT 1,
-    charisma INTEGER DEFAULT 1,
-    edge INTEGER DEFAULT 1,
-    magic INTEGER DEFAULT 0,
-    resonance INTEGER DEFAULT 0,
-    FOREIGN KEY (character_id) REFERENCES characters(id)
-);
-
 CREATE TABLE modifiers (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) DEFAULT NULL,

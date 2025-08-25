@@ -1,5 +1,3 @@
-use super::attribute::repository::create_attribute;
-use super::attribute::Attribute;
 use super::repository::create_character;
 use super::resource::repository::create_resource;
 use super::resource::{CreateResourceParams, Resource};
@@ -40,13 +38,6 @@ impl Character {
                 CreateResourceParams::new(name.to_string(), base, current, self.id.unwrap());
             create_resource(connection, params)?;
         }
-
-        Ok(())
-    }
-
-    pub fn initialize_attributes(&self, connection: &mut Connection) -> Result<()> {
-        let attribute = Attribute::new_defaults(self.id.unwrap());
-        create_attribute(connection, attribute)?;
 
         Ok(())
     }
@@ -111,7 +102,6 @@ pub struct CharacterSummary {
     pub created_at: String,
     pub updated_at: String,
     pub resources: Vec<Resource>,
-    pub attributes: Attribute,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
