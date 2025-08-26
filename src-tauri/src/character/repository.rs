@@ -164,8 +164,7 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
     Ok(character)
 }
 
-// TODO: Change the create character method to take priority params to set base stats / metatype / resources
-pub fn create_character(connection: &mut Connection, character: &Character) -> Result<Character> {
+pub fn create_character(connection: &Connection, character: &Character) -> Result<Character> {
     connection.execute(
         "INSERT INTO characters
            (name, metatype, player_name, created_at, updated_at, status)

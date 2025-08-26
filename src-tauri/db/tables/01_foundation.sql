@@ -89,12 +89,68 @@ CREATE TABLE resources (
     FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
 );
 
-CREATE TABLE priority_grades (
+CREATE TABLE qualities (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    resource_name VARCHAR(50) NOT NULL,
+    cost REAL NOT NULL DEFAULT 0,
+    category VARCHAR(50) NOT NULL CHECK(category IN ('Positive', 'Negative')),
+    FOREIGN KEY (resource_name) REFERENCES resources(name) ON DELETE RESTRICT
+);
+
+CREATE TABLE quality_effects (
+    id INTEGER PRIMARY KEY,
+    quality_id INTEGER NOT NULL,
+    target_key VARCHAR(50) NOT NULL,
+    operation VARCHAR(20) NOT NULL,
+    value_formula VARCHAR(200) NOT NULL,
+    activation VARCHAR(50) DEFAULT 'always',
+    priority INTEGER DEFAULT 100,
+    FOREIGN KEY (quality_id) REFERENCES qualities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE character_qualities (
+    id INTEGER PRIMARY KEY,
+    character_id INTEGER NOT NULL,
+    quality_id INTEGER NOT NULL,
+    rating INTEGER DEFAULT 1,
+    FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
+    FOREIGN KEY (quality_id) REFERENCES qualities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS priority_grades (
     grade VARCHAR(1) PRIMARY KEY
 );
 
-CREATE TABLE metatypes_priority_grades (
-    special_attribute_bonus INTEGER NOT NULL, -- Handles additional edge and magic / resonance
+CREATE TABLE IF NOT EXISTS priority_bundles (
+    id INTEGER PRIMARY KEY,
+    grade VARCHAR(1) NOT NULL,
+    domain VARCHAR(50) NOT NULL CHECK(domain IN ('attribute', 'skill', 'resource')),
+    description TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (grade) REFERENCES priority_grades(grade) ON DELETE RESTRICT,
+    UNIQUE (grade, domain)
+);
+
+CREATE TABLE IF NOT EXISTS priority_bundle_effects (
+    id INTEGER PRIMARY KEY,
+    bundle_id INTEGER NOT NULL,
+    target_domain VARCHAR(50) NOT NULL CHECK(target_domain IN ('attribute','skill','resource')),
+    target_name VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
+    operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
+    value REAL NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_priority_bundles_grade_domain ON priority_bundles(grade, domain);
+CREATE INDEX IF NOT EXISTS idx_pbe_bundle ON priority_bundle_effects(bundle_id);
+CREATE INDEX IF NOT EXISTS idx_pbe_target_norm ON priority_bundle_effects(target_domain, target_name);
+
+CREATE TABLE IF NOT EXISTS metatypes_priority_grades (
+    special_attribute_bonus INTEGER NOT NULL,
     metatype_name VARCHAR(100) NOT NULL,
     grade VARCHAR(1) NOT NULL,
     PRIMARY KEY (grade, metatype_name),

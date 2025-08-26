@@ -25,7 +25,7 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn initialize_base_resources(&self, connection: &mut Connection) -> Result<()> {
+    pub fn initialize_base_resources(&self, connection: &Connection) -> Result<()> {
         let resources = vec![
             ("Essence", 6.0, 6.0),
             ("Edge", 1.0, 1.0),
@@ -45,7 +45,7 @@ impl Character {
 
 impl YamlImportable for Character {
     type Output = Character;
-    fn insert_into_db(&self, connection: &mut Connection) -> Result<Self::Output> {
+    fn insert_into_db(&self, connection: &Connection) -> Result<Self::Output> {
         create_character(connection, &self)
     }
 }

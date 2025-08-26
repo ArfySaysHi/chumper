@@ -119,15 +119,12 @@ impl YamlImportable for Metatype {
     type Output = Metatype;
     fn insert_into_db(
         &self,
-        connection: &mut rusqlite::Connection,
+        connection: &rusqlite::Connection,
     ) -> crate::error::Result<Self::Output> {
-        let tx = connection.transaction()?;
-        create_metatype(&tx, &self)?;
-        create_metatype_priority_grades(&tx, &self)?;
+        create_metatype(connection, &self)?;
+        create_metatype_priority_grades(connection, &self)?;
 
-        let m = get_metatype(&tx, &self.name)?;
-
-        tx.commit()?;
+        let m = get_metatype(connection, &self.name)?;
 
         Ok(m)
     }

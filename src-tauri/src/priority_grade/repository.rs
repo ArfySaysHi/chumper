@@ -3,7 +3,7 @@ use rusqlite::{named_params, Connection};
 
 use super::PriorityGrade;
 
-pub fn list_priority_grades(connection: &mut Connection) -> Result<()> {
+pub fn list_priority_grades(connection: &Connection) -> Result<()> {
     let query = "SELECT * FROM priority_grades".to_string();
     let mut stmt = connection.prepare(&query)?;
     stmt.execute([])?;
@@ -12,7 +12,7 @@ pub fn list_priority_grades(connection: &mut Connection) -> Result<()> {
 }
 
 pub fn create_priority_grade(
-    connection: &mut Connection,
+    connection: &Connection,
     priority_grade: &PriorityGrade,
 ) -> Result<PriorityGrade> {
     let query = "INSERT INTO priority_grades VALUES (:grade)".to_string();

@@ -11,7 +11,7 @@ pub struct PriorityGrade {
 
 impl YamlImportable for PriorityGrade {
     type Output = PriorityGrade;
-    fn insert_into_db(&self, connection: &mut Connection) -> Result<Self::Output> {
+    fn insert_into_db(&self, connection: &Connection) -> Result<Self::Output> {
         create_priority_grade(connection, &self)
     }
 }

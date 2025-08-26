@@ -5,6 +5,7 @@ mod import;
 mod metatype;
 mod modifier;
 mod priority_grade;
+mod quality;
 mod shared;
 
 use crate::database::AppState;

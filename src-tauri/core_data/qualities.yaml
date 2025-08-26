@@ -1,0 +1,21 @@
+- type: Quality
+  name: Test Quality
+  resource_name: nuyen
+  cost: 1000
+  category: Positive
+- type: Quality
+  name: Test Quality With Effects
+  resource_name: karma
+  cost: 10
+  category: Positive
+  quality_effects:
+    - target_key: body
+      operation: add
+      value_formula: "1"
+      activation: always
+      priority: 50
+    - target_key: agility
+      operation: add
+      value_formula: "1"
+      activation: always
+      priority: 50
