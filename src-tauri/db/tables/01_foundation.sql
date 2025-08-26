@@ -17,7 +17,7 @@ CREATE TABLE modifiers (
     origin_type VARCHAR(50) DEFAULT NULL,
     target_key VARCHAR(50) NOT NULL,
     operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
-    value REAL NOT NULL,
+    value_formula VARCHAR(200) NOT NULL,
     activation VARCHAR(50) CHECK(activation IN ('always', 'while_unconscious', 'while_stunned')) DEFAULT 'always',
     condition_id INTEGER DEFAULT NULL,
     priority INTEGER DEFAULT 100,
@@ -89,6 +89,27 @@ CREATE TABLE resources (
     FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
 );
 
+CREATE TABLE skill_groups (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE skills (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    attribute VARCHAR(50) NOT NULL,
+    can_default BOOLEAN DEFAULT FALSE,
+    skill_group VARCHAR(100) DEFAULT NULL,
+    FOREIGN KEY (skill_group) REFERENCES skill_groups(name) ON DELETE CASCADE
+);
+
+CREATE TABLE specializations (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    skill_id INTEGER NOT NULL,
+    FOREIGN KEY (skill_id) REFERENCES skills(id)
+);
+
 CREATE TABLE qualities (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -98,6 +119,7 @@ CREATE TABLE qualities (
     FOREIGN KEY (resource_name) REFERENCES resources(name) ON DELETE RESTRICT
 );
 
+-- Convert into modifiers later
 CREATE TABLE quality_effects (
     id INTEGER PRIMARY KEY,
     quality_id INTEGER NOT NULL,

@@ -7,6 +7,7 @@ mod modifier;
 mod priority_grade;
 mod quality;
 mod shared;
+mod skill;
 
 use crate::database::AppState;
 use std::fs::{create_dir_all, remove_file};

@@ -1,0 +1,9 @@
+- type: Skill
+  name: Skill Test
+  attribute: LOG
+  can_default: false
+  skill_group: Skill Group Test
+  specializations:
+    - name: Specialization Test
+    - name: Special Two Test
+    - name: Special Three
