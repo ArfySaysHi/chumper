@@ -140,11 +140,11 @@ CREATE TABLE character_qualities (
     FOREIGN KEY (quality_id) REFERENCES qualities(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS priority_grades (
+CREATE TABLE priority_grades (
     grade VARCHAR(1) PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS priority_bundles (
+CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
     grade VARCHAR(1) NOT NULL,
     domain VARCHAR(50) NOT NULL CHECK(domain IN ('attribute', 'skill', 'resource')),
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS priority_bundles (
     UNIQUE (grade, domain)
 );
 
-CREATE TABLE IF NOT EXISTS priority_bundle_effects (
+CREATE TABLE priority_bundle_effects (
     id INTEGER PRIMARY KEY,
     bundle_id INTEGER NOT NULL,
     target_domain VARCHAR(50) NOT NULL CHECK(target_domain IN ('attribute','skill','resource')),
@@ -167,11 +167,20 @@ CREATE TABLE IF NOT EXISTS priority_bundle_effects (
     FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_priority_bundles_grade_domain ON priority_bundles(grade, domain);
-CREATE INDEX IF NOT EXISTS idx_pbe_bundle ON priority_bundle_effects(bundle_id);
-CREATE INDEX IF NOT EXISTS idx_pbe_target_norm ON priority_bundle_effects(target_domain, target_name);
+CREATE TABLE character_priorities (
+    id INTEGER PRIMARY KEY,
+    character_id INTEGER NOT NULL,
+    bundle_id INTEGER NOT NULL,
+    FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
+    FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE,
+    UNIQUE(character_id, bundle_id)
+);
 
-CREATE TABLE IF NOT EXISTS metatypes_priority_grades (
+CREATE INDEX idx_priority_bundles_grade_domain ON priority_bundles(grade, domain);
+CREATE INDEX idx_pbe_bundle ON priority_bundle_effects(bundle_id);
+CREATE INDEX idx_pbe_target_norm ON priority_bundle_effects(target_domain, target_name);
+
+CREATE TABLE metatypes_priority_grades (
     special_attribute_bonus INTEGER NOT NULL,
     metatype_name VARCHAR(100) NOT NULL,
     grade VARCHAR(1) NOT NULL,
