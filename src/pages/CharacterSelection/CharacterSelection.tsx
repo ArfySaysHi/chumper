@@ -5,11 +5,12 @@ import Button from "../../components/ui/Button/Button.tsx";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
 import useCommand from "../../hooks/useCommand.ts";
 import CharacterSelectionTab from "./CharacterSelectionTab/CharacterSelectionTab.tsx";
-import ModalContainer from "../../components/layout/ModalContainer.tsx";
+import { AnimatePresence } from "framer-motion";
+import PriorityModal from "../../components/modals/PriorityModal/PriorityModal.tsx";
 
 const CharacterSelection = () => {
   const [counter, setCounter] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [priorityModalVisible, setPriorityModalVisible] = useState(true);
 
   const { execute: createCharacter } = useCommand("create_character");
 
@@ -26,6 +27,11 @@ const CharacterSelection = () => {
 
   return (
     <div className="character-selection">
+      <AnimatePresence>
+        {priorityModalVisible && (
+          <PriorityModal onClose={() => setPriorityModalVisible(false)} />
+        )}
+      </AnimatePresence>
       <header className="character-selection__header">
         <div className="character-selection__brand">
           <h1 className="character-selection__title">Characters</h1>
@@ -49,12 +55,6 @@ const CharacterSelection = () => {
         </div>
       </header>
 
-      {modalVisible && (
-        <ModalContainer onClose={() => setModalVisible(false)}>
-          <div>Cool Content for modal wow</div>
-        </ModalContainer>
-      )}
-      <button onClick={() => setModalVisible(true)}>Modal Toggle</button>
       <main className="character-selection__main container">
         <TabGroup
           tabs={[
