@@ -1,7 +1,4 @@
 @use "sass:map";
-// ===== HARMONIOUS DARK DASHBOARD PALETTE =====
-// Based on color theory and modern dark theme best practices
-
 $colors: (
   // Warmer and more sophisticated than pure red
   primary-50: #fef7f7,
@@ -207,6 +204,10 @@ $colors: (
   @return map.get($border-radius, $name);
 }
 
+@function z-index($name) {
+  @return map.get($z-layers, $name);
+}
+
 @function font-size($name) {
   @return map.get($font-sizes, $name);
 }
@@ -223,7 +224,6 @@ $colors: (
   @return map.get($font-weights, $name);
 }
 
-// ===== SEMANTIC GROUPINGS =====
 $brand-palette: (
   primary: color(primary-500),
   secondary: color(secondary-500),
@@ -247,8 +247,6 @@ $surface-palette: (
   inset: color(surface-inset),
 );
 
-// ===== DESIGN TOKENS =====
-// Pre-built combinations for common use cases
 $button-primary: (
   bg: color(primary-500),
   bg-hover: color(primary-600),
@@ -271,35 +269,6 @@ $card-default: (
   shadow: color(shadow-sm),
   text: color(text-primary),
 );
-
-// ===== USAGE EXAMPLES =====
-/*
-// Clean, harmonious button
-.btn-primary {
-  background: color(primary-500);
-  color: color(text-on-primary);
-  border: 1px solid color(primary-500);
-
-  &:hover {
-    background: color(primary-600);
-    border-color: color(primary-600);
-  }
-}
-
-// Well-balanced card
-.card {
-  background: surface(primary);
-  border: 1px solid border(subtle);
-  box-shadow: 0 1px 3px color(shadow-sm);
-  color: text(primary);
-}
-
-// Status indicator
-.status--online {
-  color: color(status-online);
-  background: color-alpha(status-online, 0.1);
-}
-*/
 
 $font-family-primary:
   "Inter",

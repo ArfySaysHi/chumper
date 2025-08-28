@@ -5,9 +5,11 @@ import Button from "../../components/ui/Button/Button.tsx";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
 import useCommand from "../../hooks/useCommand.ts";
 import CharacterSelectionTab from "./CharacterSelectionTab/CharacterSelectionTab.tsx";
+import ModalContainer from "../../components/layout/ModalContainer.tsx";
 
 const CharacterSelection = () => {
   const [counter, setCounter] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { execute: createCharacter } = useCommand("create_character");
 
@@ -47,6 +49,12 @@ const CharacterSelection = () => {
         </div>
       </header>
 
+      {modalVisible && (
+        <ModalContainer onClose={() => setModalVisible(false)}>
+          <div>Cool Content for modal wow</div>
+        </ModalContainer>
+      )}
+      <button onClick={() => setModalVisible(true)}>Modal Toggle</button>
       <main className="character-selection__main container">
         <TabGroup
           tabs={[
