@@ -8,11 +8,14 @@ interface PriorityModalProps {
 }
 
 const PriorityModal = ({ onClose }: PriorityModalProps) => {
-  const [currentStep, _] = useState("method");
+  const [currentStep, setCurrentStep] = useState("method");
 
   return (
     <ModalContainer onClose={onClose}>
-      {currentStep && <PriorityModalMethod />}
+      {currentStep === "method" && (
+        <PriorityModalMethod setCurrentStep={setCurrentStep} />
+      )}
+      {currentStep === "priority" && <div>Priority</div>}
     </ModalContainer>
   );
 };

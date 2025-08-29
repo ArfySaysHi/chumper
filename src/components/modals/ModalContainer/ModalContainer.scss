@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
 
 .modal-container {
     position: fixed;
@@ -9,9 +10,7 @@
     width: 100vw;
     z-index: z-index(modal-backdrop);
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-center;
 
     &__overlay {
         position: absolute;

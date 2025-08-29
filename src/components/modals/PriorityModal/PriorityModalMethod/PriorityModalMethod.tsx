@@ -25,21 +25,30 @@ const methods = [
   },
 ];
 
-const PriorityModalMethod = () => {
+interface PriorityModalMethodProps {
+  setCurrentStep: (step: string) => void;
+}
+
+const PriorityModalMethod = ({ setCurrentStep }: PriorityModalMethodProps) => {
   return (
     <div className="priority-modal-method">
       <div className="priority-modal-method__header">
         <h2 className="priority-modal-method__header__title">
           Character Generation
         </h2>
-        <span className="priority-modal-method__header__divider"></span>
         <p className="priority-modal-method__header__subheader">
           Select your preferred character creation method
         </p>
       </div>
       <div className="priority-modal-method__options">
-        {methods.map((m) => (
-          <IconInfoCard title={m.title} description={m.description}>
+        {methods.map((m, i) => (
+          <IconInfoCard
+            key={m.id}
+            title={m.title}
+            onClick={() => setCurrentStep(m.id)}
+            description={m.description}
+            disabled={i > 0}
+          >
             <m.icon />
           </IconInfoCard>
         ))}

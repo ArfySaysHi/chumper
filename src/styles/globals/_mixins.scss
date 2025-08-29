@@ -56,6 +56,12 @@
   color: color(primary-500);
 }
 
+@mixin subheader-style {
+  font-family: $font-family-display;
+  @include text-style(md, semibold, normal);
+  color: color(secondary-500);
+}
+
 @mixin section-header-style {
   font-family: $font-family-display;
   font-size: font-size(lg);

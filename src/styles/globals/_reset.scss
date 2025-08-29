@@ -22,7 +22,7 @@ picture,
 video,
 canvas,
 svg {
-  display: block;
+  display: block !important; // Added because MUI adds its own styles that overwrite otherwise
   max-width: 100%;
 }
 

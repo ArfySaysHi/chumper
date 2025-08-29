@@ -1,0 +1,88 @@
+@use "sass:map";
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
+
+.icon-info-card {
+    width: 100%;
+    padding: spacing(6);
+    background: surface(secondary);
+    border: 1px solid border(subtle);
+    border-radius: border-radius(lg);
+    cursor: pointer;
+    transition: all 300ms ease;
+    text-align: left;
+
+    &:not(:disabled):hover {
+        background: surface(tertiary);
+        border-color: color(primary-500);
+        transform: scale(1.02);
+        box-shadow: 0 10px 25px rgba(color(primary-500), 0.2);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+            border-color: border(default);
+            background: surface(secondary);
+        }
+    }
+
+    &__icon-wrap {
+        display: flex;
+        align-items: flex-start;
+        gap: spacing(4);
+
+        &__icon {
+            padding: spacing(3);
+            background: rgba(color(primary-500), 0.1);
+            border-radius: border-radius(lg);
+            color: color(primary-500);
+            transition: all 200ms ease;
+            flex-shrink: 0;
+
+            svg {
+                display: block;
+                width: spacing(6);
+                height: spacing(6);
+            }
+        }
+    }
+
+    &__info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: spacing(2);
+    }
+
+    &__title {
+        @include text-style(lg, semibold, tight);
+        color: color(text-primary);
+        margin: 0;
+    }
+
+    &__badge {
+        padding: spacing(1) spacing(2);
+        font-size: font-size(xs);
+        font-family: $font-family-mono;
+        font-weight: font-weight(bold);
+        border-radius: border-radius(sm);
+        background: color(success-600);
+        color: color(text-on-primary);
+        align-self: flex-start;
+        white-space: nowrap;
+    }
+
+    &__description {
+        @include text-style(sm, regular, relaxed);
+        color: color(text-secondary);
+        margin: 0;
+    }
+
+    &:hover &__icon-wrap__icon {
+        background: rgba(color(primary-500), 0.2);
+    }
+}

@@ -1,18 +1,24 @@
 @use "sass:map";
 @use "../../../../styles/globals/_variables.scss" as *;
+@use "../../../../styles/globals/_mixins.scss" as *;
 
 .priority-modal-method {
     &__header {
-        &__title {
-        }
+        text-align: center;
+        margin-bottom: spacing(4);
 
-        &__divider {
+        &__title {
+            @include section-header-style;
+            font-size: font-size(xxl);
         }
 
         &__subheader {
+            @include subheader-style;
         }
     }
 
     &__options {
+        @include flex-column;
+        gap: spacing(4);
     }
 }
