@@ -62,6 +62,15 @@
   color: color(secondary-500);
 }
 
+@mixin link-style {
+  color: color(secondary-300);
+  cursor: pointer;
+
+  &:hover {
+    color: color(secondary-200);
+  }
+}
+
 @mixin section-header-style {
   font-family: $font-family-display;
   font-size: font-size(lg);

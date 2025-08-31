@@ -1,3 +1,4 @@
+import "./PriorityModalPriority.scss";
 import { PlusOne } from "@mui/icons-material";
 
 interface PriorityModalPriorityProps {

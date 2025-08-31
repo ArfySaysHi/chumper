@@ -1,0 +1,35 @@
+@use "sass:map";
+@use "../../../../styles/globals/_variables.scss" as *;
+@use "../../../../styles/globals/_mixins.scss" as *;
+
+.priority-modal-priority {
+    &__header {
+        position: relative;
+
+        &__back {
+            @include link-style;
+            position: absolute;
+            top: 15%;
+            transform: translate(-50%);
+        }
+
+        &__title {
+            @include header-style;
+            @include text-style(xxl, bolder);
+            text-align: center;
+        }
+    }
+
+    &__content {
+        display: grid;
+        grid-template-columns: 1fr auto;
+
+        &__priorities {
+            @include flex-column;
+            gap: spacing(6);
+        }
+
+        &__info {
+        }
+    }
+}
