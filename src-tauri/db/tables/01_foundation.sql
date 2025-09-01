@@ -180,6 +180,7 @@ CREATE INDEX idx_priority_bundles_grade_domain ON priority_bundles(grade, domain
 CREATE INDEX idx_pbe_bundle ON priority_bundle_effects(bundle_id);
 CREATE INDEX idx_pbe_target_norm ON priority_bundle_effects(target_domain, target_name);
 
+-- TODO: Create the metatype priority grades import for the frontend modal info
 CREATE TABLE metatypes_priority_grades (
     special_attribute_bonus INTEGER NOT NULL,
     metatype_name VARCHAR(100) NOT NULL,

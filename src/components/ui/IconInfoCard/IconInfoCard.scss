@@ -5,7 +5,7 @@
 .icon-info-card {
     width: 100%;
     padding: spacing(6);
-    background: surface(secondary);
+    background: surface(primary);
     border: 1px solid border(subtle);
     border-radius: border-radius(lg);
     cursor: pointer;
@@ -13,7 +13,7 @@
     text-align: left;
 
     &:not(:disabled):hover {
-        background: surface(tertiary);
+        background: surface(secondary);
         border-color: color(primary-500);
         transform: scale(1.02);
         box-shadow: 0 10px 25px rgba(color(primary-500), 0.2);

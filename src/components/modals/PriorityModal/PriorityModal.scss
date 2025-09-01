@@ -2,4 +2,5 @@
 @use "../../../styles/globals/_variables.scss" as *;
 
 .priority-modal {
+    background: surface(app);
 }

@@ -23,6 +23,7 @@
     &__content {
         display: grid;
         grid-template-columns: 1fr auto;
+        gap: spacing(6);
 
         &__priorities {
             @include flex-column;

@@ -1,41 +1,41 @@
 import "./PriorityModalPriority.scss";
 import { PlusOne } from "@mui/icons-material";
+import PrioritySelectCard from "../../../ui/PrioritySelectCard/PrioritySelectCard.tsx";
+import type { MethodSpec } from "../../../../types/creation.ts";
+import useCommand from "../../../../hooks/useCommand.ts";
+import { useEffect } from "react";
 
 interface PriorityModalPriorityProps {
   setCurrentStep: (step: string) => void;
+  methodSpec: MethodSpec;
 }
 
 const PriorityModalPriority = ({
   setCurrentStep,
+  methodSpec,
 }: PriorityModalPriorityProps) => {
+  const { execute: listMetatypes } = useCommand("list_metatypes");
+
+  useEffect(() => {
+    console.log(listMetatypes({}));
+  }, []);
+
   return (
     <div className="priority-modal-priority">
       <div className="priority-modal-priority__header">
-        <div className="priority-modal-priority__header__back">Back</div>
+        <div
+          className="priority-modal-priority__header__back"
+          onClick={() => setCurrentStep("method")}
+        >
+          Back
+        </div>
         <h1 className="priority-modal-priority__header__title">
-          Priority Generation
+          {methodSpec.title}
         </h1>
       </div>
       <div className="priority-modal-priority__content">
         <div className="priority-modal-priority__content__priorities">
-          <div className="priority-select-card">
-            <div className="priority-select-card__icon">
-              <PlusOne />
-            </div>
-            <div className="priority-select-card__info">
-              <h2 className="priority-select-card__info__title">Attributes</h2>
-              <p className="priority-select-card__info__description">
-                Physical and mental capabilities
-              </p>
-            </div>
-            <div className="priority-select-card__options">
-              {["A", "B", "C", "D", "E"].map((g) => (
-                <button className="priority-select-card__options__grade">
-                  {g}
-                </button>
-              ))}
-            </div>
-          </div>
+          <PrioritySelectCard />
         </div>
         <div className="priority-modal-priority__content__info">
           <div className="priority-details">

@@ -1,0 +1,90 @@
+@use "sass:map";
+@use "../../../styles/globals/_variables.scss" as *;
+@use "../../../styles/globals/_mixins.scss" as *;
+
+.priority-select-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+        "icon info"
+        "options options";
+    gap: 0 spacing(4);
+    padding: spacing(4);
+    background: surface(primary);
+    border-radius: border-radius(lg);
+    border: 1px solid border(subtle);
+
+    &__icon {
+        grid-area: icon;
+        @include flex-center;
+        width: spacing(12);
+        height: spacing(12);
+        background: surface(secondary);
+        border-radius: border-radius(lg);
+
+        svg {
+            fill: color(primary-500);
+            width: spacing(6);
+            height: spacing(6);
+        }
+    }
+
+    &__info {
+        grid-area: info;
+        @include flex-column;
+        justify-content: center;
+        min-width: 0;
+
+        &__title {
+            font-family: $font-family-display;
+            @include text-style(xl, medium, tight);
+            margin-bottom: spacing(1);
+            color: text(primary);
+        }
+
+        &__description {
+            @include subtext-style;
+            margin: 0;
+        }
+    }
+
+    &__options {
+        grid-area: options;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: spacing(2);
+        margin-top: spacing(4);
+
+        &__grade {
+            @include flex-center;
+            width: spacing(10);
+            height: spacing(10);
+            background: surface(secondary);
+            border: 1px solid border(default);
+            border-radius: border-radius(md);
+            color: text(primary);
+            font-family: $font-family-display;
+            font-weight: font-weight(semibold);
+            font-size: font-size(lg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: surface(tertiary);
+                border-color: color(primary-500);
+                transform: translateY(-1px);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+
+            &--selected {
+                background: color(primary-500);
+                border-color: color(primary-600);
+                color: color(text-on-primary);
+            }
+        }
+    }
+}
