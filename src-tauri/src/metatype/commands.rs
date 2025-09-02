@@ -3,7 +3,7 @@ use crate::AppState;
 use crate::metatype::{types::*, repository};
 
 #[tauri::command]
-pub async fn list_metatypes(state: State<'_, AppState>) -> Result<Vec<MetatypeSummary>, String> {
+pub async fn list_metatypes(state: State<'_, AppState>) -> Result<Vec<Metatype>, String> {
     log::info!("list_metatypes");
     let pool = state.db_pool.clone();
 

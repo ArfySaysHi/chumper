@@ -6,6 +6,14 @@
   priority_grades:
     - grade: A
       special_attribute_bonus: 9
+    - grade: B
+      special_attribute_bonus: 7
+    - grade: C
+      special_attribute_bonus: 5
+    - grade: D
+      special_attribute_bonus: 3
+    - grade: E
+      special_attribute_bonus: 1
 - type: Metatype
   name: Elf
   charisma_min: 2
@@ -15,3 +23,11 @@
   priority_grades:
     - grade: A
       special_attribute_bonus: 8
+    - grade: B
+      special_attribute_bonus: 6
+    - grade: C
+      special_attribute_bonus: 3
+    - grade: D
+      special_attribute_bonus: 0
+  metatype_qualities:
+    - name: Low-Light Vision

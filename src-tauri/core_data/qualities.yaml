@@ -19,3 +19,8 @@
       value_formula: "1"
       activation: always
       priority: 50
+- type: Quality
+  name: Low-Light Vision
+  resource_name: karma
+  cost: 4
+  category: Positive

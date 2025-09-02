@@ -1,4 +1,6 @@
-use super::repository::{create_metatype, create_metatype_priority_grades, get_metatype};
+use super::repository::{
+    create_metatype, create_metatype_priority_grades, create_metatype_qualities, get_metatype,
+};
 use crate::import::YamlImportable;
 use rusqlite::{
     types::{FromSql, FromSqlError, ToSqlOutput, Value, ValueRef},
@@ -9,7 +11,28 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct MetatypePriorityGrade {
     pub special_attribute_bonus: i32,
+    pub metatype_name: Option<String>,
     pub grade: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+pub struct MetatypeQuality {
+    pub metatype_name: Option<String>,
+    pub name: String,
+    #[serde(default = "default_rating")]
+    pub default_rating: i32,
+    #[serde(default = "default_timestamp")]
+    pub created_at: Option<String>,
+    #[serde(default = "default_timestamp")]
+    pub updated_at: Option<String>,
+}
+
+fn default_rating() -> i32 {
+    1
+}
+
+fn default_timestamp() -> Option<String> {
+    Some("datetime('now')".to_string())
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -104,6 +127,8 @@ pub struct Metatype {
     pub resonance_max: i32,
     #[serde(default)]
     pub priority_grades: Vec<MetatypePriorityGrade>,
+    #[serde(default)]
+    pub metatype_qualities: Vec<MetatypeQuality>,
 }
 
 impl Metatype {
@@ -123,6 +148,7 @@ impl YamlImportable for Metatype {
     ) -> crate::error::Result<Self::Output> {
         create_metatype(connection, &self)?;
         create_metatype_priority_grades(connection, &self)?;
+        create_metatype_qualities(connection, &self)?;
 
         let m = get_metatype(connection, &self.name)?;
 

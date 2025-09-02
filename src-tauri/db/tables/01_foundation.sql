@@ -193,3 +193,15 @@ CREATE TABLE metatypes_priority_grades (
 -- TODO: Implement attributes via modifiers
 -- TODO: Implement qualities
 -- TODO: Implement metavariants as metatypes that reference a metatype (new table maybe?)
+
+CREATE TABLE metatype_qualities (
+    id INTEGER PRIMARY KEY,
+    metatype_name VARCHAR(100) NOT NULL,
+    quality_name VARCHAR(100) NOT NULL,
+    default_rating INTEGER DEFAULT 1,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (metatype_name) REFERENCES metatypes(name) ON DELETE CASCADE,
+    FOREIGN KEY (quality_name) REFERENCES qualities(name) ON DELETE CASCADE,
+    UNIQUE (metatype_name, quality_name)
+);

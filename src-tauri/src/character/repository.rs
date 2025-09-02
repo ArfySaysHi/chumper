@@ -156,6 +156,7 @@ pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character
             resonance_min: row.get("resonance_min")?,
             resonance_max: row.get("resonance_max")?,
             priority_grades: Vec::new(),
+            metatype_qualities: Vec::new(),
         })
     })?;
 
