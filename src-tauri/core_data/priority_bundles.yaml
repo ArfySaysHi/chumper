@@ -1,0 +1,82 @@
+# This file stored information pertaining to simple stat increases at various grades
+- type: PriorityBundle
+  domain: attributes
+  priority_bundle_modifiers:
+    - grade: A
+      target_path: resources.attributes.base_amount
+      operation: add
+      value: 24
+    - grade: B
+      target_path: resources.attributes.base_amount
+      operation: add
+      value: 20
+    - grade: C
+      target_path: resources.attributes.base_amount
+      operation: add
+      value: 16
+    - grade: D
+      target_path: resources.attributes.base_amount
+      operation: add
+      value: 14
+    - grade: E
+      target_path: resources.attributes.base_amount
+      operation: add
+      value: 12
+- type: PriorityBundle
+  domain: skills
+  priority_bundle_modifiers:
+    - grade: A
+      target_path: resources.skills.base_amount
+      operation: add
+      value: 46
+    - grade: A
+      target_path: resources.skill_groups.base_amount
+      operation: add
+      value: 10
+    - grade: B
+      target_path: resources.skills.base_amount
+      operation: add
+      value: 36
+    - grade: B
+      target_path: resources.skill_groups.base_amount
+      operation: add
+      value: 5
+    - grade: C
+      target_path: resources.skills.base_amount
+      operation: add
+      value: 28
+    - grade: C
+      target_path: resources.skill_groups.base_amount
+      operation: add
+      value: 2
+    - grade: D
+      target_path: resources.skills.base_amount
+      operation: add
+      value: 22
+    - grade: E
+      target_path: resources.skills.base_amount
+      operation: add
+      value: 18
+- type: PriorityBundle
+  domain: resources
+  priority_bundle_modifiers:
+    - grade: A
+      target_path: resources.nuyen.base_amount
+      operation: add
+      value: 450000
+    - grade: B
+      target_path: resources.nuyen.base_amount
+      operation: add
+      value: 275000
+    - grade: C
+      target_path: resources.nuyen.base_amount
+      operation: add
+      value: 140000
+    - grade: D
+      target_path: resources.nuyen.base_amount
+      operation: add
+      value: 50000
+    - grade: E
+      target_path: resources.nuyen.base_amount
+      operation: add
+      value: 6000

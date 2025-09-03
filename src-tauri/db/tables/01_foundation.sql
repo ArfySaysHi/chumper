@@ -140,26 +140,18 @@ CREATE TABLE character_qualities (
     FOREIGN KEY (quality_id) REFERENCES qualities(id) ON DELETE CASCADE
 );
 
-CREATE TABLE priority_grades (
-    grade VARCHAR(1) PRIMARY KEY
-);
-
 CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
-    grade VARCHAR(1) NOT NULL,
-    domain VARCHAR(50) NOT NULL CHECK(domain IN ('attribute', 'skill', 'resource')),
-    description TEXT,
+    domain VARCHAR(50) NOT NULL CHECK(domain IN ('attributes', 'skills', 'resources')) UNIQUE,
     created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (grade) REFERENCES priority_grades(grade) ON DELETE RESTRICT,
-    UNIQUE (grade, domain)
+    updated_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE TABLE priority_bundle_effects (
+CREATE TABLE priority_bundle_modifiers (
     id INTEGER PRIMARY KEY,
+    grade VARCHAR(1) NOT NULL UNIQUE,
     bundle_id INTEGER NOT NULL,
-    target_domain VARCHAR(50) NOT NULL CHECK(target_domain IN ('attribute','skill','resource')),
-    target_name VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
+    target_path VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
     operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
     value REAL NOT NULL,
     created_at TEXT DEFAULT (datetime('now')),
@@ -175,10 +167,6 @@ CREATE TABLE character_priorities (
     FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE,
     UNIQUE(character_id, bundle_id)
 );
-
-CREATE INDEX idx_priority_bundles_grade_domain ON priority_bundles(grade, domain);
-CREATE INDEX idx_pbe_bundle ON priority_bundle_effects(bundle_id);
-CREATE INDEX idx_pbe_target_norm ON priority_bundle_effects(target_domain, target_name);
 
 -- TODO: Create the metatype priority grades import for the frontend modal info
 CREATE TABLE metatypes_priority_grades (
