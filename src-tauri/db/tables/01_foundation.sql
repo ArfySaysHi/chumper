@@ -140,6 +140,10 @@ CREATE TABLE character_qualities (
     FOREIGN KEY (quality_id) REFERENCES qualities(id) ON DELETE CASCADE
 );
 
+CREATE TABLE priority_grades (
+    grade VARCHAR(1) PRIMARY KEY
+);
+
 CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
     domain VARCHAR(50) NOT NULL CHECK(domain IN ('attributes', 'skills', 'resources')) UNIQUE,
