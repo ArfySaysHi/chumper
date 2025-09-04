@@ -80,3 +80,15 @@
       target_key: resources.nuyen.base_amount
       operation: add
       value_formula: "6000"
+- type: PriorityBundle
+  domain: magic
+  priority_bundles:
+    - name: Magician
+      domain: magic_type
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          operation: add
+          value_formula: "6"
+        - target_key: resources.spell_points.base_amount
+          operation: add
+          value_formula: "10"

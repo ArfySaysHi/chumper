@@ -14,10 +14,10 @@ const PriorityModalPriority = ({
   setCurrentStep,
   methodSpec,
 }: PriorityModalPriorityProps) => {
-  const { execute: listMetatypes } = useCommand("list_metatypes");
+  const { execute: listMetatypes } = useCommand("list_priority_bundles");
 
   useEffect(() => {
-    console.log(listMetatypes({}));
+    listMetatypes({}).then(console.log);
   }, []);
 
   return (

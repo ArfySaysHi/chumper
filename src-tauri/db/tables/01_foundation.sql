@@ -146,14 +146,17 @@ CREATE TABLE priority_grades (
 
 CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
-    domain VARCHAR(50) NOT NULL CHECK(domain IN ('attributes', 'skills', 'resources')) UNIQUE,
+    name VARCHAR(100) DEFAULT NULL,
+    domain VARCHAR(50) NOT NULL UNIQUE,
+    parent_bundle_id INTEGER DEFAULT NULL,
     created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (parent_bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE
 );
 
 CREATE TABLE priority_bundle_modifiers (
     id INTEGER PRIMARY KEY,
-    grade VARCHAR(1) NOT NULL,
+    grade VARCHAR(1) NOT NULL DEFAULT '*',
     bundle_id INTEGER NOT NULL,
     target_key VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
     operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
