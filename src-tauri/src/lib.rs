@@ -4,6 +4,7 @@ mod error;
 mod import;
 mod metatype;
 mod modifier;
+mod priority_bundle;
 mod priority_grade;
 mod quality;
 mod shared;

@@ -153,11 +153,11 @@ CREATE TABLE priority_bundles (
 
 CREATE TABLE priority_bundle_modifiers (
     id INTEGER PRIMARY KEY,
-    grade VARCHAR(1) NOT NULL UNIQUE,
+    grade VARCHAR(1) NOT NULL,
     bundle_id INTEGER NOT NULL,
-    target_path VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
+    target_key VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
     operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
-    value REAL NOT NULL,
+    value_formula VARCHAR(200) NOT NULL,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE

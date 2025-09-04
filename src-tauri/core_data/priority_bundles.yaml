@@ -3,80 +3,80 @@
   domain: attributes
   priority_bundle_modifiers:
     - grade: A
-      target_path: resources.attributes.base_amount
+      target_key: resources.attributes.base_amount
       operation: add
-      value: 24
+      value_formula: "24"
     - grade: B
-      target_path: resources.attributes.base_amount
+      target_key: resources.attributes.base_amount
       operation: add
-      value: 20
+      value_formula: "20"
     - grade: C
-      target_path: resources.attributes.base_amount
+      target_key: resources.attributes.base_amount
       operation: add
-      value: 16
+      value_formula: "16"
     - grade: D
-      target_path: resources.attributes.base_amount
+      target_key: resources.attributes.base_amount
       operation: add
-      value: 14
+      value_formula: "14"
     - grade: E
-      target_path: resources.attributes.base_amount
+      target_key: resources.attributes.base_amount
       operation: add
-      value: 12
+      value_formula: "12"
 - type: PriorityBundle
   domain: skills
   priority_bundle_modifiers:
     - grade: A
-      target_path: resources.skills.base_amount
+      target_key: resources.skills.base_amount
       operation: add
-      value: 46
+      value_formula: "46"
     - grade: A
-      target_path: resources.skill_groups.base_amount
+      target_key: resources.skill_groups.base_amount
       operation: add
-      value: 10
+      value_formula: "10"
     - grade: B
-      target_path: resources.skills.base_amount
+      target_key: resources.skills.base_amount
       operation: add
-      value: 36
+      value_formula: "36"
     - grade: B
-      target_path: resources.skill_groups.base_amount
+      target_key: resources.skill_groups.base_amount
       operation: add
-      value: 5
+      value_formula: "5"
     - grade: C
-      target_path: resources.skills.base_amount
+      target_key: resources.skills.base_amount
       operation: add
-      value: 28
+      value_formula: "28"
     - grade: C
-      target_path: resources.skill_groups.base_amount
+      target_key: resources.skill_groups.base_amount
       operation: add
-      value: 2
+      value_formula: "2"
     - grade: D
-      target_path: resources.skills.base_amount
+      target_key: resources.skills.base_amount
       operation: add
-      value: 22
+      value_formula: "22"
     - grade: E
-      target_path: resources.skills.base_amount
+      target_key: resources.skills.base_amount
       operation: add
-      value: 18
+      value_formula: "18"
 - type: PriorityBundle
   domain: resources
   priority_bundle_modifiers:
     - grade: A
-      target_path: resources.nuyen.base_amount
+      target_key: resources.nuyen.base_amount
       operation: add
-      value: 450000
+      value_formula: "450000"
     - grade: B
-      target_path: resources.nuyen.base_amount
+      target_key: resources.nuyen.base_amount
       operation: add
-      value: 275000
+      value_formula: "275000"
     - grade: C
-      target_path: resources.nuyen.base_amount
+      target_key: resources.nuyen.base_amount
       operation: add
-      value: 140000
+      value_formula: "140000"
     - grade: D
-      target_path: resources.nuyen.base_amount
+      target_key: resources.nuyen.base_amount
       operation: add
-      value: 50000
+      value_formula: "50000"
     - grade: E
-      target_path: resources.nuyen.base_amount
+      target_key: resources.nuyen.base_amount
       operation: add
-      value: 6000
+      value_formula: "6000"

@@ -1,7 +1,6 @@
+use super::PriorityGrade;
 use crate::error::Result;
 use rusqlite::{named_params, Connection};
-
-use super::PriorityGrade;
 
 pub fn list_priority_grades(connection: &Connection) -> Result<()> {
     let query = "SELECT * FROM priority_grades".to_string();

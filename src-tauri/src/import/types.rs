@@ -1,5 +1,6 @@
 use crate::{
-    character::Character, error::Result, metatype::types::Metatype, quality::Quality, skill::Skill,
+    character::Character, error::Result, metatype::types::Metatype,
+    priority_bundle::PriorityBundle, quality::Quality, skill::Skill,
 };
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
@@ -11,6 +12,7 @@ pub enum CoreData {
     Metatype(Metatype),
     Quality(Quality),
     Skill(Skill),
+    PriorityBundle(PriorityBundle),
 }
 
 impl YamlImportable for CoreData {
@@ -21,6 +23,9 @@ impl YamlImportable for CoreData {
             CoreData::Metatype(v) => v.insert_into_db(connection).map(CoreData::Metatype),
             CoreData::Quality(v) => v.insert_into_db(connection).map(CoreData::Quality),
             CoreData::Skill(v) => v.insert_into_db(connection).map(CoreData::Skill),
+            CoreData::PriorityBundle(v) => {
+                v.insert_into_db(connection).map(CoreData::PriorityBundle)
+            }
         }
     }
 }
