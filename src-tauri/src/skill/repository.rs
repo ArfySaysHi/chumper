@@ -24,32 +24,14 @@ pub fn create_skill(connection: &Connection, s: &Skill) -> Result<Skill> {
 }
 
 pub fn create_skill_group(connection: &Connection, s: &Skill) -> Result<Skill> {
-    log::info!("create_skill_group with {:#?}", &s);
-    let query = "INSERT INTO skill_groups (name) VALUES (:name) ON CONFLICT DO NOTHING".to_string();
-    let mut stmt = connection.prepare(&query)?;
-    stmt.execute(named_params! {
-        ":name": &s.name
-    })?;
-
-    Ok(s.clone())
-}
-
-pub fn create_skill_specialization(connection: &Connection, s: &Skill) -> Result<Skill> {
-    log::info!("create_skill_group with {:#?}", &s);
-    let query = "INSERT INTO specializations (name, skill_id)
-                 VALUES (:name, :skill_id)
-                 ON CONFLICT DO NOTHING"
-        .to_string();
-    let mut stmt = connection.prepare(&query)?;
-
-    if let Some(specs) = &s.specializations {
-        for spec in specs.iter() {
-            stmt.execute(named_params! {
-                ":name": &spec.name,
-                ":skill_id": &s.id
-            })?;
-        }
+    if s.skill_group.is_some() {
+        log::info!("create_skill_group with {:#?}", &s);
+        let query =
+            "INSERT INTO skill_groups (name) VALUES (:name) ON CONFLICT DO NOTHING".to_string();
+        let mut stmt = connection.prepare(&query)?;
+        stmt.execute(named_params! {
+            ":name": &s.skill_group
+        })?;
     }
-
     Ok(s.clone())
 }

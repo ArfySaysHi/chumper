@@ -103,13 +103,6 @@ CREATE TABLE skills (
     FOREIGN KEY (skill_group) REFERENCES skill_groups(name) ON DELETE CASCADE
 );
 
-CREATE TABLE specializations (
-    id INTEGER PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    skill_id INTEGER NOT NULL,
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
-);
-
 CREATE TABLE qualities (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
