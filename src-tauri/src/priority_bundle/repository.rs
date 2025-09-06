@@ -1,5 +1,6 @@
 use super::helpers::nest_priority_bundles;
 use super::{PriorityBundle, PriorityBundleModifier};
+use crate::priority_bundle::PriorityBundleSkill;
 use crate::{error::Result, import::YamlImportable};
 use rusqlite::{named_params, Connection};
 use std::collections::HashMap;
@@ -16,6 +17,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 domain: row.get("domain")?,
                 parent_bundle_id: row.get("parent_bundle_id")?,
                 priority_bundle_modifiers: Vec::new(),
+                priority_bundle_skills: Vec::new(),
                 priority_bundles: Vec::new(),
             })
         })?
@@ -50,10 +52,35 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
             pbm_map.entry(bundle_id).or_default().push(res);
         }
     }
+
+    let pbs_query = "SELECT id, grade, bundle_id, attribute, amount, default_rating FROM priority_bundle_skills".to_string();
+    let mut pbs_stmt = connection.prepare(&pbs_query)?;
+    let pbs_iter = pbs_stmt
+        .query_map([], |row| {
+            Ok(PriorityBundleSkill {
+                id: row.get("id")?,
+                grade: row.get("grade")?,
+                bundle_id: row.get("bundle_id")?,
+                attribute: row.get("attribute")?,
+                amount: row.get("amount")?,
+                default_rating: row.get("default_rating")?,
+            })
+        })?
+        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let mut pbs_map: HashMap<i64, Vec<PriorityBundleSkill>> = HashMap::new();
+    for res in pbs_iter {
+        if let Some(bundle_id) = res.bundle_id {
+            pbs_map.entry(bundle_id).or_default().push(res);
+        }
+    }
+
     for pb in &mut priority_bundles {
         if let Some(pb_id) = &pb.id {
             if let Some(mods) = pbm_map.remove(&pb_id) {
                 pb.priority_bundle_modifiers = mods;
+            }
+            if let Some(skills) = pbs_map.remove(&pb_id) {
+                pb.priority_bundle_skills = skills;
             }
         }
     }
@@ -108,6 +135,27 @@ pub fn create_priority_bundle_modifiers(
             ":target_key": &pbm.target_key,
             ":operation": &pbm.operation,
             ":value_formula": &pbm.value_formula,
+        })?;
+    }
+
+    Ok(())
+}
+
+pub fn create_priority_bundle_skills(connection: &Connection, pb: &PriorityBundle) -> Result<()> {
+    log::info!("create_priority_bundle_skills with {:#?}", &pb);
+    let query = "INSERT INTO priority_bundle_skills
+                   (grade, bundle_id, attribute, amount, default_rating)
+                 VALUES (:grade, :bundle_id, :attribute, :amount, :default_rating)"
+        .to_string();
+    let mut stmt = connection.prepare(&query)?;
+
+    for pbs in pb.priority_bundle_skills.iter() {
+        stmt.execute(named_params! {
+            ":grade": &pbs.grade,
+            ":bundle_id": &pb.id,
+            ":attribute": &pbs.attribute,
+            ":amount": &pbs.amount,
+            ":default_rating": &pbs.default_rating,
         })?;
     }
 

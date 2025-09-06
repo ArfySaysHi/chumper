@@ -92,3 +92,8 @@
         - target_key: resources.spell_points.base_amount
           operation: add
           value_formula: "10"
+      priority_bundle_skills:
+        - grade: "A"
+          attribute: "MAG"
+          amount: 2
+          default_rating: 5

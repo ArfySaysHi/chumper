@@ -159,6 +159,15 @@ CREATE TABLE priority_bundle_modifiers (
     FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE
 );
 
+CREATE TABLE priority_bundle_skills (
+    id INTEGER PRIMARY KEY,
+    grade VARCHAR(1) NOT NULL DEFAULT '*',
+    bundle_id INTEGER NOT NULL,
+    attribute VARCHAR(3) NOT NULL,
+    amount INTEGER DEFAULT 0,
+    default_rating INTEGER DEFAULT 0
+);
+
 CREATE TABLE character_priorities (
     id INTEGER PRIMARY KEY,
     character_id INTEGER NOT NULL,

@@ -1,7 +1,8 @@
+use super::repository::{
+    create_priority_bundle, create_priority_bundle_modifiers, create_priority_bundle_skills,
+};
 use crate::import::YamlImportable;
 use serde::{Deserialize, Serialize};
-
-use super::repository::{create_priority_bundle, create_priority_bundle_modifiers};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PriorityBundleModifier {
@@ -40,7 +41,24 @@ pub struct PriorityBundle {
     #[serde(default)]
     pub priority_bundle_modifiers: Vec<PriorityBundleModifier>,
     #[serde(default)]
+    pub priority_bundle_skills: Vec<PriorityBundleSkill>,
+    #[serde(default)]
     pub priority_bundles: Vec<PriorityBundle>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PriorityBundleSkill {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bundle_id: Option<i64>,
+    #[serde(default = "default_wildcard")]
+    pub grade: String,
+    pub attribute: String,
+    #[serde(default)]
+    pub amount: i32,
+    #[serde(default)]
+    pub default_rating: i32,
 }
 
 impl YamlImportable for PriorityBundle {
@@ -54,6 +72,7 @@ impl YamlImportable for PriorityBundle {
     {
         let res = create_priority_bundle(connection, &self)?;
         create_priority_bundle_modifiers(connection, &res)?;
+        create_priority_bundle_skills(connection, &res)?;
 
         Ok(res)
     }
