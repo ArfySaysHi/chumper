@@ -16,7 +16,7 @@ pub struct PriorityBundleModifier {
     pub target_key: String,
     #[serde(default = "default_operation")]
     pub operation: String,
-    pub value_formula: String,
+    pub value: String,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,
     #[serde(default = "default_timestamp")]
@@ -46,15 +46,15 @@ pub struct PriorityBundle {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parent_bundle_id: Option<i64>,
     #[serde(default)]
-    pub priority_bundle_modifiers: Vec<PriorityBundleModifier>,
+    pub modifiers: Vec<PriorityBundleModifier>,
     #[serde(default)]
-    pub priority_bundle_skills: Vec<PriorityBundleSkill>,
+    pub skills: Vec<PriorityBundleSkill>,
     #[serde(default)]
-    pub priority_bundle_metatypes: Vec<PriorityBundleMetatype>,
+    pub metatypes: Vec<PriorityBundleMetatype>,
     #[serde(default)]
-    pub priority_bundle_qualities: Vec<PriorityBundleQuality>,
+    pub qualities: Vec<PriorityBundleQuality>,
     #[serde(default)]
-    pub priority_bundles: Vec<PriorityBundle>,
+    pub children: Vec<PriorityBundle>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -69,7 +69,7 @@ pub struct PriorityBundleSkill {
     #[serde(default)]
     pub amount: i32,
     #[serde(default)]
-    pub default_rating: i32,
+    pub rating: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -81,8 +81,8 @@ pub struct PriorityBundleMetatype {
     #[serde(default = "default_wildcard")]
     pub grade: String,
     #[serde(default)]
-    pub special_attribute_bonus: i32,
-    pub metatype_name: String,
+    pub special_points: i32,
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -93,7 +93,7 @@ pub struct PriorityBundleQuality {
     pub bundle_id: Option<i64>,
     #[serde(default = "default_wildcard")]
     pub grade: String,
-    pub quality_name: String,
+    pub name: String,
 }
 
 impl YamlImportable for PriorityBundle {

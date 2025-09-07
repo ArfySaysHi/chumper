@@ -1,217 +1,217 @@
 # This file stored information pertaining to simple stat increases at various grades
 - type: PriorityBundle
   name: "metatype"
-  priority_bundle_metatypes:
-    - metatype_name: Human
+  metatypes:
+    - name: Human
       grade: "A"
-      special_attribute_bonus: 9
-    - metatype_name: Elf
+      special_points: 9
+    - name: Elf
       grade: "A"
-      special_attribute_bonus: 8
-    - metatype_name: Dwarf
+      special_points: 8
+    - name: Dwarf
       grade: "A"
-      special_attribute_bonus: 7
-    - metatype_name: Ork
+      special_points: 7
+    - name: Ork
       grade: "A"
-      special_attribute_bonus: 7
-    - metatype_name: Troll
+      special_points: 7
+    - name: Troll
       grade: "A"
-      special_attribute_bonus: 5
-    - metatype_name: Human
+      special_points: 5
+    - name: Human
       grade: "B"
-      special_attribute_bonus: 7
-    - metatype_name: Elf
+      special_points: 7
+    - name: Elf
       grade: "B"
-      special_attribute_bonus: 6
-    - metatype_name: Dwarf
+      special_points: 6
+    - name: Dwarf
       grade: "B"
-      special_attribute_bonus: 4
-    - metatype_name: Ork
+      special_points: 4
+    - name: Ork
       grade: "B"
-      special_attribute_bonus: 4
-    - metatype_name: Troll
+      special_points: 4
+    - name: Troll
       grade: "B"
-      special_attribute_bonus: 0
-    - metatype_name: Human
+      special_points: 0
+    - name: Human
       grade: "C"
-      special_attribute_bonus: 5
-    - metatype_name: Elf
+      special_points: 5
+    - name: Elf
       grade: "C"
-      special_attribute_bonus: 3
-    - metatype_name: Dwarf
+      special_points: 3
+    - name: Dwarf
       grade: "C"
-      special_attribute_bonus: 1
-    - metatype_name: Ork
+      special_points: 1
+    - name: Ork
       grade: "C"
-      special_attribute_bonus: 0
-    - metatype_name: Human
+      special_points: 0
+    - name: Human
       grade: "D"
-      special_attribute_bonus: 3
-    - metatype_name: Elf
+      special_points: 3
+    - name: Elf
       grade: "D"
-      special_attribute_bonus: 0
-    - metatype_name: Human
+      special_points: 0
+    - name: Human
       grade: "E"
-      special_attribute_bonus: 1
+      special_points: 1
 - type: PriorityBundle
   name: "attributes"
-  priority_bundle_modifiers:
+  modifiers:
     - grade: "A"
-      target_key: resources.nuyen.base_amount
-      value_formula: "450000"
+      target_key: resources.attributes.base_amount
+      value: "24"
     - grade: "B"
-      target_key: resources.nuyen.base_amount
-      value_formula: "275000"
+      target_key: resources.attributes.base_amount
+      value: "20"
     - grade: "C"
-      target_key: resources.nuyen.base_amount
-      value_formula: "140000"
+      target_key: resources.attributes.base_amount
+      value: "16"
     - grade: "D"
-      target_key: resources.nuyen.base_amount
-      value_formula: "50000"
+      target_key: resources.attributes.base_amount
+      value: "14"
     - grade: "E"
-      target_key: resources.nuyen.base_amount
-      value_formula: "6000"
+      target_key: resources.attributes.base_amount
+      value: "12"
 - type: PriorityBundle
   name: "magic/resonance"
-  priority_bundles:
+  children:
     - name: Magician
       grade: "A"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.magic.base_amount
-          value_formula: "6"
+          value: "6"
         - target_key: resources.spell_points.base_amount
-          value_formula: "10"
-      priority_bundle_skills:
+          value: "10"
+      skills:
         - attribute: "MAG"
           amount: 2
-          default_rating: 5
-      priority_bundle_qualities:
-        - quality_name: "Magician"
+          rating: 5
+      qualities:
+        - name: "Magician"
     - name: Mystic Adept
       grade: "A"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.magic.base_amount
-          value_formula: "6"
+          value: "6"
         - target_key: resources.spell_points.base_amount
-          value_formula: "10"
-      priority_bundle_skills:
+          value: "10"
+      skills:
         - attribute: "MAG"
           amount: 2
-          default_rating: 5
-      priority_bundle_qualities:
-        - quality_name: Mystic Adept
+          rating: 5
+      qualities:
+        - name: Mystic Adept
     - name: Technomancer
       grade: "A"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.resonance.base_amount
-          value_formula: "6"
+          value: "6"
         - target_key: resources.complex_forms.base_amount
-          value_formula: "5"
-      priority_bundle_skills:
+          value: "5"
+      skills:
         - attribute: "RES"
           amount: 2
-          default_rating: 5
-      priority_bundle_qualities:
-        - quality_name: Technomancer
+          rating: 5
+      qualities:
+        - name: Technomancer
     - name: Magician
       grade: "B"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.magic.base_amount
-          value_formula: "4"
+          value: "4"
         - target_key: resources.spell_points.base_amount
-          value_formula: "7"
-      priority_bundle_skills:
+          value: "7"
+      skills:
         - attribute: "MAG"
           amount: 2
-          default_rating: 4
-      priority_bundle_qualities:
-        - quality_name: "Magician"
+          rating: 4
+      qualities:
+        - name: "Magician"
     - name: Mystic Adept
       grade: "B"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.magic.base_amount
-          value_formula: "4"
+          value: "4"
         - target_key: resources.spell_points.base_amount
-          value_formula: "7"
-      priority_bundle_skills:
+          value: "7"
+      skills:
         - attribute: "MAG"
           amount: 2
-          default_rating: 4
-      priority_bundle_qualities:
-        - quality_name: Mystic Adept
+          rating: 4
+      qualities:
+        - name: Mystic Adept
     - name: "Technomancer"
       grade: "B"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.resonance.base_amount
-          value_formula: "4"
+          value: "4"
         - target_key: resources.complex_forms.base_amount
-          value_formula: "2"
-      priority_bundle_skills:
+          value: "2"
+      skills:
         - attribute: "RES"
           amount: 2
-          default_rating: 4
-      priority_bundle_qualities:
-        - quality_name: Technomancer
+          rating: 4
+      qualities:
+        - name: Technomancer
     - name: "Adept"
       grade: "B"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.magic.base_amount
-          value_formula: "6"
-      priority_bundle_skills:
+          value: "6"
+      skills:
         - attribute: "MAG"
           amount: 1
-          default_rating: 4
+          rating: 4
     - name: "Aspected Magician"
       grade: "B"
-      priority_bundle_modifiers:
+      modifiers:
         - target_key: attributes.magic.base_amount
-          value_formula: "5"
-      priority_bundle_skills:
+          value: "5"
+      skills:
         - attribute: "MAG"
           amount: 1
-          default_rating: 4
+          rating: 4
 - type: PriorityBundle
   name: "skills"
-  priority_bundle_modifiers:
+  modifiers:
     - grade: A
       target_key: resources.skills.base_amount
-      value_formula: "46"
+      value: "46"
     - grade: A
       target_key: resources.skill_groups.base_amount
-      value_formula: "10"
+      value: "10"
     - grade: B
       target_key: resources.skills.base_amount
-      value_formula: "36"
+      value: "36"
     - grade: B
       target_key: resources.skill_groups.base_amount
-      value_formula: "5"
+      value: "5"
     - grade: C
       target_key: resources.skills.base_amount
-      value_formula: "28"
+      value: "28"
     - grade: C
       target_key: resources.skill_groups.base_amount
-      value_formula: "2"
+      value: "2"
     - grade: D
       target_key: resources.skills.base_amount
-      value_formula: "22"
+      value: "22"
     - grade: E
       target_key: resources.skills.base_amount
-      value_formula: "18"
+      value: "18"
 - type: PriorityBundle
   name: "resources"
-  priority_bundle_modifiers:
+  modifiers:
     - grade: A
       target_key: resources.nuyen.base_amount
-      value_formula: "450000"
+      value: "450000"
     - grade: B
       target_key: resources.nuyen.base_amount
-      value_formula: "275000"
+      value: "275000"
     - grade: C
       target_key: resources.nuyen.base_amount
-      value_formula: "140000"
+      value: "140000"
     - grade: D
       target_key: resources.nuyen.base_amount
-      value_formula: "50000"
+      value: "50000"
     - grade: E
       target_key: resources.nuyen.base_amount
-      value_formula: "6000"
+      value: "6000"

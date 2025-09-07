@@ -16,11 +16,11 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 name: row.get("name")?,
                 grade: row.get("grade")?,
                 parent_bundle_id: row.get("parent_bundle_id")?,
-                priority_bundle_modifiers: Vec::new(),
-                priority_bundle_skills: Vec::new(),
-                priority_bundle_metatypes: Vec::new(),
-                priority_bundle_qualities: Vec::new(),
-                priority_bundles: Vec::new(),
+                modifiers: Vec::new(),
+                skills: Vec::new(),
+                metatypes: Vec::new(),
+                qualities: Vec::new(),
+                children: Vec::new(),
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -30,7 +30,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
     }
 
     let pbm_query = "SELECT id, grade, bundle_id, target_key, operation,
-                                value_formula, created_at, updated_at
+                                value, created_at, updated_at
                          FROM priority_bundle_modifiers"
         .to_string();
     let mut pbm_stmt = connection.prepare(&pbm_query)?;
@@ -42,7 +42,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 bundle_id: row.get("bundle_id")?,
                 target_key: row.get("target_key")?,
                 operation: row.get("operation")?,
-                value_formula: row.get("value_formula")?,
+                value: row.get("value")?,
                 created_at: row.get("created_at")?,
                 updated_at: row.get("updated_at")?,
             })
@@ -55,7 +55,9 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
         }
     }
 
-    let pbs_query = "SELECT id, grade, bundle_id, attribute, amount, default_rating FROM priority_bundle_skills".to_string();
+    let pbs_query =
+        "SELECT id, grade, bundle_id, attribute, amount, rating FROM priority_bundle_skills"
+            .to_string();
     let mut pbs_stmt = connection.prepare(&pbs_query)?;
     let pbs_iter = pbs_stmt
         .query_map([], |row| {
@@ -65,7 +67,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 bundle_id: row.get("bundle_id")?,
                 attribute: row.get("attribute")?,
                 amount: row.get("amount")?,
-                default_rating: row.get("default_rating")?,
+                rating: row.get("rating")?,
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -76,7 +78,9 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
         }
     }
 
-    let pb_meta_query = "SELECT id, bundle_id, grade, special_attribute_bonus, metatype_name FROM priority_bundle_metatypes".to_string();
+    let pb_meta_query =
+        "SELECT id, bundle_id, grade, special_points, name FROM priority_bundle_metatypes"
+            .to_string();
     let mut pb_meta_stmt = connection.prepare(&pb_meta_query)?;
     let pb_meta_iter = pb_meta_stmt
         .query_map([], |row| {
@@ -84,8 +88,8 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 id: row.get("id")?,
                 bundle_id: row.get("bundle_id")?,
                 grade: row.get("grade")?,
-                special_attribute_bonus: row.get("special_attribute_bonus")?,
-                metatype_name: row.get("metatype_name")?,
+                special_points: row.get("special_points")?,
+                name: row.get("name")?,
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -96,8 +100,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
         }
     }
 
-    let pbq_query =
-        "SELECT id, bundle_id, grade, quality_name FROM priority_bundle_qualities".to_string();
+    let pbq_query = "SELECT id, bundle_id, grade, name FROM priority_bundle_qualities".to_string();
     let mut pbq_stmt = connection.prepare(&pbq_query)?;
     let pbq_iter = pbq_stmt
         .query_map([], |row| {
@@ -105,7 +108,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 id: row.get("id")?,
                 bundle_id: row.get("bundle_id")?,
                 grade: row.get("grade")?,
-                quality_name: row.get("quality_name")?,
+                name: row.get("name")?,
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -118,16 +121,16 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
     for pb in &mut priority_bundles {
         if let Some(pb_id) = &pb.id {
             if let Some(mods) = pbm_map.remove(&pb_id) {
-                pb.priority_bundle_modifiers = mods;
+                pb.modifiers = mods;
             }
             if let Some(skills) = pbs_map.remove(&pb_id) {
-                pb.priority_bundle_skills = skills;
+                pb.skills = skills;
             }
             if let Some(metatypes) = pb_meta_map.remove(&pb_id) {
-                pb.priority_bundle_metatypes = metatypes;
+                pb.metatypes = metatypes;
             }
             if let Some(qualities) = pbq_map.remove(&pb_id) {
-                pb.priority_bundle_qualities = qualities;
+                pb.qualities = qualities;
             }
         }
     }
@@ -152,7 +155,7 @@ pub fn create_priority_bundle(
     })?;
 
     let rowid = connection.last_insert_rowid();
-    for nested_pb in &pb.priority_bundles {
+    for nested_pb in &pb.children {
         let mut child = nested_pb.clone();
         child.parent_bundle_id = Some(rowid);
         child.insert_into_db(connection)?;
@@ -170,18 +173,18 @@ pub fn create_priority_bundle_modifiers(
 ) -> Result<()> {
     log::info!("create_priority_bundle_modifier with {:#?}", &pb);
     let query = "INSERT INTO priority_bundle_modifiers
-                   (grade, bundle_id, target_key, operation, value_formula)
-                 VALUES (:grade, :bundle_id, :target_key, :operation, :value_formula)"
+                   (grade, bundle_id, target_key, operation, value)
+                 VALUES (:grade, :bundle_id, :target_key, :operation, :value)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
 
-    for pbm in pb.priority_bundle_modifiers.iter() {
+    for pbm in pb.modifiers.iter() {
         stmt.execute(named_params! {
             ":grade": &pbm.grade,
             ":bundle_id": &pb.id,
             ":target_key": &pbm.target_key,
             ":operation": &pbm.operation,
-            ":value_formula": &pbm.value_formula,
+            ":value": &pbm.value,
         })?;
     }
 
@@ -191,18 +194,18 @@ pub fn create_priority_bundle_modifiers(
 pub fn create_priority_bundle_skills(connection: &Connection, pb: &PriorityBundle) -> Result<()> {
     log::info!("create_priority_bundle_skills with {:#?}", &pb);
     let query = "INSERT INTO priority_bundle_skills
-                   (grade, bundle_id, attribute, amount, default_rating)
-                 VALUES (:grade, :bundle_id, :attribute, :amount, :default_rating)"
+                   (grade, bundle_id, attribute, amount, rating)
+                 VALUES (:grade, :bundle_id, :attribute, :amount, :rating)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
 
-    for pbs in pb.priority_bundle_skills.iter() {
+    for pbs in pb.skills.iter() {
         stmt.execute(named_params! {
             ":grade": &pb.grade,
             ":bundle_id": &pb.id,
             ":attribute": &pbs.attribute,
             ":amount": &pbs.amount,
-            ":default_rating": &pbs.default_rating,
+            ":rating": &pbs.rating,
         })?;
     }
 
@@ -215,17 +218,17 @@ pub fn create_priority_bundle_metatypes(
 ) -> Result<()> {
     log::info!("create_priority_bundle_metatypes with {:#?}", &pb);
     let query = "INSERT INTO priority_bundle_metatypes
-                   (bundle_id, grade, special_attribute_bonus, metatype_name)
-                 VALUES (:bundle_id, :grade, :special_attribute_bonus, :metatype_name)"
+                   (bundle_id, grade, special_points, name)
+                 VALUES (:bundle_id, :grade, :special_points, :name)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
 
-    for pbm in pb.priority_bundle_metatypes.iter() {
+    for pbm in pb.metatypes.iter() {
         stmt.execute(named_params! {
             ":bundle_id": &pb.id,
             ":grade": &pbm.grade,
-            ":special_attribute_bonus": &pbm.special_attribute_bonus,
-            ":metatype_name": &pbm.metatype_name,
+            ":special_points": &pbm.special_points,
+            ":name": &pbm.name,
         })?;
     }
 
@@ -238,16 +241,16 @@ pub fn create_priority_bundle_qualities(
 ) -> Result<()> {
     log::info!("create_priority_bundle_qualities with {:#?}", &pb);
     let query = "INSERT INTO priority_bundle_qualities
-                   (bundle_id, grade, quality_name)
-                 VALUES (:bundle_id, :grade, :quality_name)"
+                   (bundle_id, grade, name)
+                 VALUES (:bundle_id, :grade, :name)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
 
-    for pbq in pb.priority_bundle_qualities.iter() {
+    for pbq in pb.qualities.iter() {
         stmt.execute(named_params! {
             ":bundle_id": &pb.id,
             ":grade": &pbq.grade,
-            ":quality_name": &pbq.quality_name,
+            ":name": &pbq.name,
         })?;
     }
 

@@ -153,7 +153,7 @@ CREATE TABLE priority_bundle_modifiers (
     bundle_id INTEGER NOT NULL,
     target_key VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
     operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
-    value_formula VARCHAR(200) NOT NULL,
+    value VARCHAR(200) NOT NULL,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE
@@ -165,7 +165,7 @@ CREATE TABLE priority_bundle_skills (
     bundle_id INTEGER NOT NULL,
     attribute VARCHAR(3) NOT NULL,
     amount INTEGER DEFAULT 0,
-    default_rating INTEGER DEFAULT 0
+    rating INTEGER DEFAULT 0
 );
 
 CREATE TABLE character_priorities (
@@ -182,17 +182,17 @@ CREATE TABLE priority_bundle_metatypes (
     id INTEGER PRIMARY KEY,
     bundle_id INTEGER NOT NULL,
     grade VARCHAR(1) DEFAULT '*',
-    special_attribute_bonus INTEGER NOT NULL,
-    metatype_name VARCHAR(100) NOT NULL,
-    FOREIGN KEY (metatype_name) REFERENCES metatypes(name) ON DELETE CASCADE
+    special_points INTEGER NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    FOREIGN KEY (name) REFERENCES metatypes(name) ON DELETE CASCADE
 );
 
 CREATE TABLE priority_bundle_qualities (
     id INTEGER PRIMARY KEY,
     bundle_id INTEGER NOT NULL,
     grade VARCHAR(1) DEFAULT '*',
-    quality_name INTEGER NOT NULL,
-    FOREIGN KEY (quality_name) REFERENCES qualities(name) ON DELETE CASCADE
+    name INTEGER NOT NULL,
+    FOREIGN KEY (name) REFERENCES qualities(name) ON DELETE CASCADE
 );
 
 CREATE TABLE metatype_qualities (

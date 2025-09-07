@@ -6,7 +6,7 @@ pub fn nest_priority_bundles(flat: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
     let mut no_id_items: Vec<PriorityBundle> = Vec::new();
 
     for mut item in flat {
-        item.priority_bundles = Vec::new();
+        item.children = Vec::new();
         match item.id {
             Some(id) => {
                 by_id.insert(id, item);
@@ -22,7 +22,7 @@ pub fn nest_priority_bundles(flat: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
         if let Some(child) = by_id.get(&id).cloned() {
             if let Some(parent_id) = child.parent_bundle_id {
                 if let Some(parent) = by_id.get_mut(&parent_id) {
-                    parent.priority_bundles.push(child);
+                    parent.children.push(child);
                 }
             }
         }
