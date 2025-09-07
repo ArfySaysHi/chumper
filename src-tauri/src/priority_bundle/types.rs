@@ -14,12 +14,17 @@ pub struct PriorityBundleModifier {
     #[serde(default = "default_wildcard")]
     pub grade: String,
     pub target_key: String,
+    #[serde(default = "default_operation")]
     pub operation: String,
     pub value_formula: String,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,
     #[serde(default = "default_timestamp")]
     pub updated_at: Option<String>,
+}
+
+fn default_operation() -> String {
+    "add".to_string()
 }
 
 fn default_wildcard() -> String {
@@ -36,7 +41,6 @@ pub struct PriorityBundle {
     pub id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    pub domain: String,
     #[serde(default = "default_wildcard")]
     pub grade: String,
     #[serde(skip_serializing_if = "Option::is_none")]

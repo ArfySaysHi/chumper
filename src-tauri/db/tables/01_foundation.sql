@@ -140,7 +140,6 @@ CREATE TABLE priority_grades (
 CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) DEFAULT NULL,
-    domain VARCHAR(50) NOT NULL,
     grade VARCHAR(1) DEFAULT '*',
     parent_bundle_id INTEGER DEFAULT NULL,
     created_at TEXT DEFAULT (datetime('now')),

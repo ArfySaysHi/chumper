@@ -1,6 +1,6 @@
 # This file stored information pertaining to simple stat increases at various grades
 - type: PriorityBundle
-  domain: metatype
+  name: "metatype"
   priority_bundle_metatypes:
     - metatype_name: Human
       grade: "A"
@@ -54,120 +54,164 @@
       grade: "E"
       special_attribute_bonus: 1
 - type: PriorityBundle
-  domain: attributes
+  name: "attributes"
   priority_bundle_modifiers:
-    - grade: A
-      target_key: resources.attributes.base_amount
-      operation: add
-      value_formula: "24"
-    - grade: B
-      target_key: resources.attributes.base_amount
-      operation: add
-      value_formula: "20"
-    - grade: C
-      target_key: resources.attributes.base_amount
-      operation: add
-      value_formula: "16"
-    - grade: D
-      target_key: resources.attributes.base_amount
-      operation: add
-      value_formula: "14"
-    - grade: E
-      target_key: resources.attributes.base_amount
-      operation: add
-      value_formula: "12"
+    - grade: "A"
+      target_key: resources.nuyen.base_amount
+      value_formula: "450000"
+    - grade: "B"
+      target_key: resources.nuyen.base_amount
+      value_formula: "275000"
+    - grade: "C"
+      target_key: resources.nuyen.base_amount
+      value_formula: "140000"
+    - grade: "D"
+      target_key: resources.nuyen.base_amount
+      value_formula: "50000"
+    - grade: "E"
+      target_key: resources.nuyen.base_amount
+      value_formula: "6000"
 - type: PriorityBundle
-  domain: magic
+  name: "magic/resonance"
   priority_bundles:
     - name: Magician
-      domain: magic_type
       grade: "A"
       priority_bundle_modifiers:
         - target_key: attributes.magic.base_amount
-          operation: add
           value_formula: "6"
         - target_key: resources.spell_points.base_amount
-          operation: add
           value_formula: "10"
       priority_bundle_skills:
-        - grade: "A"
-          attribute: "MAG"
+        - attribute: "MAG"
           amount: 2
           default_rating: 5
       priority_bundle_qualities:
         - quality_name: "Magician"
     - name: Mystic Adept
-      domain: magic_type
       grade: "A"
       priority_bundle_modifiers:
         - target_key: attributes.magic.base_amount
-          operation: add
           value_formula: "6"
         - target_key: resources.spell_points.base_amount
-          operation: add
           value_formula: "10"
       priority_bundle_skills:
-        - grade: "A"
-          attribute: "MAG"
+        - attribute: "MAG"
           amount: 2
           default_rating: 5
       priority_bundle_qualities:
         - quality_name: Mystic Adept
+    - name: Technomancer
+      grade: "A"
+      priority_bundle_modifiers:
+        - target_key: attributes.resonance.base_amount
+          value_formula: "6"
+        - target_key: resources.complex_forms.base_amount
+          value_formula: "5"
+      priority_bundle_skills:
+        - attribute: "RES"
+          amount: 2
+          default_rating: 5
+      priority_bundle_qualities:
+        - quality_name: Technomancer
+    - name: Magician
+      grade: "B"
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          value_formula: "4"
+        - target_key: resources.spell_points.base_amount
+          value_formula: "7"
+      priority_bundle_skills:
+        - attribute: "MAG"
+          amount: 2
+          default_rating: 4
+      priority_bundle_qualities:
+        - quality_name: "Magician"
+    - name: Mystic Adept
+      grade: "B"
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          value_formula: "4"
+        - target_key: resources.spell_points.base_amount
+          value_formula: "7"
+      priority_bundle_skills:
+        - attribute: "MAG"
+          amount: 2
+          default_rating: 4
+      priority_bundle_qualities:
+        - quality_name: Mystic Adept
+    - name: "Technomancer"
+      grade: "B"
+      priority_bundle_modifiers:
+        - target_key: attributes.resonance.base_amount
+          value_formula: "4"
+        - target_key: resources.complex_forms.base_amount
+          value_formula: "2"
+      priority_bundle_skills:
+        - attribute: "RES"
+          amount: 2
+          default_rating: 4
+      priority_bundle_qualities:
+        - quality_name: Technomancer
+    - name: "Adept"
+      grade: "B"
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          value_formula: "6"
+      priority_bundle_skills:
+        - attribute: "MAG"
+          amount: 1
+          default_rating: 4
+    - name: "Aspected Magician"
+      grade: "B"
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          value_formula: "5"
+      priority_bundle_skills:
+        - attribute: "MAG"
+          amount: 1
+          default_rating: 4
 - type: PriorityBundle
-  domain: skills
+  name: "skills"
   priority_bundle_modifiers:
     - grade: A
       target_key: resources.skills.base_amount
-      operation: add
       value_formula: "46"
     - grade: A
       target_key: resources.skill_groups.base_amount
-      operation: add
       value_formula: "10"
     - grade: B
       target_key: resources.skills.base_amount
-      operation: add
       value_formula: "36"
     - grade: B
       target_key: resources.skill_groups.base_amount
-      operation: add
       value_formula: "5"
     - grade: C
       target_key: resources.skills.base_amount
-      operation: add
       value_formula: "28"
     - grade: C
       target_key: resources.skill_groups.base_amount
-      operation: add
       value_formula: "2"
     - grade: D
       target_key: resources.skills.base_amount
-      operation: add
       value_formula: "22"
     - grade: E
       target_key: resources.skills.base_amount
-      operation: add
       value_formula: "18"
 - type: PriorityBundle
-  domain: resources
+  name: "resources"
   priority_bundle_modifiers:
     - grade: A
       target_key: resources.nuyen.base_amount
-      operation: add
       value_formula: "450000"
     - grade: B
       target_key: resources.nuyen.base_amount
-      operation: add
       value_formula: "275000"
     - grade: C
       target_key: resources.nuyen.base_amount
-      operation: add
       value_formula: "140000"
     - grade: D
       target_key: resources.nuyen.base_amount
-      operation: add
       value_formula: "50000"
     - grade: E
       target_key: resources.nuyen.base_amount
-      operation: add
       value_formula: "6000"

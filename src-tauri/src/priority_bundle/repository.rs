@@ -7,15 +7,13 @@ use std::collections::HashMap;
 
 pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBundle>> {
     log::info!("list_priority_bundles");
-    let query =
-        "SELECT id, name, domain, grade, parent_bundle_id FROM priority_bundles".to_string();
+    let query = "SELECT id, name, grade, parent_bundle_id FROM priority_bundles".to_string();
     let mut stmt = connection.prepare(&query)?;
     let mut priority_bundles = stmt
         .query_map([], |row| {
             Ok(PriorityBundle {
                 id: row.get("id")?,
                 name: row.get("name")?,
-                domain: row.get("domain")?,
                 grade: row.get("grade")?,
                 parent_bundle_id: row.get("parent_bundle_id")?,
                 priority_bundle_modifiers: Vec::new(),
@@ -143,13 +141,12 @@ pub fn create_priority_bundle(
     pb: &PriorityBundle,
 ) -> Result<PriorityBundle> {
     log::info!("create_priority_bundle with {:#?}", &pb);
-    let query = "INSERT INTO priority_bundles (name, domain, grade, parent_bundle_id)
-                 VALUES (:name, :domain, :grade, :parent_bundle_id)"
+    let query = "INSERT INTO priority_bundles (name, grade, parent_bundle_id)
+                 VALUES (:name, :grade, :parent_bundle_id)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
     stmt.execute(named_params! {
         ":name": &pb.name,
-        ":domain": &pb.domain,
         ":grade": &pb.grade,
         ":parent_bundle_id": &pb.parent_bundle_id,
     })?;
@@ -201,7 +198,7 @@ pub fn create_priority_bundle_skills(connection: &Connection, pb: &PriorityBundl
 
     for pbs in pb.priority_bundle_skills.iter() {
         stmt.execute(named_params! {
-            ":grade": &pbs.grade,
+            ":grade": &pb.grade,
             ":bundle_id": &pb.id,
             ":attribute": &pbs.attribute,
             ":amount": &pbs.amount,
