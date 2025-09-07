@@ -7,7 +7,6 @@ pub fn nest_priority_bundles(flat: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
 
     for mut item in flat {
         item.priority_bundles = Vec::new();
-
         match item.id {
             Some(id) => {
                 by_id.insert(id, item);
@@ -20,17 +19,10 @@ pub fn nest_priority_bundles(flat: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
 
     let ids: Vec<i64> = by_id.keys().copied().collect();
     for id in ids {
-        if let Some(child) = by_id.remove(&id) {
-            match child.parent_bundle_id {
-                Some(parent_id) => {
-                    if let Some(parent) = by_id.get_mut(&parent_id) {
-                        parent.priority_bundles.push(child);
-                    } else {
-                        by_id.insert(id, child);
-                    }
-                }
-                None => {
-                    by_id.insert(id, child);
+        if let Some(child) = by_id.get(&id).cloned() {
+            if let Some(parent_id) = child.parent_bundle_id {
+                if let Some(parent) = by_id.get_mut(&parent_id) {
+                    parent.priority_bundles.push(child);
                 }
             }
         }
@@ -40,7 +32,7 @@ pub fn nest_priority_bundles(flat: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
         .into_values()
         .filter(|pb| pb.parent_bundle_id.is_none())
         .collect();
-    roots.extend(no_id_items.into_iter());
 
+    roots.extend(no_id_items);
     roots
 }

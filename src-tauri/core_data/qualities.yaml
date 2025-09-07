@@ -1,26 +1,480 @@
 - type: Quality
-  name: Test Quality
-  resource_name: nuyen
-  cost: 1000
+  name: Ambidextrous
+  resource_name: karma
+  cost: 4
   category: Positive
 - type: Quality
-  name: Test Quality With Effects
+  name: Analytical Mind
+  resource_name: karma
+  cost: 5
+  category: Positive
+- type: Quality
+  name: Aptitude
+  resource_name: karma
+  cost: 14
+  category: Positive
+- type: Quality
+  name: Astral Chameleon
   resource_name: karma
   cost: 10
   category: Positive
-  quality_effects:
-    - target_key: body
-      operation: add
-      value_formula: "1"
-      activation: always
-      priority: 50
-    - target_key: agility
-      operation: add
-      value_formula: "1"
-      activation: always
-      priority: 50
+- type: Quality
+  name: Bilingual
+  resource_name: karma
+  cost: 5
+  category: Positive
+- type: Quality
+  name: Blandness
+  resource_name: karma
+  cost: 8
+  category: Positive
+- type: Quality
+  name: Catlike
+  resource_name: karma
+  cost: 7
+  category: Positive
+- type: Quality
+  name: Codeslinger
+  resource_name: karma
+  cost: 10
+  category: Positive
+- type: Quality
+  name: Double Jointed
+  resource_name: karma
+  cost: 6
+  category: Positive
+- type: Quality
+  name: Exceptional Attribute
+  resource_name: karma
+  cost: 14
+  category: Positive
+- type: Quality
+  name: First Impression
+  resource_name: karma
+  cost: 11
+  category: Positive
+- type: Quality
+  name: Focused Concentration
+  resource_name: karma
+  cost: 4
+  category: Positive
+- type: Quality
+  name: Gearhead
+  resource_name: karma
+  cost: 11
+  category: Positive
+- type: Quality
+  name: Guts
+  resource_name: karma
+  cost: 10
+  category: Positive
+- type: Quality
+  name: High Pain Tolerance
+  resource_name: karma
+  cost: 7
+  category: Positive
+- type: Quality
+  name: Home Ground
+  resource_name: karma
+  cost: 10
+  category: Positive
+- type: Quality
+  name: Human-Looking
+  resource_name: karma
+  cost: 6
+  category: Positive
+- type: Quality
+  name: Indomitable (Mental)
+  resource_name: karma
+  cost: 8
+  category: Positive
+- type: Quality
+  name: Indomitable (Physical)
+  resource_name: karma
+  cost: 8
+  category: Positive
+- type: Quality
+  name: Indomitable (Social)
+  resource_name: karma
+  cost: 8
+  category: Positive
+- type: Quality
+  name: Juryrigger
+  resource_name: karma
+  cost: 10
+  category: Positive
+- type: Quality
+  name: Lucky
+  resource_name: karma
+  cost: 12
+  category: Positive
+- type: Quality
+  name: Magic Resistance
+  resource_name: karma
+  cost: 6
+  category: Positive
+- type: Quality
+  name: Mentor Spirit
+  resource_name: karma
+  cost: 5
+  category: Positive
+- type: Quality
+  name: Natural Athlete
+  resource_name: karma
+  cost: 7
+  category: Positive
+- type: Quality
+  name: Natural Hardening
+  resource_name: karma
+  cost: 10
+  category: Positive
+- type: Quality
+  name: Natural Immunity (Natural)
+  resource_name: karma
+  cost: 4
+  category: Positive
+- type: Quality
+  name: Natural Immunity (Synthetic)
+  resource_name: karma
+  cost: 10
+  category: Positive
+- type: Quality
+  name: Photographic Memory
+  resource_name: karma
+  cost: 6
+  category: Positive
+- type: Quality
+  name: Quick Healer
+  resource_name: karma
+  cost: 3
+  category: Positive
+- type: Quality
+  name: Resistance to Pathogens
+  resource_name: karma
+  cost: 4
+  category: Positive
+- type: Quality
+  name: Resistance to Toxins
+  resource_name: karma
+  cost: 4
+  category: Positive
+- type: Quality
+  name: Resistance to Pathogens/Toxins
+  resource_name: karma
+  cost: 8
+  category: Positive
+- type: Quality
+  name: Resistance to Pathogens and Toxins
+  resource_name: karma
+  cost: 8
+  category: Positive
+- type: Quality
+  name: Spirit Affinity
+  resource_name: karma
+  cost: 7
+  category: Positive
+- type: Quality
+  name: Toughness
+  resource_name: karma
+  cost: 9
+  category: Positive
+- type: Quality
+  name: Will to Live
+  resource_name: karma
+  cost: 3
+  category: Positive
 - type: Quality
   name: Low-Light Vision
   resource_name: karma
   cost: 4
+  category: Positive
+- type: Quality
+  name: Thermographic Vision
+  resource_name: karma
+  cost: 3
+  category: Positive
+- type: Quality
+  name: Magician
+  resource_name: karma
+  cost: 30
+  category: Positive
+- type: Quality
+  name: Adept
+  resource_name: karma
+  cost: 20
+  category: Positive
+- type: Quality
+  name: Mystic Adept
+  resource_name: karma
+  cost: 35
+  category: Positive
+- type: Quality
+  name: Technomancer
+  resource_name: karma
+  cost: 15
+  category: Positive
+- type: Quality
+  name: Aspected Magician
+  resource_name: karma
+  cost: 15
+  category: Positive
+- type: Quality
+  name: Addiction (Mild)
+  resource_name: karma
+  cost: -4
+  category: Negative
+- type: Quality
+  name: Addiction (Moderate)
+  resource_name: karma
+  cost: -9
+  category: Negative
+- type: Quality
+  name: Addiction (Severe)
+  resource_name: karma
+  cost: -20
+  category: Negative
+- type: Quality
+  name: Addiction (Burnout)
+  resource_name: karma
+  cost: -25
+  category: Negative
+- type: Quality
+  name: Allergy (Uncommon, Mild)
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: Allergy (Uncommon, Moderate)
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Allergy (Uncommon, Severe)
+  resource_name: karma
+  cost: -15
+  category: Negative
+- type: Quality
+  name: Allergy (Uncommon, Extreme)
+  resource_name: karma
+  cost: -20
+  category: Negative
+- type: Quality
+  name: Allergy (Common, Mild)
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Allergy (Common, Moderate)
+  resource_name: karma
+  cost: -15
+  category: Negative
+- type: Quality
+  name: Allergy (Common, Severe)
+  resource_name: karma
+  cost: -20
+  category: Negative
+- type: Quality
+  name: Allergy (Common, Extreme)
+  resource_name: karma
+  cost: -25
+  category: Negative
+- type: Quality
+  name: Astral Beacon
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Bad Luck
+  resource_name: karma
+  cost: -12
+  category: Negative
+- type: Quality
+  name: Bad Rep
+  resource_name: karma
+  cost: -7
+  category: Negative
+- type: Quality
+  name: Code of Honor
+  resource_name: karma
+  cost: -15
+  category: Negative
+- type: Quality
+  name: Codeblock
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Combat Paralysis
+  resource_name: karma
+  cost: -12
+  category: Negative
+- type: Quality
+  name: Dependent (Nuisance)
+  resource_name: karma
+  cost: -3
+  category: Negative
+- type: Quality
+  name: Dependent (Inconvenience)
+  resource_name: karma
+  cost: -6
+  category: Negative
+- type: Quality
+  name: Dependent (Demanding)
+  resource_name: karma
+  cost: -9
+  category: Negative
+- type: Quality
+  name: Distinctive Style
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: Elf Poser
+  resource_name: karma
+  cost: -6
+  category: Negative
+- type: Quality
+  name: Gremlins
+  resource_name: karma
+  cost: -4
+  category: Negative
+- type: Quality
+  name: Incompetent
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: Insomnia (Basic)
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Insomnia (Full)
+  resource_name: karma
+  cost: -15
+  category: Negative
+- type: Quality
+  name: Loss of Confidence
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Low Pain Tolerance
+  resource_name: karma
+  cost: -9
+  category: Negative
+- type: Quality
+  name: Ork Poser
+  resource_name: karma
+  cost: -6
+  category: Negative
+- type: Quality
+  name: Prejudiced (Common, Biased)
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: Prejudiced (Common, Outspoken)
+  resource_name: karma
+  cost: -7
+  category: Negative
+- type: Quality
+  name: Prejudiced (Common, Radical)
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Prejudiced (Specific, Biased)
+  resource_name: karma
+  cost: -3
+  category: Negative
+- type: Quality
+  name: Prejudiced (Specific, Outspoken)
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: Prejudiced (Specific, Radical)
+  resource_name: karma
+  cost: -8
+  category: Negative
+- type: Quality
+  name: Scorched
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Sensitive System
+  resource_name: karma
+  cost: -12
+  category: Negative
+- type: Quality
+  name: Simsense Vertigo
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: SINner (Corporate)
+  resource_name: karma
+  cost: -25
+  category: Negative
+- type: Quality
+  name: SINner (National)
+  resource_name: karma
+  cost: -5
+  category: Negative
+- type: Quality
+  name: SINner (Corporate Limited)
+  resource_name: karma
+  cost: -15
+  category: Negative
+- type: Quality
+  name: SINner (Criminal)
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Social Stress
+  resource_name: karma
+  cost: -8
+  category: Negative
+- type: Quality
+  name: Spirit Bane
+  resource_name: karma
+  cost: -7
+  category: Negative
+- type: Quality
+  name: Uncouth
+  resource_name: karma
+  cost: -14
+  category: Negative
+- type: Quality
+  name: Uneducated
+  resource_name: karma
+  cost: -8
+  category: Negative
+- type: Quality
+  name: Unsteady Hands
+  resource_name: karma
+  cost: -7
+  category: Negative
+- type: Quality
+  name: Weak Immune System
+  resource_name: karma
+  cost: -10
+  category: Negative
+- type: Quality
+  name: Astral Perception
+  resource_name: karma
+  cost: 0
+  category: Positive
+- type: Quality
+  name: 'Infected Advanced Optional Power: Mimicry'
+  resource_name: karma
+  cost: 9
+  category: Positive
+- type: Quality
+  name: 'Infected Advanced Optional Power: Psychokinesis'
+  resource_name: karma
+  cost: 9
   category: Positive

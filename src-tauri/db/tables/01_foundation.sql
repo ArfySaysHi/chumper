@@ -140,7 +140,8 @@ CREATE TABLE priority_grades (
 CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) DEFAULT NULL,
-    domain VARCHAR(50) NOT NULL UNIQUE,
+    domain VARCHAR(50) NOT NULL,
+    grade VARCHAR(1) DEFAULT '*',
     parent_bundle_id INTEGER DEFAULT NULL,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
@@ -178,18 +179,22 @@ CREATE TABLE character_priorities (
 );
 
 -- TODO: Create the metatype priority grades import for the frontend modal info
-CREATE TABLE metatypes_priority_grades (
+CREATE TABLE priority_bundle_metatypes (
+    id INTEGER PRIMARY KEY,
+    bundle_id INTEGER NOT NULL,
+    grade VARCHAR(1) DEFAULT '*',
     special_attribute_bonus INTEGER NOT NULL,
     metatype_name VARCHAR(100) NOT NULL,
-    grade VARCHAR(1) NOT NULL,
-    PRIMARY KEY (grade, metatype_name),
-    FOREIGN KEY (metatype_name) REFERENCES metatypes(name) ON DELETE CASCADE,
-    FOREIGN KEY (grade) REFERENCES priority_grades(grade) ON DELETE CASCADE
+    FOREIGN KEY (metatype_name) REFERENCES metatypes(name) ON DELETE CASCADE
 );
 
--- TODO: Implement attributes via modifiers
--- TODO: Implement qualities
--- TODO: Implement metavariants as metatypes that reference a metatype (new table maybe?)
+CREATE TABLE priority_bundle_qualities (
+    id INTEGER PRIMARY KEY,
+    bundle_id INTEGER NOT NULL,
+    grade VARCHAR(1) DEFAULT '*',
+    quality_name INTEGER NOT NULL,
+    FOREIGN KEY (quality_name) REFERENCES qualities(name) ON DELETE CASCADE
+);
 
 CREATE TABLE metatype_qualities (
     id INTEGER PRIMARY KEY,

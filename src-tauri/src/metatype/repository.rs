@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
-use super::types::{MetatypePriorityGrade, MetatypeQuality};
+use super::types::MetatypeQuality;
 use crate::error::Result;
 use crate::metatype::Metatype;
 use rusqlite::{named_params, Connection};
+use std::collections::HashMap;
 
 pub fn list_metatypes(connection: &Connection) -> Result<Vec<Metatype>> {
     let query = "SELECT id, name, body_min, body_max, agility_min, agility_max,
@@ -44,7 +43,6 @@ pub fn list_metatypes(connection: &Connection) -> Result<Vec<Metatype>> {
                 magic_max: row.get(22)?,
                 resonance_min: row.get(23)?,
                 resonance_max: row.get(24)?,
-                priority_grades: Vec::new(),
                 metatype_qualities: Vec::new(),
             })
         })?
@@ -52,30 +50,6 @@ pub fn list_metatypes(connection: &Connection) -> Result<Vec<Metatype>> {
 
     if metatypes.is_empty() {
         return Ok(metatypes);
-    }
-
-    let mut stmt = connection.prepare(
-        "SELECT special_attribute_bonus, metatype_name, grade
-         FROM metatypes_priority_grades",
-    )?;
-
-    let mut grades_map: HashMap<String, Vec<MetatypePriorityGrade>> = HashMap::new();
-    let grades_iter = stmt
-        .query_map([], |row| {
-            Ok(MetatypePriorityGrade {
-                special_attribute_bonus: row.get("special_attribute_bonus")?,
-                metatype_name: row.get("metatype_name")?,
-                grade: row.get("grade")?,
-            })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    for grade in grades_iter {
-        if let Some(metatype_name) = &grade.metatype_name {
-            grades_map
-                .entry(metatype_name.clone())
-                .or_insert_with(Vec::new)
-                .push(grade.clone());
-        }
     }
 
     let query = "SELECT metatype_name, quality_name, default_rating, created_at, updated_at
@@ -108,10 +82,6 @@ pub fn list_metatypes(connection: &Connection) -> Result<Vec<Metatype>> {
     }
 
     for metatype in &mut metatypes {
-        if let Some(grades) = grades_map.remove(&metatype.name) {
-            metatype.priority_grades = grades;
-        }
-
         if let Some(metatype_qualities) = metatype_qualities_map.remove(&metatype.name) {
             metatype.metatype_qualities = metatype_qualities;
         }
@@ -157,31 +127,10 @@ pub fn get_metatype(connection: &Connection, name: &str) -> Result<Metatype> {
                 magic_max: row.get(22)?,
                 resonance_min: row.get(23)?,
                 resonance_max: row.get(24)?,
-                priority_grades: Vec::new(),
                 metatype_qualities: Vec::new(),
             })
         },
     )?;
-    let mut stmt = connection.prepare(
-        "SELECT grade, special_attribute_bonus, metatype_name
-         FROM metatypes_priority_grades
-         WHERE metatype_name = ?1",
-    )?;
-    let grades_iter = stmt.query_map(rusqlite::params![name], |row| {
-        Ok(MetatypePriorityGrade {
-            grade: row.get("grade")?,
-            metatype_name: row.get("metatype_name")?,
-            special_attribute_bonus: row.get("special_attribute_bonus")?,
-        })
-    })?;
-
-    let mut priority_grades = Vec::new();
-    for g in grades_iter {
-        priority_grades.push(g?);
-    }
-
-    let mut metatype = metatype;
-    metatype.priority_grades = priority_grades;
 
     Ok(metatype)
 }
@@ -235,36 +184,6 @@ pub fn create_metatype(connection: &Connection, m: &Metatype) -> Result<Metatype
     cloned_metatype.id = Some(id);
 
     Ok(cloned_metatype)
-}
-
-pub fn create_metatype_priority_grades(connection: &Connection, m: &Metatype) -> Result<()> {
-    log::info!("create_metatype_priority_grades with {:#?}", &m);
-    for pg in &m.priority_grades {
-        log::debug!(
-            "Inserting grade {:?} into priority_grades for {} if not exists",
-            &pg.grade,
-            &m.name
-        );
-        connection.execute(
-            "INSERT INTO priority_grades (grade) VALUES (:grade) ON CONFLICT(grade) DO NOTHING",
-            named_params! { ":grade": &pg.grade},
-        )?;
-        connection.execute(
-            "INSERT INTO
-               metatypes_priority_grades (special_attribute_bonus, metatype_name, grade)
-             VALUES
-               (:special_attribute_bonus, :metatype_name, :grade)
-             ON CONFLICT(metatype_name, grade)
-             DO UPDATE SET special_attribute_bonus = excluded.special_attribute_bonus",
-            named_params! {
-                ":special_attribute_bonus": &pg.special_attribute_bonus,
-                ":metatype_name": &m.name,
-                ":grade": &pg.grade
-            },
-        )?;
-    }
-
-    Ok(())
 }
 
 pub fn create_metatype_qualities(connection: &Connection, m: &Metatype) -> Result<()> {

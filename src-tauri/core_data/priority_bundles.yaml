@@ -1,5 +1,59 @@
 # This file stored information pertaining to simple stat increases at various grades
 - type: PriorityBundle
+  domain: metatype
+  priority_bundle_metatypes:
+    - metatype_name: Human
+      grade: "A"
+      special_attribute_bonus: 9
+    - metatype_name: Elf
+      grade: "A"
+      special_attribute_bonus: 8
+    - metatype_name: Dwarf
+      grade: "A"
+      special_attribute_bonus: 7
+    - metatype_name: Ork
+      grade: "A"
+      special_attribute_bonus: 7
+    - metatype_name: Troll
+      grade: "A"
+      special_attribute_bonus: 5
+    - metatype_name: Human
+      grade: "B"
+      special_attribute_bonus: 7
+    - metatype_name: Elf
+      grade: "B"
+      special_attribute_bonus: 6
+    - metatype_name: Dwarf
+      grade: "B"
+      special_attribute_bonus: 4
+    - metatype_name: Ork
+      grade: "B"
+      special_attribute_bonus: 4
+    - metatype_name: Troll
+      grade: "B"
+      special_attribute_bonus: 0
+    - metatype_name: Human
+      grade: "C"
+      special_attribute_bonus: 5
+    - metatype_name: Elf
+      grade: "C"
+      special_attribute_bonus: 3
+    - metatype_name: Dwarf
+      grade: "C"
+      special_attribute_bonus: 1
+    - metatype_name: Ork
+      grade: "C"
+      special_attribute_bonus: 0
+    - metatype_name: Human
+      grade: "D"
+      special_attribute_bonus: 3
+    - metatype_name: Elf
+      grade: "D"
+      special_attribute_bonus: 0
+    - metatype_name: Human
+      grade: "E"
+      special_attribute_bonus: 1
+- type: PriorityBundle
   domain: attributes
   priority_bundle_modifiers:
     - grade: A
@@ -22,6 +76,43 @@
       target_key: resources.attributes.base_amount
       operation: add
       value_formula: "12"
+- type: PriorityBundle
+  domain: magic
+  priority_bundles:
+    - name: Magician
+      domain: magic_type
+      grade: "A"
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          operation: add
+          value_formula: "6"
+        - target_key: resources.spell_points.base_amount
+          operation: add
+          value_formula: "10"
+      priority_bundle_skills:
+        - grade: "A"
+          attribute: "MAG"
+          amount: 2
+          default_rating: 5
+      priority_bundle_qualities:
+        - quality_name: "Magician"
+    - name: Mystic Adept
+      domain: magic_type
+      grade: "A"
+      priority_bundle_modifiers:
+        - target_key: attributes.magic.base_amount
+          operation: add
+          value_formula: "6"
+        - target_key: resources.spell_points.base_amount
+          operation: add
+          value_formula: "10"
+      priority_bundle_skills:
+        - grade: "A"
+          attribute: "MAG"
+          amount: 2
+          default_rating: 5
+      priority_bundle_qualities:
+        - quality_name: Mystic Adept
 - type: PriorityBundle
   domain: skills
   priority_bundle_modifiers:
@@ -80,20 +171,3 @@
       target_key: resources.nuyen.base_amount
       operation: add
       value_formula: "6000"
-- type: PriorityBundle
-  domain: magic
-  priority_bundles:
-    - name: Magician
-      domain: magic_type
-      priority_bundle_modifiers:
-        - target_key: attributes.magic.base_amount
-          operation: add
-          value_formula: "6"
-        - target_key: resources.spell_points.base_amount
-          operation: add
-          value_formula: "10"
-      priority_bundle_skills:
-        - grade: "A"
-          attribute: "MAG"
-          amount: 2
-          default_rating: 5
