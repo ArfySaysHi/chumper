@@ -3,6 +3,9 @@
 @use "../../../../styles/globals/_mixins.scss" as *;
 
 .priority-modal-priority {
+    width: 70vw;
+    height: 70vh;
+
     &__header {
         position: relative;
 
@@ -21,16 +24,17 @@
     }
 
     &__content {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        display: flex;
         gap: spacing(6);
 
         &__priorities {
-            @include flex-column;
-            gap: spacing(6);
+            @include grid-auto-fill(400px);
+            gap: spacing(4);
+            flex: 1;
         }
 
         &__info {
+            flex: 1;
         }
     }
 }

@@ -3,6 +3,9 @@
 @use "../../../../styles/globals/_mixins.scss" as *;
 
 .priority-modal-method {
+    width: 50vw;
+    max-width: 700px;
+
     &__header {
         text-align: center;
         margin-bottom: spacing(4);

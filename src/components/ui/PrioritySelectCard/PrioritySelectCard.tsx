@@ -1,18 +1,33 @@
 import "./PrioritySelectCard.scss";
-import { PlusOne } from "@mui/icons-material";
+import {
+  Bolt,
+  AccessibilityNew,
+  Psychology,
+  AutoAwesome,
+  AccountBalance,
+} from "@mui/icons-material";
 
 interface PrioritySelectCardProps {
   title: string;
-  description: string;
-  icon?: React.ReactNode;
+  icon?: string;
   selectedGrade?: string;
   onGradeSelect?: (grade: string) => void;
 }
 
+interface IconArray {
+  [k: string]: React.ReactNode;
+}
+
+const icons: IconArray = {
+  Attributes: <Bolt />,
+  Metatype: <AccessibilityNew />,
+  Skills: <Psychology />,
+  "Magic/Resonance": <AutoAwesome />,
+  Resources: <AccountBalance />,
+};
+
 const PrioritySelectCard = ({
   title = "Attributes",
-  description = "Physical and mental capabilities",
-  icon = <PlusOne />,
   selectedGrade,
   onGradeSelect,
 }: PrioritySelectCardProps) => {
@@ -20,11 +35,10 @@ const PrioritySelectCard = ({
 
   return (
     <div className="priority-select-card">
-      <div className="priority-select-card__icon">{icon}</div>
+      <div className="priority-select-card__icon">{icons[title]}</div>
 
       <div className="priority-select-card__info">
         <h3 className="priority-select-card__info__title">{title}</h3>
-        <p className="priority-select-card__info__description">{description}</p>
       </div>
 
       <div className="priority-select-card__options">

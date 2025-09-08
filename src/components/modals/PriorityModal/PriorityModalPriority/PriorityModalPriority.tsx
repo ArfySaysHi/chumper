@@ -1,23 +1,31 @@
 import "./PriorityModalPriority.scss";
 import { PlusOne } from "@mui/icons-material";
 import PrioritySelectCard from "../../../ui/PrioritySelectCard/PrioritySelectCard.tsx";
-import type { MethodSpec } from "../../../../types/creation.ts";
 import useCommand from "../../../../hooks/useCommand.ts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import type {
+  PriorityBundleArray,
+  PriorityBundle,
+} from "../../../../schemas/priority_bundle.ts";
+import { PriorityBundleArraySchema } from "../../../../schemas/priority_bundle.ts";
 
 interface PriorityModalPriorityProps {
   setCurrentStep: (step: string) => void;
-  methodSpec: MethodSpec;
+  title: string;
 }
 
 const PriorityModalPriority = ({
   setCurrentStep,
-  methodSpec,
+  title,
 }: PriorityModalPriorityProps) => {
-  const { execute: listMetatypes } = useCommand("list_priority_bundles");
+  const { execute: listPriorityBundles } = useCommand("list_priority_bundles");
+  const [bundles, setBundles] = useState<PriorityBundleArray>();
 
   useEffect(() => {
-    listMetatypes({}).then(console.log);
+    listPriorityBundles({}).then((res) => {
+      const validatedRes = PriorityBundleArraySchema.parse(res);
+      setBundles(validatedRes.sort());
+    });
   }, []);
 
   return (
@@ -29,13 +37,17 @@ const PriorityModalPriority = ({
         >
           Back
         </div>
-        <h1 className="priority-modal-priority__header__title">
-          {methodSpec.title}
-        </h1>
+        <h1 className="priority-modal-priority__header__title">{title}</h1>
       </div>
       <div className="priority-modal-priority__content">
         <div className="priority-modal-priority__content__priorities">
-          <PrioritySelectCard />
+          {bundles &&
+            bundles.map((b: PriorityBundle) => (
+              <PrioritySelectCard
+                key={b.id || "Default ID"}
+                title={b.name || "No Title"}
+              />
+            ))}
         </div>
         <div className="priority-modal-priority__content__info">
           <div className="priority-details">

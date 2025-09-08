@@ -1,63 +1,137 @@
 @use "sass:map";
-@use "../../../styles/globals/_variables.scss" as *;
-@use "../../../styles/globals/_mixins.scss" as *;
+@use "../../../styles/globals/variables" as *;
+@use "../../../styles/globals/mixins" as *;
 
 .priority-select-card {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-        "icon info"
-        "options options";
-    gap: 0 spacing(4);
+    display: flex;
+    align-items: center;
+    gap: spacing(4);
     padding: spacing(4);
     background: surface(primary);
     border-radius: border-radius(lg);
     border: 1px solid border(subtle);
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: border(default);
+        box-shadow: 0 4px 12px rgba(color(shadow-md), 0.1);
+    }
+
+    @include respond-to(sm) {
+        gap: spacing(3);
+        padding: spacing(3);
+    }
+
+    @include respond-to(md) {
+        gap: spacing(4);
+        padding: spacing(4);
+    }
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: spacing(3);
+        text-align: center;
+    }
 
     &__icon {
-        grid-area: icon;
         @include flex-center;
-        width: spacing(12);
-        height: spacing(12);
+        min-width: spacing(12);
+        min-height: spacing(12);
         background: surface(secondary);
         border-radius: border-radius(lg);
+        transition: background-color 0.2s ease;
+
+        @include respond-to(sm) {
+            min-width: spacing(10);
+            min-height: spacing(10);
+        }
+
+        @include respond-to(md) {
+            min-width: spacing(12);
+            min-height: spacing(12);
+        }
+
+        @media (max-width: 480px) {
+            align-self: center;
+            min-width: spacing(10);
+            min-height: spacing(10);
+        }
 
         svg {
             fill: color(primary-500);
             width: spacing(6);
             height: spacing(6);
+            transition: fill 0.2s ease;
+
+            @include respond-to(sm) {
+                width: spacing(5);
+                height: spacing(5);
+            }
+
+            @include respond-to(md) {
+                width: spacing(6);
+                height: spacing(6);
+            }
         }
     }
 
     &__info {
-        grid-area: info;
-        @include flex-column;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
         min-width: 0;
+        flex: 1;
+
+        @media (max-width: 480px) {
+            align-items: center;
+        }
 
         &__title {
             font-family: $font-family-display;
             @include text-style(xl, medium, tight);
-            margin-bottom: spacing(1);
+            margin-bottom: 0;
             color: text(primary);
-        }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
-        &__description {
-            @include subtext-style;
-            margin: 0;
+            @include respond-to(sm) {
+                @include text-style(lg, medium, tight);
+            }
+
+            @include respond-to(md) {
+                @include text-style(xl, medium, tight);
+            }
+
+            @media (max-width: 480px) {
+                white-space: normal;
+                text-align: center;
+                @include text-style(lg, medium, tight);
+            }
         }
     }
 
     &__options {
-        grid-area: options;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @include flex-center;
         gap: spacing(2);
-        margin-top: spacing(4);
+        flex-shrink: 0;
+
+        @include respond-to(sm) {
+            gap: spacing(1);
+        }
+
+        @include respond-to(md) {
+            gap: spacing(2);
+        }
+
+        @media (max-width: 480px) {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: spacing(2);
+        }
 
         &__grade {
-            @include flex-center;
             width: spacing(10);
             height: spacing(10);
             background: surface(secondary);
@@ -69,22 +143,145 @@
             font-size: font-size(lg);
             cursor: pointer;
             transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+
+            @include respond-to(sm) {
+                width: spacing(8);
+                height: spacing(8);
+                font-size: font-size(base);
+            }
+
+            @include respond-to(md) {
+                width: spacing(10);
+                height: spacing(10);
+                font-size: font-size(lg);
+            }
+
+            @media (max-width: 480px) {
+                min-width: 44px;
+                min-height: 44px;
+                width: spacing(10);
+                height: spacing(10);
+            }
 
             &:hover {
                 background: surface(tertiary);
                 border-color: color(primary-500);
                 transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(color(primary-500), 0.2);
             }
 
             &:active {
                 transform: translateY(0);
+                box-shadow: 0 1px 3px rgba(color(shadow-sm), 0.3);
             }
 
             &--selected {
                 background: color(primary-500);
                 border-color: color(primary-600);
                 color: color(text-on-primary);
+                box-shadow: 0 2px 8px rgba(color(primary-500), 0.3);
+
+                &:hover {
+                    background: color(primary-400);
+                    border-color: color(primary-500);
+                    transform: translateY(-1px);
+                }
+
+                &:active {
+                    background: color(primary-600);
+                    transform: translateY(0);
+                }
+            }
+
+            &:focus-visible {
+                outline: 2px solid color(primary-500);
+                outline-offset: 2px;
+            }
+
+            &:disabled {
+                background: surface(inset);
+                border-color: border(subtle);
+                color: text(disabled);
+                cursor: not-allowed;
+                transform: none;
+
+                &:hover {
+                    background: surface(inset);
+                    border-color: border(subtle);
+                    transform: none;
+                    box-shadow: none;
+                }
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(color(primary-500), 0.1),
+                    transparent
+                );
+                transition: left 0.3s ease;
+            }
+
+            &:hover::before {
+                left: 100%;
             }
         }
+    }
+}
+
+// Pulse animation for loading state
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+// Print styles
+@media print {
+    .priority-select-card {
+        border: 1px solid #000;
+        background: white;
+        color: black;
+        box-shadow: none;
+
+        &__options__grade {
+            border: 1px solid #000;
+            background: white;
+            color: black;
+
+            &--selected {
+                background: #000;
+                color: white;
+            }
+        }
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .priority-select-card,
+    .priority-select-card__icon,
+    .priority-select-card__icon svg,
+    .priority-select-card__options__grade,
+    .priority-select-card__options__grade::before {
+        transition: none;
+        animation: none;
+    }
+
+    .priority-select-card__options__grade:hover {
+        transform: none;
     }
 }

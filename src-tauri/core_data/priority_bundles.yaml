@@ -1,6 +1,6 @@
 # This file stored information pertaining to simple stat increases at various grades
 - type: PriorityBundle
-  name: "metatype"
+  name: "Metatype"
   metatypes:
     - name: Human
       grade: "A"
@@ -54,7 +54,7 @@
       grade: "E"
       special_points: 1
 - type: PriorityBundle
-  name: "attributes"
+  name: "Attributes"
   modifiers:
     - grade: "A"
       target_key: resources.attributes.base_amount
@@ -72,7 +72,7 @@
       target_key: resources.attributes.base_amount
       value: "12"
 - type: PriorityBundle
-  name: "magic/resonance"
+  name: "Magic/Resonance"
   children:
     - name: Magician
       grade: "A"
@@ -171,7 +171,7 @@
           amount: 1
           rating: 4
 - type: PriorityBundle
-  name: "skills"
+  name: "Skills"
   modifiers:
     - grade: A
       target_key: resources.skills.base_amount
@@ -198,7 +198,7 @@
       target_key: resources.skills.base_amount
       value: "18"
 - type: PriorityBundle
-  name: "resources"
+  name: "Resources"
   modifiers:
     - grade: A
       target_key: resources.nuyen.base_amount

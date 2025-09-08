@@ -3,13 +3,10 @@ import { useState } from "react";
 import ModalContainer from "../ModalContainer/ModalContainer.tsx";
 import PriorityModalMethod from "./PriorityModalMethod/PriorityModalMethod.tsx";
 import PriorityModalPriority from "./PriorityModalPriority/PriorityModalPriority.tsx";
-import type { MethodSpec } from "../../../types/creation.ts";
 
 interface PriorityModalProps {
   onClose: () => void;
 }
-
-const specs: MethodSpec[] = [{ title: "Priority Generation" }];
 
 const PriorityModal = ({ onClose }: PriorityModalProps) => {
   const [currentStep, setCurrentStep] = useState("method");
@@ -22,7 +19,7 @@ const PriorityModal = ({ onClose }: PriorityModalProps) => {
       {currentStep === "priority" && (
         <PriorityModalPriority
           setCurrentStep={setCurrentStep}
-          methodSpec={specs[0]}
+          title={"Priority Generation"}
         />
       )}
     </ModalContainer>
