@@ -141,6 +141,7 @@ CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) DEFAULT NULL,
     grade VARCHAR(1) DEFAULT '*',
+    menu_order INTEGER DEFAULT 0,
     parent_bundle_id INTEGER DEFAULT NULL,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),

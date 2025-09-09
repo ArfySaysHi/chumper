@@ -43,19 +43,19 @@
         transition: background-color 0.2s ease;
 
         @include respond-to(sm) {
-            min-width: spacing(10);
-            min-height: spacing(10);
+            min-width: spacing(8);
+            min-height: spacing(8);
         }
 
         @include respond-to(md) {
-            min-width: spacing(12);
-            min-height: spacing(12);
+            min-width: spacing(10);
+            min-height: spacing(10);
         }
 
         @media (max-width: 480px) {
             align-self: center;
-            min-width: spacing(10);
-            min-height: spacing(10);
+            min-width: spacing(7);
+            min-height: spacing(7);
         }
 
         svg {
@@ -132,8 +132,8 @@
         }
 
         &__grade {
-            width: spacing(10);
-            height: spacing(10);
+            width: spacing(8);
+            height: spacing(8);
             background: surface(secondary);
             border: 1px solid border(default);
             border-radius: border-radius(md);
@@ -147,14 +147,14 @@
             overflow: hidden;
 
             @include respond-to(sm) {
-                width: spacing(8);
-                height: spacing(8);
+                width: spacing(6);
+                height: spacing(6);
                 font-size: font-size(base);
             }
 
             @include respond-to(md) {
-                width: spacing(10);
-                height: spacing(10);
+                width: spacing(8);
+                height: spacing(8);
                 font-size: font-size(lg);
             }
 

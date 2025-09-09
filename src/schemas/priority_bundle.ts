@@ -50,6 +50,7 @@ export type PriorityBundle = {
     id?: number;
     name?: string;
     grade: string;
+    menu_order?: number;
     parent_bundle_id?: number;
     modifiers: PriorityBundleModifier[];
     skills: PriorityBundleSkill[];
@@ -64,6 +65,7 @@ export const PriorityBundleSchema: z.ZodType<PriorityBundle> = z.lazy(() =>
         id: z.number().optional(),
         name: z.string().optional(),
         grade: z.string().length(1, "Grade must be a single character"),
+        menu_order: z.number().optional(),
         parent_bundle_id: z.number().optional(),
         modifiers: z.array(PriorityBundleModifierSchema),
         skills: z.array(PriorityBundleSkillSchema),

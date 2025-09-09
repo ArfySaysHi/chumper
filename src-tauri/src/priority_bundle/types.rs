@@ -41,6 +41,8 @@ pub struct PriorityBundle {
     pub id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    #[serde(default)]
+    pub menu_order: i32,
     #[serde(default = "default_wildcard")]
     pub grade: String,
     #[serde(skip_serializing_if = "Option::is_none")]

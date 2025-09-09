@@ -24,7 +24,9 @@ const PriorityModalPriority = ({
   useEffect(() => {
     listPriorityBundles({}).then((res) => {
       const validatedRes = PriorityBundleArraySchema.parse(res);
-      setBundles(validatedRes.sort());
+      setBundles(
+        validatedRes.sort((a, b) => (a.menu_order || 0) - (b.menu_order || 0)),
+      );
     });
   }, []);
 
