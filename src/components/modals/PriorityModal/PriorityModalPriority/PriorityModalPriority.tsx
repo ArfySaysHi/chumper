@@ -6,12 +6,18 @@ import { useEffect, useState } from "react";
 import type {
   PriorityBundleArray,
   PriorityBundle,
+  PriorityBundleModifier,
 } from "../../../../schemas/priority_bundle.ts";
 import { PriorityBundleArraySchema } from "../../../../schemas/priority_bundle.ts";
+import CharacterStatBlock from "../../../ui/CharacterStatBlock/CharacterStatBlock.tsx";
 
 interface PriorityModalPriorityProps {
   setCurrentStep: (step: string) => void;
   title: string;
+}
+
+interface PriorityGrades {
+  [k: string]: string;
 }
 
 const PriorityModalPriority = ({
@@ -20,6 +26,7 @@ const PriorityModalPriority = ({
 }: PriorityModalPriorityProps) => {
   const { execute: listPriorityBundles } = useCommand("list_priority_bundles");
   const [bundles, setBundles] = useState<PriorityBundleArray>();
+  const [grades, setGrades] = useState<PriorityGrades>({});
 
   useEffect(() => {
     listPriorityBundles({}).then((res) => {
@@ -29,6 +36,18 @@ const PriorityModalPriority = ({
       );
     });
   }, []);
+
+  const getGradeBenefits = (name: string, grade: string) => {
+    if (!bundles) return {};
+
+    const bundle = bundles.find((g: PriorityBundle) => g.name === name);
+
+    if (!bundle) return {};
+    const modifiers = bundle.modifiers.filter(
+      (m: PriorityBundleModifier) => m.grade === grade,
+    );
+    console.log(modifiers);
+  };
 
   return (
     <div className="priority-modal-priority">
@@ -46,36 +65,21 @@ const PriorityModalPriority = ({
           {bundles &&
             bundles.map((b: PriorityBundle) => (
               <PrioritySelectCard
-                key={b.id || "Default ID"}
-                title={b.name || "No Title"}
+                key={b.id || ""}
+                title={b.name || ""}
+                selectedGrade={grades[b.name || ""] || ""}
+                onGradeSelect={(opt) => {
+                  setGrades((prev) => ({
+                    ...prev,
+                    [b.name || ""]: opt,
+                  }));
+                  getGradeBenefits(b.name || "", opt);
+                }}
               />
             ))}
         </div>
         <div className="priority-modal-priority__content__info">
-          <div className="priority-details">
-            <h2 className="priority-details__header">Selection Details</h2>
-            <div className="priority-details__divider"></div>
-            <div className="priority-details__content">
-              <div className="priority-detail-card">
-                <div className="priority-detail-card__header">
-                  <div className="priority-detail-card__icon">
-                    <PlusOne />
-                  </div>
-                  <div className="priority-detail-card__header__details">
-                    <h3 className="priority-detail-card__header__details__title">
-                      Attributes
-                    </h3>
-                    <div className="priority-detail-card__header__details__description">
-                      Level 3
-                    </div>
-                  </div>
-                  <div className="priority-detail-card__info">
-                    16 Attribute Points
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CharacterStatBlock />
         </div>
       </div>
     </div>
