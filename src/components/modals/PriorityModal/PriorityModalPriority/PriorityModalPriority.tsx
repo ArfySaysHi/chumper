@@ -1,5 +1,4 @@
 import "./PriorityModalPriority.scss";
-import { PlusOne } from "@mui/icons-material";
 import PrioritySelectCard from "../../../ui/PrioritySelectCard/PrioritySelectCard.tsx";
 import useCommand from "../../../../hooks/useCommand.ts";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import type {
 } from "../../../../schemas/priority_bundle.ts";
 import { PriorityBundleArraySchema } from "../../../../schemas/priority_bundle.ts";
 import CharacterStatBlock from "../../../ui/CharacterStatBlock/CharacterStatBlock.tsx";
+import Button from "../../../ui/Button/Button.tsx";
 
 interface PriorityModalPriorityProps {
   setCurrentStep: (step: string) => void;
@@ -52,12 +52,6 @@ const PriorityModalPriority = ({
   return (
     <div className="priority-modal-priority">
       <div className="priority-modal-priority__header">
-        <div
-          className="priority-modal-priority__header__back"
-          onClick={() => setCurrentStep("method")}
-        >
-          Back
-        </div>
         <h1 className="priority-modal-priority__header__title">{title}</h1>
       </div>
       <div className="priority-modal-priority__content">
@@ -81,6 +75,12 @@ const PriorityModalPriority = ({
         <div className="priority-modal-priority__content__info">
           <CharacterStatBlock />
         </div>
+      </div>
+      <div className="priority-modal-priority__controls">
+        <Button>Submit</Button>
+        <Button variant="secondary" onClick={() => setCurrentStep("method")}>
+          Back
+        </Button>
       </div>
     </div>
   );
