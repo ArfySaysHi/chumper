@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type {
   PriorityBundleArray,
   PriorityBundle,
-  PriorityBundleModifier,
+  PriorityGrade,
 } from "../../../../schemas/priority_bundle.ts";
 import { PriorityBundleArraySchema } from "../../../../schemas/priority_bundle.ts";
 import CharacterStatBlock from "../../../ui/CharacterStatBlock/CharacterStatBlock.tsx";
@@ -37,15 +37,13 @@ const PriorityModalPriority = ({
     });
   }, []);
 
-  const getGradeBenefits = (name: string, grade: string) => {
+  const getGradeBenefits = (name: string, grade: PriorityGrade) => {
     if (!bundles) return {};
 
     const bundle = bundles.find((g: PriorityBundle) => g.name === name);
 
     if (!bundle) return {};
-    const modifiers = bundle.modifiers.filter(
-      (m: PriorityBundleModifier) => m.grade === grade,
-    );
+    const modifiers = bundle.modifiers[grade];
     console.log(modifiers);
   };
 
@@ -57,20 +55,22 @@ const PriorityModalPriority = ({
       <div className="priority-modal-priority__content">
         <div className="priority-modal-priority__content__priorities">
           {bundles &&
-            bundles.map((b: PriorityBundle) => (
-              <PrioritySelectCard
-                key={b.id || ""}
-                title={b.name || ""}
-                selectedGrade={grades[b.name || ""] || ""}
-                onGradeSelect={(opt) => {
-                  setGrades((prev) => ({
-                    ...prev,
-                    [b.name || ""]: opt,
-                  }));
-                  getGradeBenefits(b.name || "", opt);
-                }}
-              />
-            ))}
+            bundles.map((b: PriorityBundle) => {
+              const name = b.name ?? "*";
+              const key = b.id != null ? String(b.id) : name;
+
+              return (
+                <PrioritySelectCard
+                  key={key}
+                  title={name}
+                  selectedGrade={grades[name]}
+                  onGradeSelect={(opt) => {
+                    setGrades((prev) => ({ ...prev, [name]: opt }));
+                    getGradeBenefits(name, opt);
+                  }}
+                />
+              );
+            })}
         </div>
         <div className="priority-modal-priority__content__info">
           <CharacterStatBlock />

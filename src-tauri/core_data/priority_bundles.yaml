@@ -1,222 +1,272 @@
 # This file stored information pertaining to simple stat increases at various grades
 - type: PriorityBundle
   name: "Metatype"
+  grade: "*"
   menu_order: 0
+  modifiers:
+    A: []
+    B: []
+    C: []
+    D: []
+    E: []
+    "*": []
+  skills: []
   metatypes:
-    - name: Human
-      grade: "A"
+    - grade: "A"
+      name: "Human"
       special_points: 9
-    - name: Elf
-      grade: "A"
+    - grade: "A"
+      name: "Elf"
       special_points: 8
-    - name: Dwarf
-      grade: "A"
+    - grade: "A"
+      name: "Dwarf"
       special_points: 7
-    - name: Ork
-      grade: "A"
+    - grade: "A"
+      name: "Ork"
       special_points: 7
-    - name: Troll
-      grade: "A"
+    - grade: "A"
+      name: "Troll"
       special_points: 5
-    - name: Human
-      grade: "B"
+    - grade: "B"
+      name: "Human"
       special_points: 7
-    - name: Elf
-      grade: "B"
+    - grade: "B"
+      name: "Elf"
       special_points: 6
-    - name: Dwarf
-      grade: "B"
+    - grade: "B"
+      name: "Dwarf"
       special_points: 4
-    - name: Ork
-      grade: "B"
+    - grade: "B"
+      name: "Ork"
       special_points: 4
-    - name: Troll
-      grade: "B"
+    - grade: "B"
+      name: "Troll"
       special_points: 0
-    - name: Human
-      grade: "C"
+    - grade: "C"
+      name: "Human"
       special_points: 5
-    - name: Elf
-      grade: "C"
+    - grade: "C"
+      name: "Elf"
       special_points: 3
-    - name: Dwarf
-      grade: "C"
+    - grade: "C"
+      name: "Dwarf"
       special_points: 1
-    - name: Ork
-      grade: "C"
+    - grade: "C"
+      name: "Ork"
       special_points: 0
-    - name: Human
-      grade: "D"
+    - grade: "D"
+      name: "Human"
       special_points: 3
-    - name: Elf
-      grade: "D"
+    - grade: "D"
+      name: "Elf"
       special_points: 0
-    - name: Human
-      grade: "E"
+    - grade: "E"
+      name: "Human"
       special_points: 1
+  qualities: []
+  children: []
 - type: PriorityBundle
   name: "Attributes"
+  grade: "*"
   menu_order: 1
   modifiers:
-    - grade: "A"
-      target_key: resources.attributes.base_amount
-      value: "24"
-    - grade: "B"
-      target_key: resources.attributes.base_amount
-      value: "20"
-    - grade: "C"
-      target_key: resources.attributes.base_amount
-      value: "16"
-    - grade: "D"
-      target_key: resources.attributes.base_amount
-      value: "14"
-    - grade: "E"
-      target_key: resources.attributes.base_amount
-      value: "12"
+    A:
+      - grade: "A"
+        target_key: "resources.attributes.base_amount"
+        operation: "set"
+        value: "24"
+    B:
+      - grade: "B"
+        target_key: "resources.attributes.base_amount"
+        operation: "set"
+        value: "20"
+    C:
+      - grade: "C"
+        target_key: "resources.attributes.base_amount"
+        operation: "set"
+        value: "16"
+    D:
+      - grade: "D"
+        target_key: "resources.attributes.base_amount"
+        operation: "set"
+        value: "14"
+    E:
+      - grade: "E"
+        target_key: "resources.attributes.base_amount"
+        operation: "set"
+        value: "12"
+    "*": []
+  skills: []
+  metatypes: []
+  qualities: []
+  children: []
 - type: PriorityBundle
   name: "Magic/Resonance"
+  grade: "*"
   menu_order: 2
+  modifiers:
+    A: []
+    B: []
+    C: []
+    D: []
+    E: []
+    "*": []
+  skills: []
+  metatypes: []
+  qualities: []
   children:
-    - name: Magician
+    - name: "Magician"
       grade: "A"
       modifiers:
-        - target_key: attributes.magic.base_amount
-          value: "6"
-        - target_key: resources.spell_points.base_amount
-          value: "10"
+        A:
+          - grade: "A"
+            target_key: "attributes.magic.base_amount"
+            operation: "set"
+            value: "6"
+          - grade: "A"
+            target_key: "resources.spell_points.base_amount"
+            operation: "set"
+            value: "10"
+        B: []
+        C: []
+        D: []
+        E: []
+        "*": []
       skills:
-        - attribute: "MAG"
+        - grade: "A"
+          attribute: "MAG"
           amount: 2
           rating: 5
+      metatypes: []
       qualities:
-        - name: "Magician"
-    - name: Mystic Adept
+        - grade: "A"
+          name: "Magician"
+      children: []
+
+    - name: "Mystic Adept"
       grade: "A"
       modifiers:
-        - target_key: attributes.magic.base_amount
-          value: "6"
-        - target_key: resources.spell_points.base_amount
-          value: "10"
+        A:
+          - grade: "A"
+            target_key: "attributes.magic.base_amount"
+            operation: "set"
+            value: "6"
+          - grade: "A"
+            target_key: "resources.spell_points.base_amount"
+            operation: "set"
+            value: "10"
+        B: []
+        C: []
+        D: []
+        E: []
+        "*": []
       skills:
-        - attribute: "MAG"
+        - grade: "A"
+          attribute: "MAG"
           amount: 2
           rating: 5
+      metatypes: []
       qualities:
-        - name: Mystic Adept
-    - name: Technomancer
-      grade: "A"
-      modifiers:
-        - target_key: attributes.resonance.base_amount
-          value: "6"
-        - target_key: resources.complex_forms.base_amount
-          value: "5"
-      skills:
-        - attribute: "RES"
-          amount: 2
-          rating: 5
-      qualities:
-        - name: Technomancer
-    - name: Magician
-      grade: "B"
-      modifiers:
-        - target_key: attributes.magic.base_amount
-          value: "4"
-        - target_key: resources.spell_points.base_amount
-          value: "7"
-      skills:
-        - attribute: "MAG"
-          amount: 2
-          rating: 4
-      qualities:
-        - name: "Magician"
-    - name: Mystic Adept
-      grade: "B"
-      modifiers:
-        - target_key: attributes.magic.base_amount
-          value: "4"
-        - target_key: resources.spell_points.base_amount
-          value: "7"
-      skills:
-        - attribute: "MAG"
-          amount: 2
-          rating: 4
-      qualities:
-        - name: Mystic Adept
+        - grade: "A"
+          name: "Mystic Adept"
+      children: []
+
     - name: "Technomancer"
-      grade: "B"
+      grade: "A"
       modifiers:
-        - target_key: attributes.resonance.base_amount
-          value: "4"
-        - target_key: resources.complex_forms.base_amount
-          value: "2"
+        A:
+          - grade: "A"
+            target_key: "attributes.resonance.base_amount"
+            operation: "set"
+            value: "6"
+          - grade: "A"
+            target_key: "resources.complex_forms.base_amount"
+            operation: "set"
+            value: "5"
+        B: []
+        C: []
+        D: []
+        E: []
+        "*": []
       skills:
-        - attribute: "RES"
+        - grade: "A"
+          attribute: "RES"
           amount: 2
-          rating: 4
+          rating: 5
+      metatypes: []
       qualities:
-        - name: Technomancer
-    - name: "Adept"
-      grade: "B"
-      modifiers:
-        - target_key: attributes.magic.base_amount
-          value: "6"
-      skills:
-        - attribute: "MAG"
-          amount: 1
-          rating: 4
-    - name: "Aspected Magician"
-      grade: "B"
-      modifiers:
-        - target_key: attributes.magic.base_amount
-          value: "5"
-      skills:
-        - attribute: "MAG"
-          amount: 1
-          rating: 4
+        - grade: "A"
+          name: "Technomancer"
+      children: []
 - type: PriorityBundle
   name: "Skills"
+  grade: "*"
   menu_order: 3
   modifiers:
-    - grade: A
-      target_key: resources.skills.base_amount
-      value: "46"
-    - grade: A
-      target_key: resources.skill_groups.base_amount
-      value: "10"
-    - grade: B
-      target_key: resources.skills.base_amount
-      value: "36"
-    - grade: B
-      target_key: resources.skill_groups.base_amount
-      value: "5"
-    - grade: C
-      target_key: resources.skills.base_amount
-      value: "28"
-    - grade: C
-      target_key: resources.skill_groups.base_amount
-      value: "2"
-    - grade: D
-      target_key: resources.skills.base_amount
-      value: "22"
-    - grade: E
-      target_key: resources.skills.base_amount
-      value: "18"
+    A:
+      - grade: "A"
+        target_key: "resources.skills.base_amount"
+        operation: "set"
+        value: "46"
+      - grade: "A"
+        target_key: "resources.skill_groups.base_amount"
+        operation: "set"
+        value: "10"
+    B:
+      - grade: "B"
+        target_key: "resources.skills.base_amount"
+        operation: "set"
+        value: "36"
+      - grade: "B"
+        target_key: "resources.skill_groups.base_amount"
+        operation: "set"
+        value: "5"
+    C:
+      - grade: "C"
+        target_key: "resources.skills.base_amount"
+        operation: "set"
+        value: "28"
+      - grade: "C"
+        target_key: "resources.skill_groups.base_amount"
+        operation: "set"
+        value: "2"
+    D:
+      - grade: "D"
+        target_key: "resources.skills.base_amount"
+        operation: "set"
+        value: "22"
+    E:
+      - grade: "E"
+        target_key: "resources.skills.base_amount"
+        operation: "set"
+        value: "18"
 - type: PriorityBundle
   name: "Resources"
+  grade: "*"
   menu_order: 4
   modifiers:
-    - grade: A
-      target_key: resources.nuyen.base_amount
-      value: "450000"
-    - grade: B
-      target_key: resources.nuyen.base_amount
-      value: "275000"
-    - grade: C
-      target_key: resources.nuyen.base_amount
-      value: "140000"
-    - grade: D
-      target_key: resources.nuyen.base_amount
-      value: "50000"
-    - grade: E
-      target_key: resources.nuyen.base_amount
-      value: "6000"
+    A:
+      - grade: "A"
+        target_key: "resources.nuyen.base_amount"
+        operation: "set"
+        value: "450000"
+    B:
+      - grade: "B"
+        target_key: "resources.nuyen.base_amount"
+        operation: "set"
+        value: "275000"
+    C:
+      - grade: "C"
+        target_key: "resources.nuyen.base_amount"
+        operation: "set"
+        value: "140000"
+    D:
+      - grade: "D"
+        target_key: "resources.nuyen.base_amount"
+        operation: "set"
+        value: "50000"
+    E:
+      - grade: "E"
+        target_key: "resources.nuyen.base_amount"
+        operation: "set"
+        value: "6000"

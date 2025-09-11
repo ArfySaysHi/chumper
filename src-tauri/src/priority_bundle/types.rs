@@ -4,6 +4,7 @@ use super::repository::{
 };
 use crate::import::YamlImportable;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PriorityBundleModifier {
@@ -48,7 +49,7 @@ pub struct PriorityBundle {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parent_bundle_id: Option<i64>,
     #[serde(default)]
-    pub modifiers: Vec<PriorityBundleModifier>,
+    pub modifiers: HashMap<String, Vec<PriorityBundleModifier>>,
     #[serde(default)]
     pub skills: Vec<PriorityBundleSkill>,
     #[serde(default)]

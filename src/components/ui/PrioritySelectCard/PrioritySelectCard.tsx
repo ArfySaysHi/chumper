@@ -6,12 +6,13 @@ import {
   AutoAwesome,
   AccountBalance,
 } from "@mui/icons-material";
+import type { PriorityGrade } from "../../../schemas/priority_bundle.ts";
 
 interface PrioritySelectCardProps {
   title: string;
   icon?: string;
   selectedGrade?: string;
-  onGradeSelect?: (grade: string) => void;
+  onGradeSelect?: (grade: PriorityGrade) => void;
 }
 
 interface IconArray {
@@ -31,7 +32,7 @@ const PrioritySelectCard = ({
   selectedGrade,
   onGradeSelect,
 }: PrioritySelectCardProps) => {
-  const grades = ["A", "B", "C", "D", "E"];
+  const grades: PriorityGrade[] = ["A", "B", "C", "D", "E"];
 
   return (
     <div className="priority-select-card">

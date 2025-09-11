@@ -18,7 +18,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 grade: row.get("grade")?,
                 menu_order: row.get("menu_order")?,
                 parent_bundle_id: row.get("parent_bundle_id")?,
-                modifiers: Vec::new(),
+                modifiers: HashMap::new(),
                 skills: Vec::new(),
                 metatypes: Vec::new(),
                 qualities: Vec::new(),
@@ -123,7 +123,11 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
     for pb in &mut priority_bundles {
         if let Some(pb_id) = &pb.id {
             if let Some(mods) = pbm_map.remove(&pb_id) {
-                pb.modifiers = mods;
+                let mut pbm_graded: HashMap<String, Vec<PriorityBundleModifier>> = HashMap::new();
+                for pbm in mods {
+                    pbm_graded.entry(pbm.grade.clone()).or_default().push(pbm);
+                }
+                pb.modifiers = pbm_graded;
             }
             if let Some(skills) = pbs_map.remove(&pb_id) {
                 pb.skills = skills;
@@ -180,15 +184,18 @@ pub fn create_priority_bundle_modifiers(
                  VALUES (:grade, :bundle_id, :target_key, :operation, :value)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
+    let keys = pb.modifiers.keys();
 
-    for pbm in pb.modifiers.iter() {
-        stmt.execute(named_params! {
-            ":grade": &pbm.grade,
-            ":bundle_id": &pb.id,
-            ":target_key": &pbm.target_key,
-            ":operation": &pbm.operation,
-            ":value": &pbm.value,
-        })?;
+    for key in keys {
+        for item in &pb.modifiers[key] {
+            stmt.execute(named_params! {
+                ":grade": &item.grade,
+                ":bundle_id": &pb.id,
+                ":target_key": &item.target_key,
+                ":operation": &item.operation,
+                ":value": &item.value,
+            })?;
+        }
     }
 
     Ok(())
