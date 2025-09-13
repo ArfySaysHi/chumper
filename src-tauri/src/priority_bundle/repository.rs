@@ -19,10 +19,10 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 menu_order: row.get("menu_order")?,
                 parent_bundle_id: row.get("parent_bundle_id")?,
                 modifiers: HashMap::new(),
-                skills: Vec::new(),
-                metatypes: Vec::new(),
-                qualities: Vec::new(),
-                children: Vec::new(),
+                skills: HashMap::new(),
+                metatypes: HashMap::new(),
+                qualities: HashMap::new(),
+                children: HashMap::new(),
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -130,13 +130,29 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 pb.modifiers = pbm_graded;
             }
             if let Some(skills) = pbs_map.remove(&pb_id) {
-                pb.skills = skills;
+                let mut pbs_graded: HashMap<String, Vec<PriorityBundleSkill>> = HashMap::new();
+                for pbs in skills {
+                    pbs_graded.entry(pbs.grade.clone()).or_default().push(pbs);
+                }
+                pb.skills = pbs_graded;
             }
             if let Some(metatypes) = pb_meta_map.remove(&pb_id) {
-                pb.metatypes = metatypes;
+                let mut pb_meta_graded: HashMap<String, Vec<PriorityBundleMetatype>> =
+                    HashMap::new();
+                for pb_meta in metatypes {
+                    pb_meta_graded
+                        .entry(pb_meta.grade.clone())
+                        .or_default()
+                        .push(pb_meta);
+                }
+                pb.metatypes = pb_meta_graded;
             }
             if let Some(qualities) = pbq_map.remove(&pb_id) {
-                pb.qualities = qualities;
+                let mut pbq_graded: HashMap<String, Vec<PriorityBundleQuality>> = HashMap::new();
+                for pbq in qualities {
+                    pbq_graded.entry(pbq.grade.clone()).or_default().push(pbq);
+                }
+                pb.qualities = pbq_graded;
             }
         }
     }
@@ -162,10 +178,15 @@ pub fn create_priority_bundle(
     })?;
 
     let rowid = connection.last_insert_rowid();
-    for nested_pb in &pb.children {
-        let mut child = nested_pb.clone();
-        child.parent_bundle_id = Some(rowid);
-        child.insert_into_db(connection)?;
+    let keys = pb.children.keys();
+
+    for key in keys {
+        for item in &pb.children[key] {
+            let mut child = item.clone();
+            child.parent_bundle_id = Some(rowid);
+            child.grade = key.to_string();
+            child.insert_into_db(connection)?;
+        }
     }
 
     let mut cloned_pb = pb.clone();
@@ -189,7 +210,7 @@ pub fn create_priority_bundle_modifiers(
     for key in keys {
         for item in &pb.modifiers[key] {
             stmt.execute(named_params! {
-                ":grade": &item.grade,
+                ":grade": key,
                 ":bundle_id": &pb.id,
                 ":target_key": &item.target_key,
                 ":operation": &item.operation,
@@ -208,15 +229,18 @@ pub fn create_priority_bundle_skills(connection: &Connection, pb: &PriorityBundl
                  VALUES (:grade, :bundle_id, :attribute, :amount, :rating)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
+    let keys = pb.skills.keys();
 
-    for pbs in pb.skills.iter() {
-        stmt.execute(named_params! {
-            ":grade": &pb.grade,
-            ":bundle_id": &pb.id,
-            ":attribute": &pbs.attribute,
-            ":amount": &pbs.amount,
-            ":rating": &pbs.rating,
-        })?;
+    for key in keys {
+        for item in &pb.skills[key] {
+            stmt.execute(named_params! {
+                ":grade": key,
+                ":bundle_id": &pb.id,
+                ":attribute": &item.attribute,
+                ":amount": &item.amount,
+                ":rating": &item.rating,
+            })?;
+        }
     }
 
     Ok(())
@@ -232,14 +256,17 @@ pub fn create_priority_bundle_metatypes(
                  VALUES (:bundle_id, :grade, :special_points, :name)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
+    let keys = pb.metatypes.keys();
 
-    for pbm in pb.metatypes.iter() {
-        stmt.execute(named_params! {
-            ":bundle_id": &pb.id,
-            ":grade": &pbm.grade,
-            ":special_points": &pbm.special_points,
-            ":name": &pbm.name,
-        })?;
+    for key in keys {
+        for item in &pb.metatypes[key] {
+            stmt.execute(named_params! {
+                ":grade": key,
+                ":bundle_id": &pb.id,
+                ":special_points": &item.special_points,
+                ":name": &item.name,
+            })?;
+        }
     }
 
     Ok(())
@@ -255,13 +282,16 @@ pub fn create_priority_bundle_qualities(
                  VALUES (:bundle_id, :grade, :name)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
+    let keys = pb.qualities.keys();
 
-    for pbq in pb.qualities.iter() {
-        stmt.execute(named_params! {
-            ":bundle_id": &pb.id,
-            ":grade": &pbq.grade,
-            ":name": &pbq.name,
-        })?;
+    for key in keys {
+        for item in &pb.qualities[key] {
+            stmt.execute(named_params! {
+                ":bundle_id": &pb.id,
+                ":grade": key,
+                ":name": &item.name,
+            })?;
+        }
     }
 
     Ok(())

@@ -14,7 +14,7 @@ export const PriorityBundleModifierSchema = z.object({
   updated_at: z.string().optional(),
 });
 
-const defaultModifiers = {
+const defaultGradeArrays = {
   A: [],
   B: [],
   C: [],
@@ -25,8 +25,8 @@ const defaultModifiers = {
 
 export const PriorityBundleModifierMapSchema = z.preprocess(
   (val) => {
-    if (typeof val !== "object" || val === null) return defaultModifiers;
-    return { ...defaultModifiers, ...(val as Record<string, any>) };
+    if (typeof val !== "object" || val === null) return defaultGradeArrays;
+    return { ...defaultGradeArrays, ...(val as Record<string, any>) };
   },
   z.object({
     A: z.array(PriorityBundleModifierSchema),
@@ -47,6 +47,21 @@ export const PriorityBundleSkillSchema = z.object({
   rating: z.number(),
 });
 
+export const PriorityBundleSkillMapSchema = z.preprocess(
+  (val) => {
+    if (typeof val !== "object" || val === null) return defaultGradeArrays;
+    return { ...defaultGradeArrays, ...(val as Record<string, any>) };
+  },
+  z.object({
+    A: z.array(PriorityBundleSkillSchema),
+    B: z.array(PriorityBundleSkillSchema),
+    C: z.array(PriorityBundleSkillSchema),
+    D: z.array(PriorityBundleSkillSchema),
+    E: z.array(PriorityBundleSkillSchema),
+    "*": z.array(PriorityBundleSkillSchema),
+  }),
+);
+
 export const PriorityBundleMetatypeSchema = z.object({
   id: z.number().optional(),
   bundle_id: z.number().optional(),
@@ -55,12 +70,42 @@ export const PriorityBundleMetatypeSchema = z.object({
   name: z.string(),
 });
 
+export const PriorityBundleMetatypeMapSchema = z.preprocess(
+  (val) => {
+    if (typeof val !== "object" || val === null) return defaultGradeArrays;
+    return { ...defaultGradeArrays, ...(val as Record<string, any>) };
+  },
+  z.object({
+    A: z.array(PriorityBundleMetatypeSchema),
+    B: z.array(PriorityBundleMetatypeSchema),
+    C: z.array(PriorityBundleMetatypeSchema),
+    D: z.array(PriorityBundleMetatypeSchema),
+    E: z.array(PriorityBundleMetatypeSchema),
+    "*": z.array(PriorityBundleMetatypeSchema),
+  }),
+);
+
 export const PriorityBundleQualitySchema = z.object({
   id: z.number().optional(),
   bundle_id: z.number().optional(),
   grade: PriorityGradeSchema,
   name: z.string(),
 });
+
+export const PriorityBundleQualityMapSchema = z.preprocess(
+  (val) => {
+    if (typeof val !== "object" || val === null) return defaultGradeArrays;
+    return { ...defaultGradeArrays, ...(val as Record<string, any>) };
+  },
+  z.object({
+    A: z.array(PriorityBundleQualitySchema),
+    B: z.array(PriorityBundleQualitySchema),
+    C: z.array(PriorityBundleQualitySchema),
+    D: z.array(PriorityBundleQualitySchema),
+    E: z.array(PriorityBundleQualitySchema),
+    "*": z.array(PriorityBundleQualitySchema),
+  }),
+);
 
 export type PriorityBundle = {
   id?: number;
@@ -69,10 +114,10 @@ export type PriorityBundle = {
   menu_order?: number;
   parent_bundle_id?: number;
   modifiers: PriorityBundleModifierMap;
-  skills: PriorityBundleSkill[];
-  metatypes: PriorityBundleMetatype[];
-  qualities: PriorityBundleQuality[];
-  children: PriorityBundle[];
+  skills: PriorityBundleSkillMap;
+  metatypes: PriorityBundleMetatypeMap;
+  qualities: PriorityBundleQualityMap;
+  children: PriorityBundleMap;
 };
 
 export const PriorityBundleSchema: z.ZodType<PriorityBundle> = z.lazy(() =>
@@ -83,10 +128,25 @@ export const PriorityBundleSchema: z.ZodType<PriorityBundle> = z.lazy(() =>
     menu_order: z.number().optional(),
     parent_bundle_id: z.number().optional(),
     modifiers: PriorityBundleModifierMapSchema,
-    skills: z.array(PriorityBundleSkillSchema),
-    metatypes: z.array(PriorityBundleMetatypeSchema),
-    qualities: z.array(PriorityBundleQualitySchema),
-    children: z.array(PriorityBundleSchema),
+    skills: PriorityBundleSkillMapSchema,
+    metatypes: PriorityBundleMetatypeMapSchema,
+    qualities: PriorityBundleQualityMapSchema,
+    children: PriorityBundleMapSchema,
+  }),
+);
+
+export const PriorityBundleMapSchema = z.preprocess(
+  (val) => {
+    if (typeof val !== "object" || val === null) return defaultGradeArrays;
+    return { ...defaultGradeArrays, ...(val as Record<string, any>) };
+  },
+  z.object({
+    A: z.array(PriorityBundleSchema),
+    B: z.array(PriorityBundleSchema),
+    C: z.array(PriorityBundleSchema),
+    D: z.array(PriorityBundleSchema),
+    E: z.array(PriorityBundleSchema),
+    "*": z.array(PriorityBundleSchema),
   }),
 );
 
@@ -94,15 +154,30 @@ export const PriorityBundleArraySchema = z.array(PriorityBundleSchema);
 
 export type Operation = z.infer<typeof OperationSchema>;
 export type PriorityGrade = z.infer<typeof PriorityGradeSchema>;
+
 export type PriorityBundleModifier = z.infer<
   typeof PriorityBundleModifierSchema
 >;
 export type PriorityBundleModifierMap = z.infer<
   typeof PriorityBundleModifierMapSchema
 >;
+
 export type PriorityBundleSkill = z.infer<typeof PriorityBundleSkillSchema>;
+export type PriorityBundleSkillMap = z.infer<
+  typeof PriorityBundleSkillMapSchema
+>;
+
 export type PriorityBundleMetatype = z.infer<
   typeof PriorityBundleMetatypeSchema
 >;
+export type PriorityBundleMetatypeMap = z.infer<
+  typeof PriorityBundleMetatypeMapSchema
+>;
+
 export type PriorityBundleQuality = z.infer<typeof PriorityBundleQualitySchema>;
+export type PriorityBundleQualityMap = z.infer<
+  typeof PriorityBundleQualityMapSchema
+>;
+
+export type PriorityBundleMap = z.infer<typeof PriorityBundleMapSchema>;
 export type PriorityBundleArray = z.infer<typeof PriorityBundleArraySchema>;

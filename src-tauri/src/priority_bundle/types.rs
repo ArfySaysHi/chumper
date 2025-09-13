@@ -51,13 +51,13 @@ pub struct PriorityBundle {
     #[serde(default)]
     pub modifiers: HashMap<String, Vec<PriorityBundleModifier>>,
     #[serde(default)]
-    pub skills: Vec<PriorityBundleSkill>,
+    pub skills: HashMap<String, Vec<PriorityBundleSkill>>,
     #[serde(default)]
-    pub metatypes: Vec<PriorityBundleMetatype>,
+    pub metatypes: HashMap<String, Vec<PriorityBundleMetatype>>,
     #[serde(default)]
-    pub qualities: Vec<PriorityBundleQuality>,
+    pub qualities: HashMap<String, Vec<PriorityBundleQuality>>,
     #[serde(default)]
-    pub children: Vec<PriorityBundle>,
+    pub children: HashMap<String, Vec<PriorityBundle>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
