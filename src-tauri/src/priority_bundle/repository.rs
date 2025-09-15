@@ -1,5 +1,6 @@
 use super::helpers::nest_priority_bundles;
 use super::{PriorityBundle, PriorityBundleModifier};
+use crate::priority_bundle::helpers::group_by_grade;
 use crate::priority_bundle::{PriorityBundleMetatype, PriorityBundleQuality, PriorityBundleSkill};
 use crate::{error::Result, import::YamlImportable};
 use rusqlite::{named_params, Connection};
@@ -123,36 +124,16 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
     for pb in &mut priority_bundles {
         if let Some(pb_id) = &pb.id {
             if let Some(mods) = pbm_map.remove(&pb_id) {
-                let mut pbm_graded: HashMap<String, Vec<PriorityBundleModifier>> = HashMap::new();
-                for pbm in mods {
-                    pbm_graded.entry(pbm.grade.clone()).or_default().push(pbm);
-                }
-                pb.modifiers = pbm_graded;
+                pb.modifiers = group_by_grade(mods, |m| &m.grade);
             }
             if let Some(skills) = pbs_map.remove(&pb_id) {
-                let mut pbs_graded: HashMap<String, Vec<PriorityBundleSkill>> = HashMap::new();
-                for pbs in skills {
-                    pbs_graded.entry(pbs.grade.clone()).or_default().push(pbs);
-                }
-                pb.skills = pbs_graded;
+                pb.skills = group_by_grade(skills, |s| &s.grade);
             }
             if let Some(metatypes) = pb_meta_map.remove(&pb_id) {
-                let mut pb_meta_graded: HashMap<String, Vec<PriorityBundleMetatype>> =
-                    HashMap::new();
-                for pb_meta in metatypes {
-                    pb_meta_graded
-                        .entry(pb_meta.grade.clone())
-                        .or_default()
-                        .push(pb_meta);
-                }
-                pb.metatypes = pb_meta_graded;
+                pb.metatypes = group_by_grade(metatypes, |m| &m.grade);
             }
             if let Some(qualities) = pbq_map.remove(&pb_id) {
-                let mut pbq_graded: HashMap<String, Vec<PriorityBundleQuality>> = HashMap::new();
-                for pbq in qualities {
-                    pbq_graded.entry(pbq.grade.clone()).or_default().push(pbq);
-                }
-                pb.qualities = pbq_graded;
+                pb.qualities = group_by_grade(qualities, |q| &q.grade);
             }
         }
     }

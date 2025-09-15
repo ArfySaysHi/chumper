@@ -1,12 +1,10 @@
 CREATE TABLE characters (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    metatype VARCHAR(50) NOT NULL,
     player_name VARCHAR(100),
     status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
     created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (metatype) REFERENCES metatype(name)
+    updated_at TEXT DEFAULT (datetime('now'))
 );
 
 CREATE TABLE modifiers (

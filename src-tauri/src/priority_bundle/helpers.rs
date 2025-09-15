@@ -30,3 +30,15 @@ pub fn nest_priority_bundles(flat: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
 
     roots
 }
+
+pub fn group_by_grade<T>(
+    items: Vec<T>,
+    grade_accessor: impl Fn(&T) -> &str,
+) -> HashMap<String, Vec<T>> {
+    let mut grouped: HashMap<String, Vec<T>> = HashMap::new();
+    for item in items {
+        let grade = grade_accessor(&item).to_string();
+        grouped.entry(grade).or_default().push(item);
+    }
+    grouped
+}

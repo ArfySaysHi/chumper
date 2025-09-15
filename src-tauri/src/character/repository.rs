@@ -2,9 +2,8 @@ use super::commands::ListCharactersParams;
 use super::resource;
 use crate::character::types::*;
 use crate::error::Result;
-use crate::metatype::types::Metatype;
 use resource::Resource;
-use rusqlite::{named_params, params, Connection};
+use rusqlite::Connection;
 use std::collections::HashMap;
 
 pub fn list_characters(
@@ -96,95 +95,75 @@ pub fn list_characters(
     Ok(characters)
 }
 
-pub fn get_character_by_id(connection: &Connection, id: i64) -> Result<Character> {
-    let mut character = connection.query_row(
-        "SELECT id, name, metatype, player_name, created_at, updated_at, status
-         FROM characters
-         WHERE id = ?1",
-        params![id],
-        |row| {
-            Ok(Character {
-                id: Some(row.get("id")?),
-                name: row.get("name")?,
-                metatype: row.get("metatype")?,
-                player_name: row.get("player_name")?,
-                created_at: row.get("created_at")?,
-                updated_at: row.get("updated_at")?,
-                status: row.get("status")?,
-                metatype_info: Metatype::new(row.get("name")?),
-            })
-        },
-    )?;
+pub fn get_character_by_id(_connection: &Connection, _id: i64) -> Result<()> {
+    Ok(())
+    // let mut character = connection.query_row(
+    //     "SELECT id, name, metatype, player_name, created_at, updated_at, status
+    //      FROM characters
+    //      WHERE id = ?1",
+    //     params![id],
+    //     |row| {
+    //         Ok(Character {
+    //             id: Some(row.get("id")?),
+    //             name: row.get("name")?,
+    //             player_name: row.get("player_name")?,
+    //             created_at: row.get("created_at")?,
+    //             updated_at: row.get("updated_at")?,
+    //             status: row.get("status")?,
+    //         })
+    //     },
+    // )?;
 
-    let metatype_query = format!(
-        "SELECT (
-           id, name, body_min, body_max, agility_min, agility_max, reaction_min, reaction_max,
-           strength_min, strength_max, willpower_min, willpower_max, logic_min, logic_max,
-           intuition_min, intuition_max, charisma_min, charisma_max, edge_min, edge_max,
-           magical_type, magic_min, magic_max, resonance_min, resonance_max
-         )
-         FROM metatypes
-         WHERE name = ({})",
-        character.metatype
-    );
+    // let metatype_query = format!(
+    //     "SELECT (
+    //        id, name, body_min, body_max, agility_min, agility_max, reaction_min, reaction_max,
+    //        strength_min, strength_max, willpower_min, willpower_max, logic_min, logic_max,
+    //        intuition_min, intuition_max, charisma_min, charisma_max, edge_min, edge_max,
+    //        magical_type, magic_min, magic_max, resonance_min, resonance_max
+    //      )
+    //      FROM metatypes
+    //      WHERE name = ({})",
+    //     character.metatype
+    // );
 
-    let metatype = connection.query_row(&metatype_query, [], |row| {
-        Ok(Metatype {
-            id: row.get("id")?,
-            name: row.get("name")?,
-            body_min: row.get("body_min")?,
-            body_max: row.get("body_max")?,
-            agility_min: row.get("agility_min")?,
-            agility_max: row.get("agility_max")?,
-            reaction_min: row.get("reaction_min")?,
-            reaction_max: row.get("reaction_max")?,
-            strength_min: row.get("strength_min")?,
-            strength_max: row.get("strength_max")?,
-            willpower_min: row.get("willpower_min")?,
-            willpower_max: row.get("willpower_max")?,
-            logic_min: row.get("logic_min")?,
-            logic_max: row.get("logic_max")?,
-            intuition_min: row.get("intuition_min")?,
-            intuition_max: row.get("intuition_max")?,
-            charisma_min: row.get("charisma_min")?,
-            charisma_max: row.get("charisma_max")?,
-            edge_min: row.get("edge_min")?,
-            edge_max: row.get("edge_max")?,
-            magical_type: row.get("magical_type")?,
-            magic_min: row.get("magic_min")?,
-            magic_max: row.get("magic_max")?,
-            resonance_min: row.get("resonance_min")?,
-            resonance_max: row.get("resonance_max")?,
-            metatype_qualities: Vec::new(),
-        })
-    })?;
+    // let metatype = connection.query_row(&metatype_query, [], |row| {
+    //     Ok(Metatype {
+    //         id: row.get("id")?,
+    //         name: row.get("name")?,
+    //         body_min: row.get("body_min")?,
+    //         body_max: row.get("body_max")?,
+    //         agility_min: row.get("agility_min")?,
+    //         agility_max: row.get("agility_max")?,
+    //         reaction_min: row.get("reaction_min")?,
+    //         reaction_max: row.get("reaction_max")?,
+    //         strength_min: row.get("strength_min")?,
+    //         strength_max: row.get("strength_max")?,
+    //         willpower_min: row.get("willpower_min")?,
+    //         willpower_max: row.get("willpower_max")?,
+    //         logic_min: row.get("logic_min")?,
+    //         logic_max: row.get("logic_max")?,
+    //         intuition_min: row.get("intuition_min")?,
+    //         intuition_max: row.get("intuition_max")?,
+    //         charisma_min: row.get("charisma_min")?,
+    //         charisma_max: row.get("charisma_max")?,
+    //         edge_min: row.get("edge_min")?,
+    //         edge_max: row.get("edge_max")?,
+    //         magical_type: row.get("magical_type")?,
+    //         magic_min: row.get("magic_min")?,
+    //         magic_max: row.get("magic_max")?,
+    //         resonance_min: row.get("resonance_min")?,
+    //         resonance_max: row.get("resonance_max")?,
+    //         metatype_qualities: Vec::new(),
+    //     })
+    // })?;
 
-    character.metatype_info = metatype;
+    // character.metatype_info = metatype;
 
-    Ok(character)
+    // Ok(character)
 }
 
-pub fn create_character(connection: &Connection, character: &Character) -> Result<Character> {
-    connection.execute(
-        "INSERT INTO characters
-           (name, metatype, player_name, created_at, updated_at, status)
-         VALUES (
-           :name, :metatype, :player_name, datetime('now'), datetime('now'), :status
-         )",
-        named_params!(
-            ":name": character.name,
-            ":metatype": character.metatype,
-            ":player_name": character.player_name,
-            ":status": character.status
-        ),
-    )?;
-
-    let row_id = connection.last_insert_rowid();
-    let mut created_character = character.clone();
-    created_character.id = Some(row_id);
-    created_character.initialize_base_resources(connection)?;
-
-    Ok(created_character)
+pub fn create_character(_connection: &Connection) -> Result<()> {
+    Ok(())
 }
 
 pub fn delete_character(connection: &Connection, id: i64) -> Result<String> {

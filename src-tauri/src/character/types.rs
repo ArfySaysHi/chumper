@@ -13,7 +13,6 @@ pub struct Character {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
     pub name: String,
-    pub metatype: String, // TODO: Remove this later
     pub player_name: Option<String>,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,
@@ -21,7 +20,7 @@ pub struct Character {
     pub updated_at: Option<String>,
     #[serde(default)]
     pub status: CharacterStatus,
-    pub metatype_info: Metatype,
+    pub metatype: Metatype,
 }
 
 impl Character {
@@ -44,9 +43,9 @@ impl Character {
 }
 
 impl YamlImportable for Character {
-    type Output = Character;
-    fn insert_into_db(&self, connection: &Connection) -> Result<Self::Output> {
-        create_character(connection, &self)
+    type Output = ();
+    fn insert_into_db(&self, connection: &Connection) -> Result<()> {
+        create_character(connection)
     }
 }
 
@@ -102,11 +101,4 @@ pub struct CharacterSummary {
     pub created_at: String,
     pub updated_at: String,
     pub resources: Vec<Resource>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CreateCharacterRequest {
-    pub name: String,
-    pub metatype: String,
-    pub player_name: Option<String>,
 }
