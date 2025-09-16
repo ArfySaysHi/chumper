@@ -9,7 +9,7 @@ CREATE TABLE characters (
 
 CREATE TABLE character_priorities (
     id INTEGER PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    bundle_name VARCHAR(100) NOT NULL,
     grade VARCHAR(1) NOT NULL,
     priority_system VARCHAR(100) DEFAULT 'Core',
     character_id INTEGER NOT NULL,

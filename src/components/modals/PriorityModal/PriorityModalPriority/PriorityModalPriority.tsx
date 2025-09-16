@@ -53,7 +53,7 @@ const PriorityModalPriority = ({
     createCharacter({
       params: {
         priority_system: "Core",
-        grades,
+        priorities: grades,
         metatype_id: 0,
         skill_selections: [],
       },
