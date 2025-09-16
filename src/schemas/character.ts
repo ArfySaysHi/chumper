@@ -2,8 +2,7 @@ import { z } from "zod";
 
 export const CharacterSchema = z.object({
     id: z.number().optional(),
-    name: z.string().min(1, "Character name is required"),
-    metatype: z.string(),
+    name: z.string().optional(),
     player_name: z.string().optional(),
     created_at: z.string().optional(),
     updated_at: z.string().optional(),
@@ -12,8 +11,7 @@ export const CharacterSchema = z.object({
 
 export const CharacterSummarySchema = z.object({
     id: z.number().optional(),
-    name: z.string().min(1, "Character name is required"),
-    metatype: z.string(),
+    name: z.string().optional(),
     player_name: z.string().nullable(),
     created_at: z.string().optional(),
     updated_at: z.string().optional(),

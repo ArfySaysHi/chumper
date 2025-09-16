@@ -11,7 +11,7 @@ pub fn list_characters(
     params: Option<ListCharactersParams>,
 ) -> Result<Vec<CharacterSummary>> {
     let mut query = "SELECT
-                       id, name, metatype, player_name, status, created_at, updated_at
+                       id, name, player_name, status, created_at, updated_at
                      FROM characters
                      WHERE 1=1"
         .to_string();
@@ -38,7 +38,6 @@ pub fn list_characters(
             Ok(CharacterSummary {
                 id: row.get("id")?,
                 name: row.get("name")?,
-                metatype: row.get("metatype")?,
                 player_name: row.get("player_name")?,
                 status: row.get("status")?,
                 created_at: row.get("created_at")?,

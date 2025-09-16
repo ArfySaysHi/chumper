@@ -1,10 +1,19 @@
 CREATE TABLE characters (
     id INTEGER PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100),
     player_name VARCHAR(100),
     status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE character_priorities (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    grade VARCHAR(1) NOT NULL,
+    priority_system VARCHAR(100) DEFAULT 'Core',
+    character_id INTEGER NOT NULL,
+    FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
 );
 
 CREATE TABLE modifiers (
@@ -165,15 +174,6 @@ CREATE TABLE priority_bundle_skills (
     attribute VARCHAR(3) NOT NULL,
     amount INTEGER DEFAULT 0,
     rating INTEGER DEFAULT 0
-);
-
-CREATE TABLE character_priorities (
-    id INTEGER PRIMARY KEY,
-    character_id INTEGER NOT NULL,
-    bundle_id INTEGER NOT NULL,
-    FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
-    FOREIGN KEY (bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE,
-    UNIQUE(character_id, bundle_id)
 );
 
 -- TODO: Create the metatype priority grades import for the frontend modal info

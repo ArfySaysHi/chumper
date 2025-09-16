@@ -38,9 +38,16 @@ pub async fn get_character(id: i64, state: State<'_, AppState>) -> Result<(), St
 }
 
 #[tauri::command]
-pub async fn create_character(character: Character, _state: State<'_, AppState>) -> Result<(), String> {
-    log::info!("create_character with {:?}", &character);
-    Ok(())
+pub async fn create_character(params: super::CharacterCreateParams, state: State<'_, AppState>) -> Result<(), String> {
+    log::info!("create_character with {:?}", &params);
+    let pool = state.db_pool.clone();
+
+    tokio::task::spawn_blocking(move || {
+        let mut connection = pool.get().map_err(|e| e.to_string())?;
+        let tx = connection.transaction().map_err(|e| e.to_string())?;
+        super::create(&tx, params).map_err(|e| e.to_string())?;
+        tx.commit().map_err(|e| e.to_string())
+    }).await.map_err(|e| e.to_string())?
 }
 
 #[tauri::command]

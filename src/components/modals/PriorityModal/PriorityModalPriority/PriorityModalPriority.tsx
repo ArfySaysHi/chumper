@@ -25,6 +25,7 @@ const PriorityModalPriority = ({
   title,
 }: PriorityModalPriorityProps) => {
   const { execute: listPriorityBundles } = useCommand("list_priority_bundles");
+  const { execute: createCharacter } = useCommand("create_character");
   const [bundles, setBundles] = useState<PriorityBundleArray>();
   const [grades, setGrades] = useState<PriorityGrades>({});
 
@@ -45,6 +46,18 @@ const PriorityModalPriority = ({
     if (!bundle) return {};
     const modifiers = bundle.modifiers[grade];
     console.log(modifiers);
+  };
+
+  const submit = () => {
+    console.log(grades);
+    createCharacter({
+      params: {
+        priority_system: "Core",
+        grades,
+        metatype_id: 0,
+        skill_selections: [],
+      },
+    }).then(console.log);
   };
 
   return (
@@ -77,7 +90,7 @@ const PriorityModalPriority = ({
         </div>
       </div>
       <div className="priority-modal-priority__controls">
-        <Button>Submit</Button>
+        <Button onClick={submit}>Submit</Button>
         <Button variant="secondary" onClick={() => setCurrentStep("method")}>
           Back
         </Button>

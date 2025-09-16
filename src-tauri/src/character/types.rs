@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 pub struct Character {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
-    pub name: String,
+    pub name: Option<String>,
     pub player_name: Option<String>,
     #[serde(default = "default_timestamp")]
     pub created_at: Option<String>,
@@ -94,8 +94,7 @@ impl FromSql for CharacterStatus {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CharacterSummary {
     pub id: Option<i64>,
-    pub name: String,
-    pub metatype: String,
+    pub name: Option<String>,
     pub player_name: Option<String>,
     pub status: CharacterStatus,
     pub created_at: String,

@@ -3,27 +3,12 @@ import { Download, Upload, Settings } from "@mui/icons-material";
 import "./CharacterSelection.scss";
 import Button from "../../components/ui/Button/Button.tsx";
 import TabGroup from "../../components/ui/TabGroup/TabGroup.tsx";
-import useCommand from "../../hooks/useCommand.ts";
 import CharacterSelectionTab from "./CharacterSelectionTab/CharacterSelectionTab.tsx";
 import { AnimatePresence } from "framer-motion";
 import PriorityModal from "../../components/modals/PriorityModal/PriorityModal.tsx";
 
 const CharacterSelection = () => {
-  const [counter, setCounter] = useState(0);
   const [priorityModalVisible, setPriorityModalVisible] = useState(true);
-
-  const { execute: createCharacter } = useCommand("create_character");
-
-  const handleCreateChar = async () => {
-    try {
-      await createCharacter({
-        character: { name: `name_${counter}`, metatype: "Human" },
-      });
-      setCounter(counter + 1);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
     <div className="character-selection">
@@ -39,7 +24,7 @@ const CharacterSelection = () => {
         </div>
         <div className="character-selection__toolbar">
           <Button
-            onClick={handleCreateChar}
+            onClick={() => setPriorityModalVisible(true)}
             variant="icon"
             size="xs"
             title="Settings"
