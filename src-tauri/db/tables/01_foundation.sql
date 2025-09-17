@@ -3,8 +3,10 @@ CREATE TABLE characters (
     name VARCHAR(100),
     player_name VARCHAR(100),
     status VARCHAR(30) CHECK (status IN ('Creation', 'Active', 'Archived')) DEFAULT 'Creation',
+    metatype_id INTEGER NOT NULL,
     created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (metatype_id) REFERENCES metatypes(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE character_priorities (
