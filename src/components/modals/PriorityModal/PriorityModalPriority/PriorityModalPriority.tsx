@@ -16,8 +16,13 @@ interface PriorityModalPriorityProps {
   title: string;
 }
 
+interface CharacterCreatePriorityOption {
+  grade: string;
+  chosen_bundle_id?: number;
+}
+
 interface PriorityGrades {
-  [k: string]: string;
+  [k: string]: CharacterCreatePriorityOption;
 }
 
 const PriorityModalPriority = ({
@@ -49,7 +54,6 @@ const PriorityModalPriority = ({
   };
 
   const submit = () => {
-    console.log(grades);
     createCharacter({
       params: {
         priority_system: "Core",
@@ -76,9 +80,9 @@ const PriorityModalPriority = ({
                 <PrioritySelectCard
                   key={key}
                   title={name}
-                  selectedGrade={grades[name]}
+                  selectedGrade={grades?.[name]?.grade}
                   onGradeSelect={(opt) => {
-                    setGrades((prev) => ({ ...prev, [name]: opt }));
+                    setGrades((prev) => ({ ...prev, [name]: { grade: opt } }));
                     getGradeBenefits(name, opt);
                   }}
                 />

@@ -9,7 +9,8 @@ use std::collections::HashMap;
 pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBundle>> {
     log::info!("list_priority_bundles");
     let query =
-        "SELECT id, name, grade, menu_order, parent_bundle_id FROM priority_bundles".to_string();
+        "SELECT id, name, grade, menu_order, parent_bundle_id, system FROM priority_bundles"
+            .to_string();
     let mut stmt = connection.prepare(&query)?;
     let mut priority_bundles = stmt
         .query_map([], |row| {
@@ -19,6 +20,7 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 grade: row.get("grade")?,
                 menu_order: row.get("menu_order")?,
                 parent_bundle_id: row.get("parent_bundle_id")?,
+                system: row.get("system")?,
                 modifiers: HashMap::new(),
                 skills: HashMap::new(),
                 metatypes: HashMap::new(),

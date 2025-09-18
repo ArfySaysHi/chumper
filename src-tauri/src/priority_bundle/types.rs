@@ -48,6 +48,8 @@ pub struct PriorityBundle {
     pub grade: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parent_bundle_id: Option<i64>,
+    #[serde(default = "default_system")]
+    pub system: String,
     #[serde(default)]
     pub modifiers: HashMap<String, Vec<PriorityBundleModifier>>,
     #[serde(default)]
@@ -58,6 +60,10 @@ pub struct PriorityBundle {
     pub qualities: HashMap<String, Vec<PriorityBundleQuality>>,
     #[serde(default)]
     pub children: HashMap<String, Vec<PriorityBundle>>,
+}
+
+fn default_system() -> String {
+    "Core".to_string()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

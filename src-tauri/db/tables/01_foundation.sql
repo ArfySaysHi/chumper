@@ -152,6 +152,7 @@ CREATE TABLE priority_bundles (
     grade VARCHAR(1) DEFAULT '*',
     menu_order INTEGER DEFAULT 0,
     parent_bundle_id INTEGER DEFAULT NULL,
+    system VARCHAR(100) DEFAULT 'Core',
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (parent_bundle_id) REFERENCES priority_bundles(id) ON DELETE CASCADE
