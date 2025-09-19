@@ -4,8 +4,8 @@ const OperationSchema = z.enum(["add", "sub", "mul", "div", "set"]);
 const PriorityGradeSchema = z.enum(["A", "B", "C", "D", "E", "*"]);
 
 export const PriorityBundleModifierSchema = z.object({
-  id: z.number().optional(),
-  bundle_id: z.number().optional(),
+  id: z.number(),
+  bundle_id: z.number(),
   grade: PriorityGradeSchema,
   target_key: z.string(),
   operation: OperationSchema,
@@ -39,8 +39,8 @@ export const PriorityBundleModifierMapSchema = z.preprocess(
 );
 
 export const PriorityBundleSkillSchema = z.object({
-  id: z.number().optional(),
-  bundle_id: z.number().optional(),
+  id: z.number(),
+  bundle_id: z.number(),
   grade: PriorityGradeSchema,
   attribute: z.string(),
   amount: z.number(),
@@ -63,8 +63,8 @@ export const PriorityBundleSkillMapSchema = z.preprocess(
 );
 
 export const PriorityBundleMetatypeSchema = z.object({
-  id: z.number().optional(),
-  bundle_id: z.number().optional(),
+  id: z.number(),
+  bundle_id: z.number(),
   grade: PriorityGradeSchema,
   special_points: z.number(),
   name: z.string(),
@@ -86,8 +86,8 @@ export const PriorityBundleMetatypeMapSchema = z.preprocess(
 );
 
 export const PriorityBundleQualitySchema = z.object({
-  id: z.number().optional(),
-  bundle_id: z.number().optional(),
+  id: z.number(),
+  bundle_id: z.number(),
   grade: PriorityGradeSchema,
   name: z.string(),
 });
@@ -108,7 +108,7 @@ export const PriorityBundleQualityMapSchema = z.preprocess(
 );
 
 export type PriorityBundle = {
-  id?: number;
+  id: number;
   name?: string;
   grade: PriorityGrade;
   menu_order?: number;
@@ -122,8 +122,8 @@ export type PriorityBundle = {
 
 export const PriorityBundleSchema: z.ZodType<PriorityBundle> = z.lazy(() =>
   z.object({
-    id: z.number().optional(),
-    name: z.string().optional(),
+    id: z.number(),
+    name: z.string().optional().default(""),
     grade: PriorityGradeSchema,
     menu_order: z.number().optional(),
     parent_bundle_id: z.number().optional(),

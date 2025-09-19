@@ -14,7 +14,7 @@ pub struct CharacterCreatePriorityOption {
 #[derive(Default, Serialize, Deserialize, Debug, Clone)]
 pub struct CharacterCreateParams {
     pub priority_system: String,
-    pub priorities: HashMap<String, CharacterCreatePriorityOption>,
+    pub priorities: HashMap<i64, CharacterCreatePriorityOption>,
     pub metatype_id: i64,
     pub skill_selections: Vec<HashMap<i64, i32>>,
 }
@@ -69,30 +69,45 @@ fn create_priorities(
 static BUNDLE_GET_QUERY: &str =
     "SELECT id, name, grade, menu_order, parent_bundle_id, system, created_at, updated_at
      FROM priority_bundles
-     WHERE system = :system";
+     WHERE system = :system AND id = :bundle_id";
 
 fn get_relevant_bundles(
     connection: &Connection,
     params: &CharacterCreateParams,
-) -> Result<Vec<PriorityBundle>> {
+) -> Result<HashMap<i64, PriorityBundle>> {
     let mut stmt = connection.prepare(BUNDLE_GET_QUERY)?;
-    let priority_bundles = stmt
-        .query_map(named_params! { ":system": params.priority_system }, |row| {
-            Ok(PriorityBundle {
-                id: row.get("id")?,
-                name: row.get("name")?,
-                grade: row.get("grade")?,
-                menu_order: row.get("menu_order")?,
-                parent_bundle_id: row.get("parent_bundle_id")?,
-                system: row.get("system")?,
-                modifiers: HashMap::new(),
-                children: HashMap::new(),
-                qualities: HashMap::new(),
-                skills: HashMap::new(),
-                metatypes: HashMap::new(),
-            })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+
+    let mut bundle_ids = vec![];
+    for (k, v) in &params.priorities {
+        bundle_ids.push(k.clone());
+
+        if let Some(id) = v.chosen_bundle_id {
+            bundle_ids.push(id);
+        }
+    }
+
+    let mut priority_bundles: HashMap<i64, PriorityBundle> = HashMap::new();
+    for id in bundle_ids {
+        let pb = stmt.query_row(
+            named_params! { ":system": params.priority_system, ":bundle_id": id },
+            |row| {
+                Ok(PriorityBundle {
+                    id: row.get("id")?,
+                    name: row.get("name")?,
+                    grade: row.get("grade")?,
+                    menu_order: row.get("menu_order")?,
+                    parent_bundle_id: row.get("parent_bundle_id")?,
+                    system: row.get("system")?,
+                    modifiers: HashMap::new(),
+                    children: HashMap::new(),
+                    qualities: HashMap::new(),
+                    skills: HashMap::new(),
+                    metatypes: HashMap::new(),
+                })
+            },
+        )?;
+        priority_bundles.entry(id).insert_entry(pb);
+    }
 
     Ok(priority_bundles)
 }

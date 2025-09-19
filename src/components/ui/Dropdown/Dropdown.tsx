@@ -2,16 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import { ExpandMore, Check } from "@mui/icons-material";
 import "./Dropdown.scss";
 
-interface DropdownOption {
-  value: string | number;
+interface DropdownOption<T> {
+  id: string | number;
+  value: T;
   label: string;
   disabled?: boolean;
   icon?: React.ReactNode;
 }
 
-interface DropdownProps {
-  options: DropdownOption[];
-  value?: string | number;
+interface DropdownProps<T> {
+  options: DropdownOption<T>[];
+  value?: T | T[];
   placeholder?: string;
   disabled?: boolean;
   multiple?: boolean;
@@ -23,11 +24,12 @@ interface DropdownProps {
   helperText?: string;
   label?: string;
   className?: string;
-  onChange?: (value: string | number | (string | number)[]) => void;
+  onChange?: (value?: T | T[]) => void;
   onSearch?: (query: string) => void;
+  valueEquality?: (a: T, b: T) => boolean;
 }
 
-const Dropdown = ({
+const Dropdown = <T,>({
   options,
   value,
   placeholder = "Select an option...",
@@ -43,25 +45,33 @@ const Dropdown = ({
   className = "",
   onChange,
   onSearch,
-}: DropdownProps) => {
+  valueEquality,
+}: DropdownProps<T>) => {
+  const equals = valueEquality ?? ((a: T, b: T) => a === b);
+
+  // keep internal selection as an array of T for simplicity
+  const normalizeInitial = (): T[] => {
+    if (multiple) {
+      if (Array.isArray(value)) return value as T[];
+      if (value !== undefined) return [value as T];
+      return [];
+    } else {
+      if (value !== undefined) return [value as T];
+      return [];
+    }
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedValues, setSelectedValues] = useState<(string | number)[]>(
-    multiple
-      ? Array.isArray(value)
-        ? value
-        : value
-          ? [value]
-          : []
-      : value
-        ? [value]
-        : [],
-  );
+  const [selectedValues, setSelectedValues] = useState<T[]>(normalizeInitial());
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Close dropdown when clicking outside
+  useEffect(() => {
+    setSelectedValues(normalizeInitial());
+  }, [value, multiple]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -77,47 +87,51 @@ const Dropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Focus search input when dropdown opens
   useEffect(() => {
     if (isOpen && searchable && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isOpen, searchable]);
 
-  // Filter options based on search query
   const filteredOptions = searchQuery
     ? options.filter((option) =>
         option.label.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : options;
 
+  const isValueSelected = (val: T) =>
+    selectedValues.some((v) => equals(v, val));
+
   const handleToggle = () => {
     if (disabled) return;
     setIsOpen(!isOpen);
   };
 
-  const handleOptionSelect = (optionValue: string | number) => {
-    let newSelectedValues: (string | number)[];
+  const handleOptionSelect = (optionValue: T) => {
+    let newSelected: T[];
 
     if (multiple) {
-      if (selectedValues.includes(optionValue)) {
-        newSelectedValues = selectedValues.filter((v) => v !== optionValue);
+      if (isValueSelected(optionValue)) {
+        newSelected = selectedValues.filter((v) => !equals(v, optionValue));
       } else {
-        newSelectedValues = [...selectedValues, optionValue];
+        newSelected = [...selectedValues, optionValue];
       }
     } else {
-      newSelectedValues = [optionValue];
+      newSelected = [optionValue];
       setIsOpen(false);
     }
 
-    setSelectedValues(newSelectedValues);
-    onChange?.(multiple ? newSelectedValues : newSelectedValues[0]);
+    setSelectedValues(newSelected);
+    if (onChange) {
+      if (multiple) onChange(newSelected);
+      else onChange(newSelected[0]);
+    }
   };
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedValues([]);
-    onChange?.(multiple ? [] : "");
+    onChange?.(multiple ? [] : undefined);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,14 +145,16 @@ const Dropdown = ({
 
     if (multiple) {
       if (selectedValues.length === 1) {
-        const option = options.find((opt) => opt.value === selectedValues[0]);
-        return option?.label || "";
+        const option = options.find((opt) =>
+          equals(opt.value, selectedValues[0]),
+        );
+        return option?.label ?? "";
       }
       return `${selectedValues.length} items selected`;
     }
 
-    const option = options.find((opt) => opt.value === selectedValues[0]);
-    return option?.label || "";
+    const option = options.find((opt) => equals(opt.value, selectedValues[0]));
+    return option?.label ?? "";
   };
 
   const dropdownClasses = [
@@ -208,10 +224,10 @@ const Dropdown = ({
                 </li>
               ) : (
                 filteredOptions.map((option) => {
-                  const isSelected = selectedValues.includes(option.value);
+                  const isSelected = isValueSelected(option.value);
 
                   return (
-                    <li key={option.value} className="dropdown__item-wrapper">
+                    <li key={option.id} className="dropdown__item-wrapper">
                       <button
                         type="button"
                         className={`dropdown__item ${
