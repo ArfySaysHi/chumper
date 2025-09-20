@@ -1,125 +1,106 @@
 # This file stored information pertaining to simple stat increases at various grades
 - type: PriorityBundle
   name: Metatype
-  menu_order: 0
   grade: A
   metatypes:
-    - name: "Human"
+    - name: Human
       special_points: 9
-    - name: "Elf"
+    - name: Elf
       special_points: 8
-    - name: "Dwarf"
+    - name: Dwarf
       special_points: 7
-    - name: "Ork"
+    - name: Ork
       special_points: 7
-    - name: "Troll"
+    - name: Troll
       special_points: 5
 
 - type: PriorityBundle
   name: Metatype
-  menu_order: 0
   grade: B
   metatypes:
-    - name: "Human"
+    - name: Human
       special_points: 7
-    - name: "Elf"
+    - name: Elf
       special_points: 6
-    - name: "Dwarf"
+    - name: Dwarf
       special_points: 4
-    - name: "Ork"
+    - name: Ork
       special_points: 4
-    - name: "Troll"
+    - name: Troll
       special_points: 0
 
 - type: PriorityBundle
-  name: Metatype
-  menu_order: 0
   grade: C
   metatypes:
-    - name: "Human"
+    - name: Human
       special_points: 5
-    - name: "Elf"
+    - name: Elf
       special_points: 3
-    - name: "Dwarf"
+    - name: Dwarf
       special_points: 1
-    - name: "Ork"
+    - name: Ork
       special_points: 0
 
 - type: PriorityBundle
   name: Metatype
-  menu_order: 0
   grade: D
   metatypes:
-    - name: "Human"
+    - name: Human
       special_points: 3
-    - name: "Elf"
+    - name: Elf
       special_points: 0
 
 - type: PriorityBundle
   name: Metatype
-  menu_order: 0
   grade: E
   metatypes:
-    - name: "Human"
+    - name: Human
       special_points: 1
 
 - type: PriorityBundle
   name: Attributes
-  menu_order: 1
   grade: A
   modifiers:
     - target_key: "resources.attributes.base_amount"
-      operation: "Set"
       value: "24"
 
 - type: PriorityBundle
   name: Attributes
-  menu_order: 1
   grade: B
   modifiers:
     - target_key: "resources.attributes.base_amount"
-      operation: "Set"
       value: "20"
 
 - type: PriorityBundle
   name: Attributes
-  menu_order: 1
   grade: C
   modifiers:
     - target_key: "resources.attributes.base_amount"
-      operation: "Set"
       value: "16"
 
 - type: PriorityBundle
   name: Attributes
-  menu_order: 1
   grade: D
   modifiers:
     - target_key: "resources.attributes.base_amount"
-      operation: "Set"
       value: "14"
 
 - type: PriorityBundle
   name: Attributes
-  menu_order: 1
   grade: E
   modifiers:
     - target_key: "resources.attributes.base_amount"
-      operation: "Set"
       value: "12"
 
 - type: PriorityBundle
   name: "Magic/Resonance"
-  menu_order: 2
   options:
     - name: "Magician"
       grade: A
       modifiers:
         - target_key: "attributes.magic.base_amount"
-          operation: "Set"
           value: "6"
         - target_key: "resources.spell_points.base_amount"
-          operation: "Set"
           value: "10"
       skills:
         - attribute: "MAG"
@@ -127,15 +108,12 @@
           rating: 5
       qualities:
         - name: "Magician"
-
     - name: "Mystic Adept"
       grade: A
       modifiers:
         - target_key: "attributes.magic.base_amount"
-          operation: "Set"
           value: "6"
         - target_key: "resources.spell_points.base_amount"
-          operation: "Set"
           value: "10"
       skills:
         - attribute: "MAG"
@@ -143,15 +121,12 @@
           rating: 5
       qualities:
         - name: "Mystic Adept"
-
     - name: "Technomancer"
       grade: A
       modifiers:
         - target_key: "attributes.resonance.base_amount"
-          operation: "Set"
           value: "6"
         - target_key: "resources.complex_forms.base_amount"
-          operation: "Set"
           value: "5"
       skills:
         - attribute: "RES"
@@ -160,108 +135,78 @@
       qualities:
         - name: "Technomancer"
 
-    - name: "Test"
-      grade: B
-      modifiers:
-        - target_key: "attributes.magic.base_amount"
-          operation: "Set"
-          value: "4"
-
 - type: PriorityBundle
   name: "Skills"
-  menu_order: 3
   grade: A
   modifiers:
     - target_key: "resources.skills.base_amount"
-      operation: "Set"
       value: "46"
     - target_key: "resources.skill_groups.base_amount"
-      operation: "Set"
       value: "10"
 
 - type: PriorityBundle
   name: "Skills"
-  menu_order: 3
   grade: B
   modifiers:
     - target_key: "resources.skills.base_amount"
-      operation: "Set"
       value: "36"
     - target_key: "resources.skill_groups.base_amount"
-      operation: "Set"
       value: "5"
 
 - type: PriorityBundle
   name: "Skills"
-  menu_order: 3
   grade: C
   modifiers:
     - target_key: "resources.skills.base_amount"
-      operation: "Set"
       value: "28"
     - target_key: "resources.skill_groups.base_amount"
-      operation: "Set"
       value: "2"
 
 - type: PriorityBundle
   name: "Skills"
-  menu_order: 3
   grade: D
   modifiers:
     - target_key: "resources.skills.base_amount"
-      operation: "Set"
       value: "22"
 
 - type: PriorityBundle
   name: "Skills"
-  menu_order: 3
   grade: E
   modifiers:
     - target_key: "resources.skills.base_amount"
-      operation: "Set"
       value: "18"
 
 - type: PriorityBundle
   name: "Resources"
-  menu_order: 4
   grade: A
   modifiers:
     - target_key: "resources.nuyen.base_amount"
-      operation: "Set"
       value: "450000"
 
 - type: PriorityBundle
   name: "Resources"
-  menu_order: 4
   grade: B
   modifiers:
     - target_key: "resources.nuyen.base_amount"
-      operation: "Set"
       value: "275000"
 
 - type: PriorityBundle
   name: "Resources"
-  menu_order: 4
   grade: C
   modifiers:
     - target_key: "resources.nuyen.base_amount"
-      operation: "Set"
       value: "140000"
 
 - type: PriorityBundle
   name: "Resources"
-  menu_order: 4
   grade: D
   modifiers:
     - target_key: "resources.nuyen.base_amount"
-      operation: "Set"
       value: "50000"
 
 - type: PriorityBundle
   name: "Resources"
-  menu_order: 4
   grade: E
   modifiers:
     - target_key: "resources.nuyen.base_amount"
-      operation: "Set"
       value: "6000"

@@ -17,6 +17,7 @@ pub enum CoreData {
 impl YamlImportable for CoreData {
     type Output = CoreData;
     fn insert_into_db(&self, connection: &Connection) -> Result<Self::Output> {
+        log::debug!("wawa: {:#?}", &self);
         match self {
             CoreData::Metatype(v) => v.insert_into_db(connection).map(CoreData::Metatype),
             CoreData::Quality(v) => v.insert_into_db(connection).map(CoreData::Quality),

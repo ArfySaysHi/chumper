@@ -41,6 +41,7 @@ pub fn import_all(connection: &mut Connection, paths: Vec<String>) -> error::Res
         let items: Vec<CoreData> = serde_yml::from_str(&raw)?;
 
         for item in items {
+            log::debug!("{:#?}", &item);
             item.insert_into_db(connection)?;
         }
     }
