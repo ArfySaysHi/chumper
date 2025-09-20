@@ -1,7 +1,3 @@
-CREATE TABLE priority_grades (
-    grade VARCHAR(1) PRIMARY KEY
-);
-
 CREATE TABLE priority_bundles (
     id INTEGER PRIMARY KEY,
     name VARCHAR(100) DEFAULT NULL,
@@ -19,7 +15,7 @@ CREATE TABLE priority_bundle_modifiers (
     grade VARCHAR(1) NOT NULL DEFAULT '*',
     bundle_id INTEGER NOT NULL,
     target_key VARCHAR(200) NOT NULL, -- e.g. "body", "nuyen", "attributes.points"
-    operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
+    operation VARCHAR(20) NOT NULL CHECK(operation IN ('Add', 'Sub', 'Mul', 'Div', 'Set')),
     value VARCHAR(200) NOT NULL,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),

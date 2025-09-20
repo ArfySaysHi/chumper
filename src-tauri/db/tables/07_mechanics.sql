@@ -5,7 +5,7 @@ CREATE TABLE modifiers (
     origin_id INTEGER DEFAULT NULL,
     origin_type VARCHAR(50) DEFAULT NULL,
     target_key VARCHAR(50) NOT NULL,
-    operation VARCHAR(20) NOT NULL CHECK(operation IN ('add', 'sub', 'mul', 'div', 'set')),
+    operation VARCHAR(20) NOT NULL CHECK(operation IN ('Add', 'Sub', 'Mul', 'Div', 'Set')),
     value_formula VARCHAR(200) NOT NULL,
     activation VARCHAR(50) CHECK(activation IN ('always', 'while_unconscious', 'while_stunned')) DEFAULT 'always',
     condition_id INTEGER DEFAULT NULL,

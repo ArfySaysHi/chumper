@@ -23,17 +23,17 @@ pub fn create_quality(connection: &Connection, q: &Quality) -> Result<Quality> {
     Ok(cloned_quality)
 }
 
-pub fn create_quality_effects(connection: &Connection, q: &Quality) -> Result<()> {
-    log::info!("create_quality_effects with {:#?}", &q);
-    let query = "INSERT INTO quality_effects
+pub fn create_quality_modifiers(connection: &Connection, q: &Quality) -> Result<()> {
+    log::info!("create_quality_modifiers with {:#?}", &q);
+    let query = "INSERT INTO quality_modifiers
                    (quality_id, target_key, operation, value_formula, activation, priority)
                  VALUES
                    (:quality_id, :target_key, :operation, :value_formula, :activation, :priority)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
 
-    if let Some(quality_effects) = &q.quality_effects {
-        for qe in quality_effects.iter() {
+    if let Some(quality_mods) = &q.quality_modifiers {
+        for qe in quality_mods.iter() {
             stmt.execute(named_params! {
                 ":quality_id": &q.id,
                 ":target_key": &qe.target_key,

@@ -1,4 +1,4 @@
-use crate::priority_bundle::PriorityBundle;
+use crate::shared::Grade;
 use crate::{character::CharacterStatus, error::Result};
 use rusqlite::{named_params, Connection};
 use serde::{Deserialize, Serialize};
@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone)]
 pub struct CharacterCreatePriorityOption {
-    pub grade: String,
+    pub grade: Grade,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub chosen_bundle_id: Option<i64>,
 }
@@ -33,81 +33,6 @@ pub fn create(connection: &Connection, params: CharacterCreateParams) -> Result<
         ":metatype_id": &params.metatype_id,
     })?;
 
-    let character_id = connection.last_insert_rowid();
-    create_priorities(connection, &params, &character_id)?;
-
-    let bundles = get_relevant_bundles(connection, &params)?;
-    log::debug!("Listed priority bundles: {:#?}", &bundles);
-    // Add Enum for sub-choices within a field i.e. magic/resonance choice within bundle
-
+    let _character_id = connection.last_insert_rowid();
     Ok(())
-}
-
-static PRIORITY_CREATE_QUERY: &str = "INSERT INTO character_priorities (bundle_name, grade, priority_system, character_id)
-                                      VALUES (:bundle_name, :grade, :priority_system, :character_id)";
-
-fn create_priorities(
-    connection: &Connection,
-    params: &CharacterCreateParams,
-    character_id: &i64,
-) -> Result<()> {
-    log::debug!("create_priorities with {:#?}", &params.priorities);
-    let mut stmt = connection.prepare(PRIORITY_CREATE_QUERY)?;
-
-    for (bundle_name, bundle_value) in &params.priorities {
-        stmt.execute(named_params! {
-            ":bundle_name": &bundle_name,
-            ":grade": &bundle_value.grade,
-            ":priority_system": &params.priority_system,
-            ":character_id": &character_id,
-        })?;
-    }
-
-    Ok(())
-}
-
-static BUNDLE_GET_QUERY: &str =
-    "SELECT id, name, grade, menu_order, parent_bundle_id, system, created_at, updated_at
-     FROM priority_bundles
-     WHERE system = :system AND id = :bundle_id";
-
-fn get_relevant_bundles(
-    connection: &Connection,
-    params: &CharacterCreateParams,
-) -> Result<HashMap<i64, PriorityBundle>> {
-    let mut stmt = connection.prepare(BUNDLE_GET_QUERY)?;
-
-    let mut bundle_ids = vec![];
-    for (k, v) in &params.priorities {
-        bundle_ids.push(k.clone());
-
-        if let Some(id) = v.chosen_bundle_id {
-            bundle_ids.push(id);
-        }
-    }
-
-    let mut priority_bundles: HashMap<i64, PriorityBundle> = HashMap::new();
-    for id in bundle_ids {
-        let pb = stmt.query_row(
-            named_params! { ":system": params.priority_system, ":bundle_id": id },
-            |row| {
-                Ok(PriorityBundle {
-                    id: row.get("id")?,
-                    name: row.get("name")?,
-                    grade: row.get("grade")?,
-                    menu_order: row.get("menu_order")?,
-                    parent_bundle_id: row.get("parent_bundle_id")?,
-                    system: row.get("system")?,
-                    modifiers: HashMap::new(),
-                    children: HashMap::new(),
-                    qualities: HashMap::new(),
-                    skills: HashMap::new(),
-                    metatypes: HashMap::new(),
-                })
-            },
-        )?;
-        priority_bundles.entry(id).insert_entry(pb);
-    }
-
-    Ok(priority_bundles)
 }

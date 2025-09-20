@@ -2,188 +2,266 @@
 - type: PriorityBundle
   name: Metatype
   menu_order: 0
+  grade: A
   metatypes:
-    A:
-      - name: "Human"
-        special_points: 9
-      - name: "Elf"
-        special_points: 8
-      - name: "Dwarf"
-        special_points: 7
-      - name: "Ork"
-        special_points: 7
-      - name: "Troll"
-        special_points: 5
-    B:
-      - name: "Human"
-        special_points: 7
-      - name: "Elf"
-        special_points: 6
-      - name: "Dwarf"
-        special_points: 4
-      - name: "Ork"
-        special_points: 4
-      - name: "Troll"
-        special_points: 0
-    C:
-      - name: "Human"
-        special_points: 5
-      - name: "Elf"
-        special_points: 3
-      - name: "Dwarf"
-        special_points: 1
-      - name: "Ork"
-        special_points: 0
-    D:
-      - name: "Human"
-        special_points: 3
-      - name: "Elf"
-        special_points: 0
-    E:
-      - name: "Human"
-        special_points: 1
+    - name: "Human"
+      special_points: 9
+    - name: "Elf"
+      special_points: 8
+    - name: "Dwarf"
+      special_points: 7
+    - name: "Ork"
+      special_points: 7
+    - name: "Troll"
+      special_points: 5
+
+- type: PriorityBundle
+  name: Metatype
+  menu_order: 0
+  grade: B
+  metatypes:
+    - name: "Human"
+      special_points: 7
+    - name: "Elf"
+      special_points: 6
+    - name: "Dwarf"
+      special_points: 4
+    - name: "Ork"
+      special_points: 4
+    - name: "Troll"
+      special_points: 0
+
+- type: PriorityBundle
+  name: Metatype
+  menu_order: 0
+  grade: C
+  metatypes:
+    - name: "Human"
+      special_points: 5
+    - name: "Elf"
+      special_points: 3
+    - name: "Dwarf"
+      special_points: 1
+    - name: "Ork"
+      special_points: 0
+
+- type: PriorityBundle
+  name: Metatype
+  menu_order: 0
+  grade: D
+  metatypes:
+    - name: "Human"
+      special_points: 3
+    - name: "Elf"
+      special_points: 0
+
+- type: PriorityBundle
+  name: Metatype
+  menu_order: 0
+  grade: E
+  metatypes:
+    - name: "Human"
+      special_points: 1
+
 - type: PriorityBundle
   name: Attributes
   menu_order: 1
+  grade: A
   modifiers:
-    A:
-      - target_key: "resources.attributes.base_amount"
-        operation: "set"
-        value: "24"
-    B:
-      - target_key: "resources.attributes.base_amount"
-        operation: "set"
-        value: "20"
-    C:
-      - target_key: "resources.attributes.base_amount"
-        operation: "set"
-        value: "16"
-    D:
-      - target_key: "resources.attributes.base_amount"
-        operation: "set"
-        value: "14"
-    E:
-      - target_key: "resources.attributes.base_amount"
-        operation: "set"
-        value: "12"
+    - target_key: "resources.attributes.base_amount"
+      operation: "Set"
+      value: "24"
+
 - type: PriorityBundle
-  name: Magic/Resonance
+  name: Attributes
+  menu_order: 1
+  grade: B
+  modifiers:
+    - target_key: "resources.attributes.base_amount"
+      operation: "Set"
+      value: "20"
+
+- type: PriorityBundle
+  name: Attributes
+  menu_order: 1
+  grade: C
+  modifiers:
+    - target_key: "resources.attributes.base_amount"
+      operation: "Set"
+      value: "16"
+
+- type: PriorityBundle
+  name: Attributes
+  menu_order: 1
+  grade: D
+  modifiers:
+    - target_key: "resources.attributes.base_amount"
+      operation: "Set"
+      value: "14"
+
+- type: PriorityBundle
+  name: Attributes
+  menu_order: 1
+  grade: E
+  modifiers:
+    - target_key: "resources.attributes.base_amount"
+      operation: "Set"
+      value: "12"
+
+- type: PriorityBundle
+  name: "Magic/Resonance"
   menu_order: 2
-  children:
-    A:
-      - name: Magician
-        modifiers:
-          A:
-            - target_key: "attributes.magic.base_amount"
-              operation: set
-              value: "6"
-            - target_key: "resources.spell_points.base_amount"
-              operation: set
-              value: "10"
-        skills:
-          A:
-            - attribute: MAG
-              amount: 2
-              rating: 5
-        qualities:
-          A:
-            - name: "Magician"
-      - name: "Mystic Adept"
-        modifiers:
-          A:
-            - target_key: "attributes.magic.base_amount"
-              operation: "set"
-              value: "6"
-            - target_key: "resources.spell_points.base_amount"
-              operation: "set"
-              value: "10"
-        skills:
-          A:
-            - attribute: "MAG"
-              amount: 2
-              rating: 5
-        qualities:
-          A:
-            - name: "Mystic Adept"
-      - name: "Technomancer"
-        modifiers:
-          A:
-            - target_key: "attributes.resonance.base_amount"
-              operation: "set"
-              value: "6"
-            - target_key: "resources.complex_forms.base_amount"
-              operation: "set"
-              value: "5"
-        skills:
-          A:
-            - attribute: "RES"
-              amount: 2
-              rating: 5
-        qualities:
-          A:
-            - name: "Technomancer"
-    B:
-      - name: Test
-        modifiers:
-          "*":
-            - target_key: "attributes.magic.base_amount"
-              operation: set
-              value: "4"
+  options:
+    - name: "Magician"
+      grade: A
+      modifiers:
+        - target_key: "attributes.magic.base_amount"
+          operation: "Set"
+          value: "6"
+        - target_key: "resources.spell_points.base_amount"
+          operation: "Set"
+          value: "10"
+      skills:
+        - attribute: "MAG"
+          amount: 2
+          rating: 5
+      qualities:
+        - name: "Magician"
+
+    - name: "Mystic Adept"
+      grade: A
+      modifiers:
+        - target_key: "attributes.magic.base_amount"
+          operation: "Set"
+          value: "6"
+        - target_key: "resources.spell_points.base_amount"
+          operation: "Set"
+          value: "10"
+      skills:
+        - attribute: "MAG"
+          amount: 2
+          rating: 5
+      qualities:
+        - name: "Mystic Adept"
+
+    - name: "Technomancer"
+      grade: A
+      modifiers:
+        - target_key: "attributes.resonance.base_amount"
+          operation: "Set"
+          value: "6"
+        - target_key: "resources.complex_forms.base_amount"
+          operation: "Set"
+          value: "5"
+      skills:
+        - attribute: "RES"
+          amount: 2
+          rating: 5
+      qualities:
+        - name: "Technomancer"
+
+    - name: "Test"
+      grade: B
+      modifiers:
+        - target_key: "attributes.magic.base_amount"
+          operation: "Set"
+          value: "4"
 
 - type: PriorityBundle
   name: "Skills"
   menu_order: 3
+  grade: A
   modifiers:
-    A:
-      - target_key: "resources.skills.base_amount"
-        operation: "set"
-        value: "46"
-      - target_key: "resources.skill_groups.base_amount"
-        operation: "set"
-        value: "10"
-    B:
-      - target_key: "resources.skills.base_amount"
-        operation: "set"
-        value: "36"
-      - target_key: "resources.skill_groups.base_amount"
-        operation: "set"
-        value: "5"
-    C:
-      - target_key: "resources.skills.base_amount"
-        operation: "set"
-        value: "28"
-      - target_key: "resources.skill_groups.base_amount"
-        operation: "set"
-        value: "2"
-    D:
-      - target_key: "resources.skills.base_amount"
-        operation: "set"
-        value: "22"
-    E:
-      - target_key: "resources.skills.base_amount"
-        operation: "set"
-        value: "18"
+    - target_key: "resources.skills.base_amount"
+      operation: "Set"
+      value: "46"
+    - target_key: "resources.skill_groups.base_amount"
+      operation: "Set"
+      value: "10"
+
+- type: PriorityBundle
+  name: "Skills"
+  menu_order: 3
+  grade: B
+  modifiers:
+    - target_key: "resources.skills.base_amount"
+      operation: "Set"
+      value: "36"
+    - target_key: "resources.skill_groups.base_amount"
+      operation: "Set"
+      value: "5"
+
+- type: PriorityBundle
+  name: "Skills"
+  menu_order: 3
+  grade: C
+  modifiers:
+    - target_key: "resources.skills.base_amount"
+      operation: "Set"
+      value: "28"
+    - target_key: "resources.skill_groups.base_amount"
+      operation: "Set"
+      value: "2"
+
+- type: PriorityBundle
+  name: "Skills"
+  menu_order: 3
+  grade: D
+  modifiers:
+    - target_key: "resources.skills.base_amount"
+      operation: "Set"
+      value: "22"
+
+- type: PriorityBundle
+  name: "Skills"
+  menu_order: 3
+  grade: E
+  modifiers:
+    - target_key: "resources.skills.base_amount"
+      operation: "Set"
+      value: "18"
+
 - type: PriorityBundle
   name: "Resources"
   menu_order: 4
+  grade: A
   modifiers:
-    A:
-      - target_key: "resources.nuyen.base_amount"
-        operation: "set"
-        value: "450000"
-    B:
-      - target_key: "resources.nuyen.base_amount"
-        operation: "set"
-        value: "275000"
-    C:
-      - target_key: "resources.nuyen.base_amount"
-        operation: "set"
-        value: "140000"
-    D:
-      - target_key: "resources.nuyen.base_amount"
-        operation: "set"
-        value: "50000"
-    E:
-      - target_key: "resources.nuyen.base_amount"
-        operation: "set"
-        value: "6000"
+    - target_key: "resources.nuyen.base_amount"
+      operation: "Set"
+      value: "450000"
+
+- type: PriorityBundle
+  name: "Resources"
+  menu_order: 4
+  grade: B
+  modifiers:
+    - target_key: "resources.nuyen.base_amount"
+      operation: "Set"
+      value: "275000"
+
+- type: PriorityBundle
+  name: "Resources"
+  menu_order: 4
+  grade: C
+  modifiers:
+    - target_key: "resources.nuyen.base_amount"
+      operation: "Set"
+      value: "140000"
+
+- type: PriorityBundle
+  name: "Resources"
+  menu_order: 4
+  grade: D
+  modifiers:
+    - target_key: "resources.nuyen.base_amount"
+      operation: "Set"
+      value: "50000"
+
+- type: PriorityBundle
+  name: "Resources"
+  menu_order: 4
+  grade: E
+  modifiers:
+    - target_key: "resources.nuyen.base_amount"
+      operation: "Set"
+      value: "6000"

@@ -24,7 +24,6 @@ pub enum AppError {
     Character(#[from] CharacterError),
 }
 
-// TODO: Add more once we have filled out the validations etc
 #[derive(Error, Debug)]
 pub enum CharacterError {
     #[error("Character not found with id: {id}")]

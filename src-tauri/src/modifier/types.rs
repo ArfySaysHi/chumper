@@ -1,4 +1,10 @@
-use crate::import::YamlImportable;
+use crate::{
+    import::YamlImportable,
+    shared::{
+        defaults::{priority, timestamp},
+        Operation,
+    },
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
@@ -13,19 +19,20 @@ pub struct Modifier {
     #[serde(default)]
     pub origin_type: Option<String>,
     pub target_key: String,
-    pub operation: String,
+    #[serde(default)]
+    pub operation: Operation,
     #[serde(default)]
     pub value_formula: String,
     pub activation: String,
     #[serde(default)]
     pub condition_id: Option<i64>,
-    #[serde(default = "default_priority")]
+    #[serde(default = "priority")]
     pub priority: i64,
     #[serde(default)]
     pub stack_group: Option<String>,
-    #[serde(default = "default_timestamp")]
+    #[serde(default = "timestamp")]
     pub created_at: Option<String>,
-    #[serde(default = "default_timestamp")]
+    #[serde(default = "timestamp")]
     pub updated_at: Option<String>,
 }
 
@@ -40,12 +47,4 @@ impl YamlImportable for Modifier {
     {
         super::repository::create_modifier(connection, &self)
     }
-}
-
-fn default_priority() -> i64 {
-    100
-}
-
-fn default_timestamp() -> Option<String> {
-    Some("datetime('now')".to_string())
 }

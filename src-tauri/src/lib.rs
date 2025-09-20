@@ -5,7 +5,6 @@ mod import;
 mod metatype;
 mod modifier;
 mod priority_bundle;
-mod priority_grade;
 mod quality;
 mod shared;
 mod skill;
@@ -46,7 +45,6 @@ pub fn run() {
             character::commands::delete_character,
             character::commands::archive_character,
             character::resource::commands::list_character_resources,
-            priority_grade::commands::list_priority_grades,
             modifier::commands::list_modifiers,
             metatype::commands::list_metatypes,
             metatype::commands::get_metatype,
@@ -54,7 +52,6 @@ pub fn run() {
             database::commands::initialize_database,
             import::commands::import_characters,
             import::commands::import_metatypes,
-            import::commands::import_priority_grades,
             priority_bundle::commands::list_priority_bundles,
         ])
         .run(tauri::generate_context!())

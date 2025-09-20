@@ -3,8 +3,9 @@ use super::repository::{
     create_priority_bundle_qualities, create_priority_bundle_skills,
 };
 use crate::import::YamlImportable;
+use crate::shared::Grade;
+use crate::shared::{defaults::system, defaults::timestamp, Operation};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PriorityBundleModifier {
@@ -12,28 +13,14 @@ pub struct PriorityBundleModifier {
     pub id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_id: Option<i64>,
-    #[serde(default = "default_wildcard")]
-    pub grade: String,
     pub target_key: String,
-    #[serde(default = "default_operation")]
-    pub operation: String,
+    #[serde(default)]
+    pub operation: Operation,
     pub value: String,
-    #[serde(default = "default_timestamp")]
+    #[serde(default = "timestamp")]
     pub created_at: Option<String>,
-    #[serde(default = "default_timestamp")]
+    #[serde(default = "timestamp")]
     pub updated_at: Option<String>,
-}
-
-fn default_operation() -> String {
-    "add".to_string()
-}
-
-fn default_wildcard() -> String {
-    "*".to_string()
-}
-
-fn default_timestamp() -> Option<String> {
-    Some("datetime('now')".to_string())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -44,26 +31,34 @@ pub struct PriorityBundle {
     pub name: Option<String>,
     #[serde(default)]
     pub menu_order: i32,
-    #[serde(default = "default_wildcard")]
-    pub grade: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub parent_bundle_id: Option<i64>,
-    #[serde(default = "default_system")]
+    #[serde(default)]
+    pub grade: Grade,
+    #[serde(default = "system")]
     pub system: String,
     #[serde(default)]
-    pub modifiers: HashMap<String, Vec<PriorityBundleModifier>>,
+    pub modifiers: Vec<PriorityBundleModifier>,
     #[serde(default)]
-    pub skills: HashMap<String, Vec<PriorityBundleSkill>>,
+    pub skills: Vec<PriorityBundleSkill>,
     #[serde(default)]
-    pub metatypes: HashMap<String, Vec<PriorityBundleMetatype>>,
+    pub metatypes: Vec<PriorityBundleMetatype>,
     #[serde(default)]
-    pub qualities: HashMap<String, Vec<PriorityBundleQuality>>,
+    pub qualities: Vec<PriorityBundleQuality>,
     #[serde(default)]
-    pub children: HashMap<String, Vec<PriorityBundle>>,
+    pub options: Vec<PriorityBundle>,
 }
 
-fn default_system() -> String {
-    "Core".to_string()
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PriorityBundleOption {
+    pub id: i64,
+    pub bundle_id: i64,
+    #[serde(default)]
+    pub modifiers: Vec<PriorityBundleModifier>,
+    #[serde(default)]
+    pub skills: Vec<PriorityBundleSkill>,
+    #[serde(default)]
+    pub metatypes: Vec<PriorityBundleMetatype>,
+    #[serde(default)]
+    pub qualities: Vec<PriorityBundleQuality>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -72,8 +67,8 @@ pub struct PriorityBundleSkill {
     pub id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_id: Option<i64>,
-    #[serde(default = "default_wildcard")]
-    pub grade: String,
+    #[serde(default)]
+    pub grade: Grade,
     pub attribute: String,
     #[serde(default)]
     pub amount: i32,
@@ -87,8 +82,8 @@ pub struct PriorityBundleMetatype {
     pub id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_id: Option<i64>,
-    #[serde(default = "default_wildcard")]
-    pub grade: String,
+    #[serde(default)]
+    pub grade: Grade,
     #[serde(default)]
     pub special_points: i32,
     pub name: String,
@@ -100,8 +95,8 @@ pub struct PriorityBundleQuality {
     pub id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_id: Option<i64>,
-    #[serde(default = "default_wildcard")]
-    pub grade: String,
+    #[serde(default)]
+    pub grade: Grade,
     pub name: String,
 }
 

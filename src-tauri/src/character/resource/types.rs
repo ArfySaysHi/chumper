@@ -22,6 +22,7 @@ pub struct CreateResourceParams {
     pub character_id: i64,
 }
 
+#[allow(dead_code)]
 impl CreateResourceParams {
     pub fn new(
         name: impl Into<String>,

@@ -1,7 +1,6 @@
+use super::{CreateResourceParams, Resource};
 use crate::error::Result;
 use rusqlite::{named_params, Connection};
-
-use super::{CreateResourceParams, Resource};
 
 pub fn list_resources(connection: &Connection, character_id: i64) -> Result<Vec<Resource>> {
     let query = format!(
@@ -22,6 +21,7 @@ pub fn list_resources(connection: &Connection, character_id: i64) -> Result<Vec<
     Ok(res.collect::<rusqlite::Result<Vec<_>>>()?)
 }
 
+#[allow(dead_code)]
 pub fn create_resource(connection: &Connection, params: CreateResourceParams) -> Result<String> {
     println!("Attempting to create_resource with: {:?}", params);
     let query = "INSERT INTO resources

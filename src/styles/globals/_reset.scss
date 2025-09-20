@@ -95,7 +95,6 @@ a {
 }
 
 /* Focus styles for accessibility */
-// TODO: Figure out whether this is necessary or can I do it a little more stylistically
 :focus-visible {
   outline: 2px solid color(primary-500);
   outline-offset: 2px;

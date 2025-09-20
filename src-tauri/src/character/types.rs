@@ -23,6 +23,7 @@ pub struct Character {
     pub metatype: Metatype,
 }
 
+#[allow(dead_code)]
 impl Character {
     pub fn initialize_base_resources(&self, connection: &Connection) -> Result<()> {
         let resources = vec![

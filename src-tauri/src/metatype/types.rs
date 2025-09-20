@@ -1,5 +1,6 @@
 use super::repository::{create_metatype, create_metatype_qualities, get_metatype};
 use crate::import::YamlImportable;
+use crate::shared::defaults::{attribute_max, attribute_min, rating, timestamp};
 use rusqlite::{
     types::{FromSql, FromSqlError, ToSqlOutput, Value, ValueRef},
     Result, ToSql,
@@ -10,20 +11,12 @@ use serde::{Deserialize, Serialize};
 pub struct MetatypeQuality {
     pub metatype_name: Option<String>,
     pub name: String,
-    #[serde(default = "default_rating")]
+    #[serde(default = "rating")]
     pub default_rating: i32,
-    #[serde(default = "default_timestamp")]
+    #[serde(default = "timestamp")]
     pub created_at: Option<String>,
-    #[serde(default = "default_timestamp")]
+    #[serde(default = "timestamp")]
     pub updated_at: Option<String>,
-}
-
-fn default_rating() -> i32 {
-    1
-}
-
-fn default_timestamp() -> Option<String> {
-    Some("datetime('now')".to_string())
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -70,63 +63,54 @@ pub struct Metatype {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
     pub name: String,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub body_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub body_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub agility_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub agility_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub reaction_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub reaction_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub strength_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub strength_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub willpower_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub willpower_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub logic_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub logic_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub intuition_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub intuition_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub charisma_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub charisma_max: i32,
-    #[serde(default = "default_minimum")]
+    #[serde(default = "attribute_min")]
     pub edge_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub edge_max: i32,
     #[serde(default)]
     pub magical_type: MagicalType,
     #[serde(default)]
     pub magic_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub magic_max: i32,
     #[serde(default)]
     pub resonance_min: i32,
-    #[serde(default = "default_maximum")]
+    #[serde(default = "attribute_max")]
     pub resonance_max: i32,
     #[serde(default)]
     pub metatype_qualities: Vec<MetatypeQuality>,
-}
-
-impl Metatype {
-    pub fn new(name: String) -> Self {
-        Self {
-            name,
-            ..Default::default()
-        }
-    }
 }
 
 impl YamlImportable for Metatype {
@@ -142,14 +126,6 @@ impl YamlImportable for Metatype {
 
         Ok(m)
     }
-}
-
-fn default_minimum() -> i32 {
-    1
-}
-
-fn default_maximum() -> i32 {
-    6
 }
 
 #[derive(Debug, Serialize, Deserialize)]

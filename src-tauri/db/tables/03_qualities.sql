@@ -7,12 +7,11 @@ CREATE TABLE qualities (
     FOREIGN KEY (resource_name) REFERENCES resources(name) ON DELETE RESTRICT
 );
 
--- Convert into modifiers later
-CREATE TABLE quality_effects (
+CREATE TABLE quality_modifiers (
     id INTEGER PRIMARY KEY,
     quality_id INTEGER NOT NULL,
     target_key VARCHAR(50) NOT NULL,
-    operation VARCHAR(20) NOT NULL,
+    operation VARCHAR(20) NOT NULL CHECK(operation IN ('Add', 'Sub', 'Mul', 'Div', 'Set')),
     value_formula VARCHAR(200) NOT NULL,
     activation VARCHAR(50) DEFAULT 'always',
     priority INTEGER DEFAULT 100,

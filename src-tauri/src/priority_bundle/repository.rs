@@ -1,8 +1,6 @@
-use super::helpers::nest_priority_bundles;
 use super::{PriorityBundle, PriorityBundleModifier};
-use crate::priority_bundle::helpers::group_by_grade;
+use crate::error::Result;
 use crate::priority_bundle::{PriorityBundleMetatype, PriorityBundleQuality, PriorityBundleSkill};
-use crate::{error::Result, import::YamlImportable};
 use rusqlite::{named_params, Connection};
 use std::collections::HashMap;
 
@@ -19,13 +17,12 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 name: row.get("name")?,
                 grade: row.get("grade")?,
                 menu_order: row.get("menu_order")?,
-                parent_bundle_id: row.get("parent_bundle_id")?,
                 system: row.get("system")?,
-                modifiers: HashMap::new(),
-                skills: HashMap::new(),
-                metatypes: HashMap::new(),
-                qualities: HashMap::new(),
-                children: HashMap::new(),
+                modifiers: Vec::new(),
+                skills: Vec::new(),
+                metatypes: Vec::new(),
+                qualities: Vec::new(),
+                options: Vec::new(),
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -43,7 +40,6 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
         .query_map([], |row| {
             Ok(PriorityBundleModifier {
                 id: row.get("id")?,
-                grade: row.get("grade")?,
                 bundle_id: row.get("bundle_id")?,
                 target_key: row.get("target_key")?,
                 operation: row.get("operation")?,
@@ -126,22 +122,21 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
     for pb in &mut priority_bundles {
         if let Some(pb_id) = &pb.id {
             if let Some(mods) = pbm_map.remove(&pb_id) {
-                pb.modifiers = group_by_grade(mods, |m| &m.grade);
+                pb.modifiers = mods;
             }
             if let Some(skills) = pbs_map.remove(&pb_id) {
-                pb.skills = group_by_grade(skills, |s| &s.grade);
+                pb.skills = skills;
             }
             if let Some(metatypes) = pb_meta_map.remove(&pb_id) {
-                pb.metatypes = group_by_grade(metatypes, |m| &m.grade);
+                pb.metatypes = metatypes;
             }
             if let Some(qualities) = pbq_map.remove(&pb_id) {
-                pb.qualities = group_by_grade(qualities, |q| &q.grade);
+                pb.qualities = qualities;
             }
         }
     }
 
-    let roots = nest_priority_bundles(priority_bundles);
-    Ok(roots)
+    Ok(priority_bundles)
 }
 
 pub fn create_priority_bundle(
@@ -149,29 +144,17 @@ pub fn create_priority_bundle(
     pb: &PriorityBundle,
 ) -> Result<PriorityBundle> {
     log::info!("create_priority_bundle with {:#?}", &pb);
-    let query = "INSERT INTO priority_bundles (name, grade, menu_order, parent_bundle_id)
-                 VALUES (:name, :grade, :menu_order, :parent_bundle_id)"
+    let query = "INSERT INTO priority_bundles (name, grade, menu_order)
+                 VALUES (:name, :grade, :menu_order)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
     stmt.execute(named_params! {
         ":name": &pb.name,
         ":grade": &pb.grade,
         ":menu_order": &pb.menu_order,
-        ":parent_bundle_id": &pb.parent_bundle_id,
     })?;
 
     let rowid = connection.last_insert_rowid();
-    let keys = pb.children.keys();
-
-    for key in keys {
-        for item in &pb.children[key] {
-            let mut child = item.clone();
-            child.parent_bundle_id = Some(rowid);
-            child.grade = key.to_string();
-            child.insert_into_db(connection)?;
-        }
-    }
-
     let mut cloned_pb = pb.clone();
     cloned_pb.id = Some(rowid);
 
@@ -184,22 +167,18 @@ pub fn create_priority_bundle_modifiers(
 ) -> Result<()> {
     log::info!("create_priority_bundle_modifier with {:#?}", &pb);
     let query = "INSERT INTO priority_bundle_modifiers
-                   (grade, bundle_id, target_key, operation, value)
-                 VALUES (:grade, :bundle_id, :target_key, :operation, :value)"
+                   (bundle_id, target_key, operation, value)
+                 VALUES (:bundle_id, :target_key, :operation, :value)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
-    let keys = pb.modifiers.keys();
 
-    for key in keys {
-        for item in &pb.modifiers[key] {
-            stmt.execute(named_params! {
-                ":grade": key,
-                ":bundle_id": &pb.id,
-                ":target_key": &item.target_key,
-                ":operation": &item.operation,
-                ":value": &item.value,
-            })?;
-        }
+    for item in &pb.modifiers {
+        stmt.execute(named_params! {
+            ":bundle_id": &pb.id,
+            ":target_key": &item.target_key,
+            ":operation": &item.operation,
+            ":value": &item.value,
+        })?;
     }
 
     Ok(())
@@ -212,18 +191,15 @@ pub fn create_priority_bundle_skills(connection: &Connection, pb: &PriorityBundl
                  VALUES (:grade, :bundle_id, :attribute, :amount, :rating)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
-    let keys = pb.skills.keys();
 
-    for key in keys {
-        for item in &pb.skills[key] {
-            stmt.execute(named_params! {
-                ":grade": key,
-                ":bundle_id": &pb.id,
-                ":attribute": &item.attribute,
-                ":amount": &item.amount,
-                ":rating": &item.rating,
-            })?;
-        }
+    for item in &pb.skills {
+        stmt.execute(named_params! {
+            ":grade": &item.grade,
+            ":bundle_id": &pb.id,
+            ":attribute": &item.attribute,
+            ":amount": &item.amount,
+            ":rating": &item.rating,
+        })?;
     }
 
     Ok(())
@@ -239,17 +215,14 @@ pub fn create_priority_bundle_metatypes(
                  VALUES (:bundle_id, :grade, :special_points, :name)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
-    let keys = pb.metatypes.keys();
 
-    for key in keys {
-        for item in &pb.metatypes[key] {
-            stmt.execute(named_params! {
-                ":grade": key,
-                ":bundle_id": &pb.id,
-                ":special_points": &item.special_points,
-                ":name": &item.name,
-            })?;
-        }
+    for item in &pb.metatypes {
+        stmt.execute(named_params! {
+            ":grade": &item.grade,
+            ":bundle_id": &pb.id,
+            ":special_points": &item.special_points,
+            ":name": &item.name,
+        })?;
     }
 
     Ok(())
@@ -265,16 +238,13 @@ pub fn create_priority_bundle_qualities(
                  VALUES (:bundle_id, :grade, :name)"
         .to_string();
     let mut stmt = connection.prepare(&query)?;
-    let keys = pb.qualities.keys();
 
-    for key in keys {
-        for item in &pb.qualities[key] {
-            stmt.execute(named_params! {
-                ":bundle_id": &pb.id,
-                ":grade": key,
-                ":name": &item.name,
-            })?;
-        }
+    for item in &pb.qualities {
+        stmt.execute(named_params! {
+            ":bundle_id": &pb.id,
+            ":grade": &item.grade,
+            ":name": &item.name,
+        })?;
     }
 
     Ok(())
