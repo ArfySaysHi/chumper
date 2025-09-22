@@ -36,11 +36,9 @@ const PriorityModalPriority = ({
   const [grades, setGrades] = useState<PriorityGrades>({});
 
   useEffect(() => {
-    listPriorityBundles({}).then((res) => {
+    listPriorityBundles({ params: {} }).then((res) => {
       const validatedRes = PriorityBundleArraySchema.parse(res);
-      setBundles(
-        validatedRes.sort((a, b) => (a.menu_order || 0) - (b.menu_order || 0)),
-      );
+      setBundles(validatedRes.sort((a, b) => (a.id || 0) - (b.id || 0)));
     });
   }, []);
 

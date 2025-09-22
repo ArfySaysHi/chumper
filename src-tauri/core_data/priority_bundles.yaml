@@ -30,6 +30,7 @@
       special_points: 0
 
 - type: PriorityBundle
+  name: Metatype
   grade: C
   metatypes:
     - name: Human

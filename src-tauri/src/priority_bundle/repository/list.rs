@@ -3,15 +3,72 @@ use crate::priority_bundle::{
     PriorityBundle, PriorityBundleMetatype, PriorityBundleModifier, PriorityBundleQuality,
     PriorityBundleSkill,
 };
-use rusqlite::Connection;
-use std::collections::HashMap;
+use crate::shared::defaults::system;
+use crate::shared::{group_by_key, query_vec};
+use rusqlite::{named_params, Connection};
+use serde::Deserialize;
 
-pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBundle>> {
+#[derive(Debug, Deserialize)]
+pub struct ListPriorityBundlesParams {
+    #[serde(default = "system")]
+    pub system: String,
+}
+
+pub fn list_priority_bundles(
+    connection: &Connection,
+    params: &ListPriorityBundlesParams,
+) -> Result<Vec<PriorityBundle>> {
     log::info!("list_priority_bundles");
-    let query = "SELECT id, name, grade, system FROM priority_bundles".to_string();
-    let mut stmt = connection.prepare(&query)?;
-    let mut priority_bundles = stmt
-        .query_map([], |row| {
+    let mut priority_bundles = get_priority_bundles(connection, params)?;
+
+    if priority_bundles.is_empty() {
+        return Ok(priority_bundles);
+    }
+
+    let modifiers = get_modifiers(connection)?;
+    let mut mod_map = group_by_key(modifiers, |modi| modi.bundle_id);
+
+    let skills = get_skills(connection)?;
+    let mut skill_map = group_by_key(skills, |skill| skill.bundle_id);
+
+    let metatypes = get_metatypes(connection)?;
+    let mut metatype_map = group_by_key(metatypes, |meta| meta.bundle_id);
+
+    let qualities = get_qualities(connection)?;
+    let mut quality_map = group_by_key(qualities, |quality| quality.bundle_id);
+
+    for pb in &mut priority_bundles {
+        if let Some(pb_id) = &pb.id {
+            if let Some(mods) = mod_map.remove(&pb_id) {
+                pb.modifiers = mods;
+            }
+            if let Some(skills) = skill_map.remove(&pb_id) {
+                pb.skills = skills;
+            }
+            if let Some(metatypes) = metatype_map.remove(&pb_id) {
+                pb.metatypes = metatypes;
+            }
+            if let Some(qualities) = quality_map.remove(&pb_id) {
+                pb.qualities = qualities;
+            }
+        }
+    }
+
+    Ok(priority_bundles)
+}
+
+fn get_priority_bundles(
+    connection: &Connection,
+    params: &ListPriorityBundlesParams,
+) -> Result<Vec<PriorityBundle>> {
+    let mut query = "SELECT id, name, grade, system FROM priority_bundles WHERE 1=1".to_string();
+    query.push_str(" AND system = :system");
+
+    let res = query_vec(
+        connection,
+        &query,
+        named_params! { ":system": &params.system},
+        |row| {
             Ok(PriorityBundle {
                 id: row.get("id")?,
                 name: row.get("name")?,
@@ -23,111 +80,67 @@ pub fn list_priority_bundles(connection: &Connection) -> Result<Vec<PriorityBund
                 qualities: Vec::new(),
                 options: Vec::new(),
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
 
-    if priority_bundles.is_empty() {
-        return Ok(priority_bundles);
-    }
+    Ok(res)
+}
 
-    let pbm_query = "SELECT id, bundle_id, target_key, operation, value, created_at, updated_at
-                     FROM priority_bundle_modifiers"
-        .to_string();
-    let mut pbm_stmt = connection.prepare(&pbm_query)?;
-    let pbm_iter = pbm_stmt
-        .query_map([], |row| {
-            Ok(PriorityBundleModifier {
-                id: row.get("id")?,
-                bundle_id: row.get("bundle_id")?,
-                target_key: row.get("target_key")?,
-                operation: row.get("operation")?,
-                value: row.get("value")?,
-                created_at: row.get("created_at")?,
-                updated_at: row.get("updated_at")?,
-            })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    let mut pbm_map: HashMap<i64, Vec<PriorityBundleModifier>> = HashMap::new();
-    for res in pbm_iter {
-        if let Some(bundle_id) = res.bundle_id {
-            pbm_map.entry(bundle_id).or_default().push(res);
-        }
-    }
+fn get_modifiers(connection: &Connection) -> Result<Vec<PriorityBundleModifier>> {
+    let query = "SELECT id, bundle_id, target_key, operation, value, created_at, updated_at
+                 FROM priority_bundle_modifiers";
+    let res = query_vec(connection, query, [], |row| {
+        Ok(PriorityBundleModifier {
+            id: row.get("id")?,
+            bundle_id: row.get("bundle_id")?,
+            target_key: row.get("target_key")?,
+            operation: row.get("operation")?,
+            value: row.get("value")?,
+            created_at: row.get("created_at")?,
+            updated_at: row.get("updated_at")?,
+        })
+    })?;
+    Ok(res)
+}
 
-    let pbs_query =
-        "SELECT id, bundle_id, attribute, amount, rating FROM priority_bundle_skills".to_string();
-    let mut pbs_stmt = connection.prepare(&pbs_query)?;
-    let pbs_iter = pbs_stmt
-        .query_map([], |row| {
-            Ok(PriorityBundleSkill {
-                id: row.get("id")?,
-                bundle_id: row.get("bundle_id")?,
-                attribute: row.get("attribute")?,
-                amount: row.get("amount")?,
-                rating: row.get("rating")?,
-            })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    let mut pbs_map: HashMap<i64, Vec<PriorityBundleSkill>> = HashMap::new();
-    for res in pbs_iter {
-        if let Some(bundle_id) = res.bundle_id {
-            pbs_map.entry(bundle_id).or_default().push(res);
-        }
-    }
+fn get_skills(connection: &Connection) -> Result<Vec<PriorityBundleSkill>> {
+    let query = "SELECT id, bundle_id, attribute, amount, rating FROM priority_bundle_skills";
+    let res = query_vec(connection, query, [], |row| {
+        Ok(PriorityBundleSkill {
+            id: row.get("id")?,
+            bundle_id: row.get("bundle_id")?,
+            attribute: row.get("attribute")?,
+            amount: row.get("amount")?,
+            rating: row.get("rating")?,
+        })
+    })?;
 
-    let pb_meta_query =
-        "SELECT id, bundle_id, special_points, name FROM priority_bundle_metatypes".to_string();
-    let mut pb_meta_stmt = connection.prepare(&pb_meta_query)?;
-    let pb_meta_iter = pb_meta_stmt
-        .query_map([], |row| {
-            Ok(PriorityBundleMetatype {
-                id: row.get("id")?,
-                bundle_id: row.get("bundle_id")?,
-                special_points: row.get("special_points")?,
-                name: row.get("name")?,
-            })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    let mut pb_meta_map: HashMap<i64, Vec<PriorityBundleMetatype>> = HashMap::new();
-    for res in pb_meta_iter {
-        if let Some(bundle_id) = res.bundle_id {
-            pb_meta_map.entry(bundle_id).or_default().push(res);
-        }
-    }
+    Ok(res)
+}
 
-    let pbq_query = "SELECT id, bundle_id, name FROM priority_bundle_qualities".to_string();
-    let mut pbq_stmt = connection.prepare(&pbq_query)?;
-    let pbq_iter = pbq_stmt
-        .query_map([], |row| {
-            Ok(PriorityBundleQuality {
-                id: row.get("id")?,
-                bundle_id: row.get("bundle_id")?,
-                name: row.get("name")?,
-            })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    let mut pbq_map: HashMap<i64, Vec<PriorityBundleQuality>> = HashMap::new();
-    for res in pbq_iter {
-        if let Some(bundle_id) = res.bundle_id {
-            pbq_map.entry(bundle_id).or_default().push(res);
-        }
-    }
-    for pb in &mut priority_bundles {
-        if let Some(pb_id) = &pb.id {
-            if let Some(mods) = pbm_map.remove(&pb_id) {
-                pb.modifiers = mods;
-            }
-            if let Some(skills) = pbs_map.remove(&pb_id) {
-                pb.skills = skills;
-            }
-            if let Some(metatypes) = pb_meta_map.remove(&pb_id) {
-                pb.metatypes = metatypes;
-            }
-            if let Some(qualities) = pbq_map.remove(&pb_id) {
-                pb.qualities = qualities;
-            }
-        }
-    }
+fn get_metatypes(connection: &Connection) -> Result<Vec<PriorityBundleMetatype>> {
+    let query = "SELECT id, bundle_id, special_points, name FROM priority_bundle_metatypes";
+    let res = query_vec(connection, query, [], |row| {
+        Ok(PriorityBundleMetatype {
+            id: row.get("id")?,
+            bundle_id: row.get("bundle_id")?,
+            special_points: row.get("special_points")?,
+            name: row.get("name")?,
+        })
+    })?;
 
-    Ok(priority_bundles)
+    Ok(res)
+}
+
+fn get_qualities(connection: &Connection) -> Result<Vec<PriorityBundleQuality>> {
+    let query = "SELECT id, bundle_id, name FROM priority_bundle_qualities";
+    let res = query_vec(connection, query, [], |row| {
+        Ok(PriorityBundleQuality {
+            id: row.get("id")?,
+            bundle_id: row.get("bundle_id")?,
+            name: row.get("name")?,
+        })
+    })?;
+
+    Ok(res)
 }
