@@ -53,6 +53,7 @@ pub fn run() {
             import::commands::import_characters,
             import::commands::import_metatypes,
             priority_bundle::commands::list_priority_bundles,
+            priority_bundle::commands::list_priority_bundles_by_grade,
         ])
         .run(tauri::generate_context!())
         .map_err(|e| {

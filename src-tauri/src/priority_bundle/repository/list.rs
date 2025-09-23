@@ -9,14 +9,14 @@ use rusqlite::{named_params, Connection};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct ListPriorityBundlesParams {
+pub struct PriorityBundleListParams {
     #[serde(default = "system")]
     pub system: String,
 }
 
 pub fn list_priority_bundles(
     connection: &Connection,
-    params: &ListPriorityBundlesParams,
+    params: &PriorityBundleListParams,
 ) -> Result<Vec<PriorityBundle>> {
     log::info!("list_priority_bundles");
     let mut priority_bundles = get_priority_bundles(connection, params)?;
@@ -59,7 +59,7 @@ pub fn list_priority_bundles(
 
 fn get_priority_bundles(
     connection: &Connection,
-    params: &ListPriorityBundlesParams,
+    params: &PriorityBundleListParams,
 ) -> Result<Vec<PriorityBundle>> {
     let mut query = "SELECT id, name, grade, system FROM priority_bundles WHERE 1=1".to_string();
     query.push_str(" AND system = :system");

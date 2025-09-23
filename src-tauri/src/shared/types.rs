@@ -49,7 +49,7 @@ impl FromSql for Operation {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq, Copy)]
 pub enum Grade {
     A,
     B,

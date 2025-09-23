@@ -30,7 +30,9 @@ const PriorityModalPriority = ({
   setCurrentStep,
   title,
 }: PriorityModalPriorityProps) => {
-  const { execute: listPriorityBundles } = useCommand("list_priority_bundles");
+  const { execute: listPriorityBundles } = useCommand(
+    "list_priority_bundles_by_grade",
+  );
   const { execute: createCharacter } = useCommand("create_character");
   const [bundles, setBundles] = useState<PriorityBundleArray>();
   const [grades, setGrades] = useState<PriorityGrades>({});
