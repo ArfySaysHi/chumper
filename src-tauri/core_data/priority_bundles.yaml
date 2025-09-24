@@ -95,9 +95,9 @@
 
 - type: PriorityBundle
   name: "Magic/Resonance"
+  grade: A
   options:
     - name: "Magician"
-      grade: A
       modifiers:
         - target_key: "attributes.magic.base_amount"
           value: "6"
@@ -110,7 +110,6 @@
       qualities:
         - name: "Magician"
     - name: "Mystic Adept"
-      grade: A
       modifiers:
         - target_key: "attributes.magic.base_amount"
           value: "6"
@@ -123,7 +122,6 @@
       qualities:
         - name: "Mystic Adept"
     - name: "Technomancer"
-      grade: A
       modifiers:
         - target_key: "attributes.resonance.base_amount"
           value: "6"

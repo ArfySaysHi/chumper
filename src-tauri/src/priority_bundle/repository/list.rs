@@ -7,6 +7,7 @@ use crate::shared::defaults::system;
 use crate::shared::{group_by_key, query_vec};
 use rusqlite::{named_params, Connection};
 use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct PriorityBundleListParams {
@@ -54,6 +55,8 @@ pub fn list_priority_bundles(
         }
     }
 
+    priority_bundles = assign_options(priority_bundles);
+
     Ok(priority_bundles)
 }
 
@@ -61,7 +64,8 @@ fn get_priority_bundles(
     connection: &Connection,
     params: &PriorityBundleListParams,
 ) -> Result<Vec<PriorityBundle>> {
-    let mut query = "SELECT id, name, grade, system FROM priority_bundles WHERE 1=1".to_string();
+    let mut query =
+        "SELECT id, name, grade, system, parent_id FROM priority_bundles WHERE 1=1".to_string();
     query.push_str(" AND system = :system");
 
     let res = query_vec(
@@ -74,6 +78,7 @@ fn get_priority_bundles(
                 name: row.get("name")?,
                 grade: row.get("grade")?,
                 system: row.get("system")?,
+                parent_id: row.get("parent_id")?,
                 modifiers: Vec::new(),
                 skills: Vec::new(),
                 metatypes: Vec::new(),
@@ -143,4 +148,33 @@ fn get_qualities(connection: &Connection) -> Result<Vec<PriorityBundleQuality>> 
     })?;
 
     Ok(res)
+}
+
+fn assign_options(bundles: Vec<PriorityBundle>) -> Vec<PriorityBundle> {
+    let mut roots = vec![];
+    let mut options = vec![];
+
+    for bundle in bundles {
+        match bundle.parent_id.is_none() {
+            true => roots.push(bundle),
+            false => options.push(bundle),
+        }
+    }
+
+    let mut option_map: HashMap<i64, Vec<PriorityBundle>> = HashMap::new();
+    for option in options {
+        if let Some(pid) = option.parent_id {
+            option_map.entry(pid).or_default().push(option);
+        }
+    }
+
+    for root in &mut roots {
+        if let Some(root_id) = root.id {
+            if let Some(options) = option_map.remove(&root_id) {
+                root.options = options;
+            }
+        }
+    }
+
+    roots
 }

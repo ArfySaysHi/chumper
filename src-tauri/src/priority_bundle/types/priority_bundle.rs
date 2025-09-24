@@ -1,6 +1,5 @@
 use super::{
-    PriorityBundleMetatype, PriorityBundleModifier, PriorityBundleOption, PriorityBundleQuality,
-    PriorityBundleSkill,
+    PriorityBundleMetatype, PriorityBundleModifier, PriorityBundleQuality, PriorityBundleSkill,
 };
 use crate::import::YamlImportable;
 use crate::priority_bundle::repository::{
@@ -30,7 +29,9 @@ pub struct PriorityBundle {
     #[serde(default)]
     pub qualities: Vec<PriorityBundleQuality>,
     #[serde(default)]
-    pub options: Vec<PriorityBundleOption>,
+    pub options: Vec<PriorityBundle>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent_id: Option<i64>,
 }
 
 impl YamlImportable for PriorityBundle {

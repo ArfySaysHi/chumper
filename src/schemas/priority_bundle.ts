@@ -1,12 +1,11 @@
 import { z } from "zod";
 
-const OperationSchema = z.enum(["add", "sub", "mul", "div", "set"]);
+const OperationSchema = z.enum(["Add", "Sub", "Mul", "Div", "Set"]);
 const PriorityGradeSchema = z.enum(["A", "B", "C", "D", "E", "*"]);
 
 export const PriorityBundleModifierSchema = z.object({
   id: z.number(),
   bundle_id: z.number(),
-  grade: PriorityGradeSchema,
   target_key: z.string(),
   operation: OperationSchema,
   value: z.string(),
@@ -41,7 +40,6 @@ export const PriorityBundleModifierMapSchema = z.preprocess(
 export const PriorityBundleSkillSchema = z.object({
   id: z.number(),
   bundle_id: z.number(),
-  grade: PriorityGradeSchema,
   attribute: z.string(),
   amount: z.number(),
   rating: z.number(),
@@ -65,7 +63,6 @@ export const PriorityBundleSkillMapSchema = z.preprocess(
 export const PriorityBundleMetatypeSchema = z.object({
   id: z.number(),
   bundle_id: z.number(),
-  grade: PriorityGradeSchema,
   special_points: z.number(),
   name: z.string(),
 });
@@ -88,7 +85,6 @@ export const PriorityBundleMetatypeMapSchema = z.preprocess(
 export const PriorityBundleQualitySchema = z.object({
   id: z.number(),
   bundle_id: z.number(),
-  grade: PriorityGradeSchema,
   name: z.string(),
 });
 
@@ -111,13 +107,12 @@ export type PriorityBundle = {
   id: number;
   name?: string;
   grade: PriorityGrade;
-  menu_order?: number;
-  parent_bundle_id?: number;
-  modifiers: PriorityBundleModifierMap;
-  skills: PriorityBundleSkillMap;
-  metatypes: PriorityBundleMetatypeMap;
-  qualities: PriorityBundleQualityMap;
-  children: PriorityBundleMap;
+  parent_id?: number;
+  modifiers: PriorityBundleModifier[];
+  skills: PriorityBundleSkill[];
+  metatypes: PriorityBundleMetatype[];
+  qualities: PriorityBundleQuality[];
+  options: PriorityBundle[];
 };
 
 export const PriorityBundleSchema: z.ZodType<PriorityBundle> = z.lazy(() =>
@@ -127,11 +122,11 @@ export const PriorityBundleSchema: z.ZodType<PriorityBundle> = z.lazy(() =>
     grade: PriorityGradeSchema,
     menu_order: z.number().optional(),
     parent_bundle_id: z.number().optional(),
-    modifiers: PriorityBundleModifierMapSchema,
-    skills: PriorityBundleSkillMapSchema,
-    metatypes: PriorityBundleMetatypeMapSchema,
-    qualities: PriorityBundleQualityMapSchema,
-    children: PriorityBundleMapSchema,
+    modifiers: z.array(PriorityBundleModifierSchema),
+    skills: z.array(PriorityBundleSkillSchema),
+    metatypes: z.array(PriorityBundleMetatypeSchema),
+    qualities: z.array(PriorityBundleQualitySchema),
+    options: z.array(PriorityBundleSchema),
   }),
 );
 
